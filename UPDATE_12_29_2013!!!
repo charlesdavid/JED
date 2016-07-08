@@ -1,0 +1,42 @@
+A major update to JED and the JED User Manual was just done:
+
+The new manual has all the new input file formats with lots of examples.
+Also, there is an appendix for Input File Formats and Output File Examples.
+
+The .jar files that were uploaded today MUST be run with modified input files:
+
+****************SAMPLE INPUT FILES ARE IN THIS DIRECTORY*******************
+
+The JED input files now do NOT require you to enter ANY chain information for MULTI chain files.
+
+Also, chain offsets are no longer required.
+
+The current format is the SAME for BOTH SINGLE or MULTI formatted PDB files.
+
+All that you need to do is specify multi chain pdb files with the usual flag: Set it to "1" or "multi".
+
+Also, the new verion of JED can handle just about any type of numbering scheme in your PDB files,
+including starting with negative numbers and having missing residues.
+
+It does this by reading the reference pdb file when loading your residue lists and creates a mapping from the pdb file to the coordinates matrix.
+
+Thus it is CRITICAL that your reference PDB file be matched to your matrix of coordinates, i.e., it is one of the pdb files used to create it.
+
+There is much more error checking now, and if you do not have the input file right, JED wont let you proceed...
+*********IT WILL GIVE FEEDBACK for what I could think of that would cause it to misbehave...
+
+But I know I did not think of everything!
+
+If you find bugs, PLEASE REPORT ASAP so that they can be sprayed.
+
+Also, please examine the outputs carefully to assess the accuracy of the program.
+
+Specifically, check that the correct residues are processed as requested and 
+that the matrix of coordinates has the  correct coordinate values for the chosen residues.
+
+Any other verification checks are greatly appreciated too.
+
+Thanks for using JED and providing feedback so that it can be improved.
+
+-charles
+

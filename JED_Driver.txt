@@ -1,0 +1,59 @@
+0.00	//SINGLE CHAIN PDBs PRE-PROCESSING JOB
+0.00
+1      0
+0      0     0     0
+C:\\Users\\Charles\\workspace\\JED_1.0\\JED_Test\\Single\\PDBs\\
+TEST 			1A6N.pdb	
+
+
+
+
+
+
+
+0.00	//MULTI CHAIN PDBs PRE-PROCESSING JOB
+0.00
+1    1
+0    0     0     0
+C:\\Users\\Charles\\workspace\\JED_1.0\\JED_Test\\Multi\\PDBs\\
+TEST		MVb_A_B_ATP.pdb
+
+
+
+
+
+
+
+
+0.01	//MULTI CHAIN PDBs cPCA, dPCA, dpPCA, and VIZ JOB
+2.00
+0    1
+5    3     4     1     1.0
+C:\\Users\\Charles\\workspace\\JED_1.0\\JED_Test\\Multi\\
+TEST			MVb_A_B_ATP.pdb
+residues.txt
+residues_dist.txt
+residue_pairs.txt
+original_PDB_Coordinates.txt	0
+
+
+
+
+
+
+
+
+0.01	//SINGLE CHAIN PDBs cPCA, dPCA, dpPCA, and VIZ JOB
+2.00
+0      0
+20     5     3     2     1.0
+C:\\Users\\Charles\\workspace\\JED_1.0\\JED_Test\\Single\\
+TEST			1A6N.pdb
+residues.txt					
+residues_dist.txt				
+residue_pairs.txt
+original_PDB_Coordinates.txt	0
+
+
+
+

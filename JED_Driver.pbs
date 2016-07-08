@@ -1,0 +1,20 @@
+#!/bin/sh
+# ===== PBS OPTIONS =====
+#PBS -q PCA
+#PBS -N JED
+#PBS -l nodes=1:ppn=4
+#PBS -l mem=12gb
+#PBS -l walltime=23:59:59
+# ===== END PBS OPTIONS =====
+SHORT_JOBID=`echo $PBS_JOBID |cut -d. -f1`
+JOBNAME=`echo $PBS_JOBNAME |cut -d- -f1`
+exec 1>&2>$PBS_O_WORKDIR/JED-SUMMARY-$SHORT_JOBID
+
+dir=`pwd`
+echo "The Bash Working Directory:  "$dir
+echo "The PBS _O_WORKDIR:  "$PBS_O_WORKDIR
+cd $PBS_O_WORKDIR
+
+path="/nfs/cbr-fs2/vol1/projects/dcm/JED/Charles/400/JED_Driver.txt"
+
+java -jar -d64 -Xms5000m -Xmx11000m -XX:MaxPermSize=1024m JED_Driver.jar $path
