@@ -64,6 +64,7 @@ public class VIZ_Driver
 	static List<String> lines;
 	static boolean exist, success, OK;
 
+	@SuppressWarnings("unchecked")
 	private static void read_data_files()
 		{
 			atoms = PDB_IO.Read_PDB(PDB);

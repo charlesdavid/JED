@@ -29,6 +29,8 @@ public class PCA
 	int ROWS, COLS;
 	Matrix data_matrix, data_means, data_sigmas;
 
+	/* ****************************** CONSTRUCTOR ********************************************************************************* */
+
 	/**
 	 * Constructor to perform PCA on data:
 	 * Note: The data matrix takes ROWS as variables and COLS as instances.
@@ -43,6 +45,8 @@ public class PCA
 			ROWS = data.getRowDimension();
 
 		}
+
+	/* ****************************** METHODS ********************************************************************************* */
 
 	/**
 	 * Method to calculate the covariance matrix: AA(T)
@@ -148,7 +152,7 @@ public class PCA
 		}
 
 	/**
-	 * Method to calculate the correlation matrix form the data.
+	 * Method to calculate the correlation matrix from the data.
 	 * Note: The data are ROW CENTERED before the calculation.
 	 * 
 	 * @return Returns the Correlation Matrix, R
@@ -161,7 +165,7 @@ public class PCA
 		}
 
 	/**
-	 * Method to calculate the correlation matrix form the data.
+	 * Method to calculate the correlation matrix from the data.
 	 * Note: The data are NOT CENTERED before the calculation.
 	 * 
 	 * @return Returns the Correlation Matrix, R
@@ -174,6 +178,32 @@ public class PCA
 		}
 
 	/**
+	 * Method to calculate the partial-correlation matrix from a precision matrix.
+	 * 
+	 * @return Returns the Partial Correlation Matrix, P_CORR
+	 */
+	static Matrix get_partial_correlation_matrix(Matrix precision)
+		{
+			int num_Vars = precision.getColumnDimension();
+			Matrix P_CORR = new Matrix(num_Vars, num_Vars);
+			for (int i = 0; i < num_Vars; i++)
+				{
+					double x = precision.get(i, i);
+					P_CORR.set(i, i, -1d);
+					for (int j = 0; j < i; j++)
+						{
+							double y = precision.get(j, j);
+							double r = precision.get(i, j);
+							double p = (-r / (Math.sqrt(x * y)));
+							P_CORR.set(j, i, p);
+							P_CORR.set(i, j, p);
+						}
+				}
+
+			return P_CORR;
+		}
+
+	/**
 	 * Method to calculate the eigenvalue decomposition of a matrix.
 	 * Note: The matrix argument should be a positive-definite matrix for real eigenvalues.
 	 * Based in the JAMA library
@@ -182,7 +212,7 @@ public class PCA
 	 *            The matrix to factor
 	 * @return The eigenvalue decomposition holding the eigenvalues and eigenvectors.
 	 */
-	EigenvalueDecomposition get_eigenvalue_decomposition(Matrix q)
+	static EigenvalueDecomposition get_eigenvalue_decomposition(Matrix q)
 		{
 
 			EigenvalueDecomposition evd = new EigenvalueDecomposition(q);
