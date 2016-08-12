@@ -93,7 +93,7 @@ public class JED_Get_Distance_Pair_DVPs
 				number_of_conformations = COLS;
 				delta_vector_series = new Matrix(ROWS, COLS);
 				number_of_pairs = ROWS;
-				file_name_head = out_dir + number_of_pairs;
+				file_name_head = out_dir + "ss_" + number_of_pairs;
 			}
 
 		/* ******************************************************************************************************************************* */

@@ -704,5 +704,11 @@ public class JED_Do_Cartesian
 				return square_pca_modes_P_CORR;
 			}
 
-
+		/**
+		 * @return the residue_list_original
+		 */
+		public List<Integer> get_residue_list_original()
+			{
+				return residue_list_original;
+			}
 	}

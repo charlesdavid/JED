@@ -36,20 +36,15 @@ import Jama.Matrix;
 public class JED_Get_Cartesian_PCA
 	{
 
-		public String directory, out_dir_cPCA, out_dir_COV, out_dir_CORR, out_dir_P_CORR, description, file_name_head,
-				path;
+		public String directory, out_dir_cPCA, out_dir_COV, out_dir_CORR, out_dir_P_CORR, description, file_name_head, path;
 		public int number_of_modes, number_of_residues, ROWS, COLS;
-		public double trace_COV, trace_CORR, trace_P_CORR, cond_COV, cond_CORR, cond_P_CORR, rank_COV, rank_CORR,
-				rank_P_CORR, det_COV, det_CORR, det_P_CORR;
-		public List<Double> eigenvalues_COV, top_eigenvalues_COV, eigenvalues_CORR, top_eigenvalues_CORR,
-				eigenvalues_P_CORR, top_eigenvalues_P_CORR;
-		public double[] pca_mode_COV_min, pca_mode_COV_max, pca_mode_CORR_min, pca_mode_CORR_max, pca_mode_P_CORR_min,
-				pca_mode_P_CORR_max;
-		static Matrix input_data, centered_input_data, cov, corr, pcorr, precision_cov, precision_corr,
-				top_evectors_COV, square_pca_modes_COV, weighted_square_pca_modes_COV, weighted_pca_modes_COV,
-				top_evectors_CORR, square_pca_modes_CORR, weighted_square_pca_modes_CORR, weighted_pca_modes_CORR,
-				pca_modes_COV, pca_modes_CORR, top_evectors_P_CORR, square_pca_modes_P_CORR,
-				weighted_square_pca_modes_P_CORR, weighted_pca_modes_P_CORR, pca_modes_P_CORR;
+		public double trace_COV, trace_CORR, trace_P_CORR, cond_COV, cond_CORR, cond_P_CORR, rank_COV, rank_CORR, rank_P_CORR, det_COV, det_CORR, det_P_CORR;
+		public List<Double> eigenvalues_COV, top_eigenvalues_COV, eigenvalues_CORR, top_eigenvalues_CORR, eigenvalues_P_CORR, top_eigenvalues_P_CORR;
+		public double[] pca_mode_COV_min, pca_mode_COV_max, pca_mode_CORR_min, pca_mode_CORR_max, pca_mode_P_CORR_min, pca_mode_P_CORR_max;
+		static Matrix input_data, centered_input_data, cov, corr, pcorr, precision_cov, precision_corr, top_evectors_COV, square_pca_modes_COV,
+				weighted_square_pca_modes_COV, weighted_pca_modes_COV, top_evectors_CORR, square_pca_modes_CORR, weighted_square_pca_modes_CORR,
+				weighted_pca_modes_CORR, pca_modes_COV, pca_modes_CORR, top_evectors_P_CORR, square_pca_modes_P_CORR, weighted_square_pca_modes_P_CORR,
+				weighted_pca_modes_P_CORR, pca_modes_P_CORR;
 		public EigenvalueDecomposition evd;
 		public NumberFormat nf;
 		public RoundingMode rm;
@@ -137,12 +132,14 @@ public class JED_Get_Cartesian_PCA
 				Matrix sigma = pca.getData_sigmas();
 
 				file_name_head = out_dir_cPCA + "ss_" + number_of_residues;
+
 				path = file_name_head + "_centroids_of_variables.txt";
 				Matrix_IO.write_Matrix(centroids, path, 12, 6);
 				path = file_name_head + "_std_devs_of_centered_variables.txt";
 				Matrix_IO.write_Matrix(sigma, path, 12, 6);
 
 				file_name_head = out_dir_COV + "ss_" + number_of_residues;
+
 				Matrix_IO.write_Matrix(cov, file_name_head + "_COV_matrix.txt", 12, 6);
 
 				evd = PCA.get_eigenvalue_decomposition(cov);
@@ -169,6 +166,7 @@ public class JED_Get_Cartesian_PCA
 				System.gc();
 
 				file_name_head = out_dir_CORR + "ss_" + number_of_residues;
+
 				Matrix_IO.write_Matrix(corr, file_name_head + "_CORR_matrix.txt", 12, 6);
 
 				evd = PCA.get_eigenvalue_decomposition(corr);
@@ -194,6 +192,7 @@ public class JED_Get_Cartesian_PCA
 				rank_P_CORR = pcorr.rank();
 
 				file_name_head = out_dir_P_CORR + "ss_" + number_of_residues;
+
 				Matrix_IO.write_Matrix(pcorr, file_name_head + "_partial_correlation_matrix.txt", 12, 6);
 
 				evd = PCA.get_eigenvalue_decomposition(pcorr);
@@ -221,7 +220,6 @@ public class JED_Get_Cartesian_PCA
 						eigenvalues_COV.add(k);
 					}
 				Collections.sort(eigenvalues_COV, Collections.reverseOrder());
-				file_name_head = out_dir_COV + "ss_" + number_of_residues;
 				List_IO.write_Double_List(eigenvalues_COV, file_name_head + "_eigenvalues_COV.txt", 12);
 			}
 
@@ -229,12 +227,9 @@ public class JED_Get_Cartesian_PCA
 			{
 				try
 					{
-						file_name_head = out_dir_COV + "ss_" + number_of_residues;
-						File top_ss_evals_cov = new File(
-								file_name_head + "_top_" + number_of_modes + "_eigenvalues_COV.txt");
+						File top_ss_evals_cov = new File(file_name_head + "_top_" + number_of_modes + "_eigenvalues_COV.txt");
 						BufferedWriter top_ss_evals_writer = new BufferedWriter(new FileWriter(top_ss_evals_cov));
-						top_ss_evals_writer.write(
-								String.format("%-16s%-16s%-16s%n", "Eigenvalue", "% Variance", "Cumulative Variance"));
+						top_ss_evals_writer.write(String.format("%-16s%-16s%-16s%n", "Eigenvalue", "% Variance", "Cumulative Variance"));
 						top_eigenvalues_COV = new ArrayList<Double>();
 						double cumulative_variance = 0;
 						for (int e = 0; e < number_of_modes; e++)
@@ -242,15 +237,14 @@ public class JED_Get_Cartesian_PCA
 								double val = eigenvalues_COV.get(e);
 								double normed_val = (val / trace_COV);
 								cumulative_variance += normed_val;
-								top_ss_evals_writer.write(String.format("%-16s%-16s%-16s%n", nf.format(val),
-										nf.format(normed_val), nf.format(cumulative_variance)));
+								top_ss_evals_writer
+										.write(String.format("%-16s%-16s%-16s%n", nf.format(val), nf.format(normed_val), nf.format(cumulative_variance)));
 								top_eigenvalues_COV.add(val);
 							}
 						top_ss_evals_writer.close();
 					} catch (IOException io)
 					{
-						System.err.println("Could not write to the file: " + file_name_head + "_top_" + number_of_modes
-								+ "_eigenvalues_COV.txt");
+						System.err.println("Could not write to the file: " + file_name_head + "_top_" + number_of_modes + "_eigenvalues_COV.txt");
 						io.getMessage();
 						io.getStackTrace();
 					}
@@ -271,7 +265,6 @@ public class JED_Get_Cartesian_PCA
 					}
 				top_evectors_COV = modes_reversed;
 
-				file_name_head = out_dir_COV + "ss_" + number_of_residues;
 				path = file_name_head + "_top_" + number_of_modes + "_eigenvectors_COV.txt";
 				Matrix_IO.write_Matrix(top_evectors_COV, path, 12, 6);
 				path = file_name_head + "_inverse_covariance_matrix.txt";
@@ -315,7 +308,6 @@ public class JED_Get_Cartesian_PCA
 						pca_mode_COV_max[a] = max;
 						pca_mode_COV_min[a] = min;
 					}
-				file_name_head = out_dir_COV + "ss_" + number_of_residues;
 				path = file_name_head + "_top_" + number_of_modes + "_square_pca_mode_MAXES_COV.txt";
 				Array_IO.write_Double_Array(pca_mode_COV_max, path, 6);
 				path = file_name_head + "_top_" + number_of_modes + "_square_pca_mode_MINS_COV.txt";
@@ -344,7 +336,6 @@ public class JED_Get_Cartesian_PCA
 						eigenvalues_CORR.add(k);
 					}
 				Collections.sort(eigenvalues_CORR, Collections.reverseOrder());
-				file_name_head = out_dir_CORR + "ss_" + number_of_residues;
 				List_IO.write_Double_List(eigenvalues_CORR, file_name_head + "_eigenvalues_CORR.txt", 12);
 			}
 
@@ -352,12 +343,9 @@ public class JED_Get_Cartesian_PCA
 			{
 				try
 					{
-						file_name_head = out_dir_CORR + "ss_" + number_of_residues;
-						File top_ss_evals_cov = new File(
-								file_name_head + "_top_" + number_of_modes + "_eigenvalues_CORR.txt");
+						File top_ss_evals_cov = new File(file_name_head + "_top_" + number_of_modes + "_eigenvalues_CORR.txt");
 						BufferedWriter top_ss_evals_writer = new BufferedWriter(new FileWriter(top_ss_evals_cov));
-						top_ss_evals_writer.write(
-								String.format("%-16s%-16s%-16s%n", "Eigenvalue", "% Variance", "Cumulative Variance"));
+						top_ss_evals_writer.write(String.format("%-16s%-16s%-16s%n", "Eigenvalue", "% Variance", "Cumulative Variance"));
 						top_eigenvalues_CORR = new ArrayList<Double>();
 						double cumulative_variance = 0;
 						for (int i = 0; i < number_of_modes; i++)
@@ -365,15 +353,14 @@ public class JED_Get_Cartesian_PCA
 								double val = eigenvalues_CORR.get(i);
 								double normed_val = (val / trace_CORR);
 								cumulative_variance += normed_val;
-								top_ss_evals_writer.write(String.format("%-16s%-16s%-16s%n", nf.format(val),
-										nf.format(normed_val), nf.format(cumulative_variance)));
+								top_ss_evals_writer
+										.write(String.format("%-16s%-16s%-16s%n", nf.format(val), nf.format(normed_val), nf.format(cumulative_variance)));
 								top_eigenvalues_CORR.add(val);
 							}
 						top_ss_evals_writer.close();
 					} catch (IOException io)
 					{
-						System.err.println("Could not write to the file: " + file_name_head + "_top_" + number_of_modes
-								+ "_eigenvalues_CORR.txt");
+						System.err.println("Could not write to the file: " + file_name_head + "_top_" + number_of_modes + "_eigenvalues_CORR.txt");
 						io.getMessage();
 						io.getStackTrace();
 					}
@@ -393,7 +380,6 @@ public class JED_Get_Cartesian_PCA
 						modes_reversed.setMatrix(0, ROWS - 1, r, r, col);
 					}
 				top_evectors_CORR = modes_reversed;
-				file_name_head = out_dir_CORR + "ss_" + number_of_residues;
 				path = file_name_head + "_top_" + number_of_modes + "_eigenvectors_CORR.txt";
 				Matrix_IO.write_Matrix(top_evectors_CORR, path, 12, 6);
 				path = file_name_head + "_inverse_correlation_matrix.txt";
@@ -437,7 +423,6 @@ public class JED_Get_Cartesian_PCA
 						pca_mode_CORR_max[a] = max;
 						pca_mode_CORR_min[a] = min;
 					}
-				file_name_head = out_dir_CORR + "ss_" + number_of_residues;
 				path = file_name_head + "_top_" + number_of_modes + "_square_pca_mode_MAXES_CORR.txt";
 				Array_IO.write_Double_Array(pca_mode_CORR_max, path, 6);
 				path = file_name_head + "_top_" + number_of_modes + "_square_pca_mode_MINS_CORR.txt";
@@ -469,7 +454,7 @@ public class JED_Get_Cartesian_PCA
 					{
 						eigenvalues_P_CORR.add(k);
 					}
-				file_name_head = out_dir_P_CORR + "ss_" + number_of_residues;
+				Collections.sort(eigenvalues_P_CORR, Collections.reverseOrder());
 				List_IO.write_Double_List(eigenvalues_P_CORR, file_name_head + "_eigenvalues_P_CORR.txt", 12);
 			}
 
@@ -477,12 +462,9 @@ public class JED_Get_Cartesian_PCA
 			{
 				try
 					{
-						file_name_head = out_dir_P_CORR + "ss_" + number_of_residues;
-						File top_ss_evals_cov = new File(
-								file_name_head + "_top_" + number_of_modes + "_eigenvalues_P_CORR.txt");
+						File top_ss_evals_cov = new File(file_name_head + "_top_" + number_of_modes + "_eigenvalues_P_CORR.txt");
 						BufferedWriter top_ss_evals_writer = new BufferedWriter(new FileWriter(top_ss_evals_cov));
-						top_ss_evals_writer.write(
-								String.format("%-16s%-16s%-16s%n", "Eigenvalue", "% Variance", "Cumulative Variance"));
+						top_ss_evals_writer.write(String.format("%-16s%-16s%-16s%n", "Eigenvalue", "% Variance", "Cumulative Variance"));
 						top_eigenvalues_P_CORR = new ArrayList<Double>();
 						double cumulative_variance = 0;
 						for (int i = 0; i < number_of_modes; i++)
@@ -490,15 +472,14 @@ public class JED_Get_Cartesian_PCA
 								double val = eigenvalues_P_CORR.get(i);
 								double normed_val = (val / trace_P_CORR);
 								cumulative_variance += normed_val;
-								top_ss_evals_writer.write(String.format("%-16s%-16s%-16s%n", nf.format(val),
-										nf.format(normed_val), nf.format(cumulative_variance)));
+								top_ss_evals_writer
+										.write(String.format("%-16s%-16s%-16s%n", nf.format(val), nf.format(normed_val), nf.format(cumulative_variance)));
 								top_eigenvalues_P_CORR.add(val);
 							}
 						top_ss_evals_writer.close();
 					} catch (IOException io)
 					{
-						System.err.println("Could not write to the file: " + file_name_head + "_top_" + number_of_modes
-								+ "_eigenvalues_P_CORR.txt");
+						System.err.println("Could not write to the file: " + file_name_head + "_top_" + number_of_modes + "_eigenvalues_P_CORR.txt");
 						io.getMessage();
 						io.getStackTrace();
 					}
@@ -513,8 +494,17 @@ public class JED_Get_Cartesian_PCA
 				evd = null;
 				System.gc();
 
-				top_evectors_P_CORR = ss_evectors.getMatrix(0, ROWS - 1, 0, number_of_modes - 1);
-				file_name_head = out_dir_P_CORR + "ss_" + number_of_residues;
+				// top_evectors_P_CORR = ss_evectors.getMatrix(0, ROWS - 1, 0, number_of_modes - 1);
+
+				top_evectors_P_CORR = ss_evectors.getMatrix(0, ROWS - 1, ROWS - number_of_modes, ROWS - 1);
+				Matrix modes_reversed = new Matrix(ROWS, COLS);
+				for (int r = 0; r < COLS; r++)
+					{
+						Matrix col = top_evectors_P_CORR.getMatrix(0, ROWS - 1, COLS - 1 - r, COLS - 1 - r);
+						modes_reversed.setMatrix(0, ROWS - 1, r, r, col);
+					}
+				top_evectors_P_CORR = modes_reversed;
+
 				path = file_name_head + "_top_" + number_of_modes + "_eigenvectors_P_CORR.txt";
 				Matrix_IO.write_Matrix(top_evectors_P_CORR, path, 12, 6);
 				ss_evectors = null;
@@ -555,7 +545,6 @@ public class JED_Get_Cartesian_PCA
 						pca_mode_P_CORR_max[a] = max;
 						pca_mode_P_CORR_min[a] = min;
 					}
-				file_name_head = out_dir_P_CORR + "ss_" + number_of_residues;
 				path = file_name_head + "_top_" + number_of_modes + "_square_pca_mode_MAXES_P_CORR.txt";
 				Array_IO.write_Double_Array(pca_mode_P_CORR_max, path, 6);
 				path = file_name_head + "_top_" + number_of_modes + "_square_pca_mode_MINS_P_CORR.txt";

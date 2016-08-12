@@ -198,9 +198,9 @@ public class JED_Do_Dist_Pairs
 								cv.adjust_row_data();
 								distance_matrix_cond = cv.get_coorinates_adjusted();
 								Z_scores = cv.get_z_scores();
-								Matrix_IO.write_Matrix(Z_scores, out_dir + number_of_pairs + "_Residue_Pairs_Distance_Z_scores.txt", 6, 1);
+								Matrix_IO.write_Matrix(Z_scores, out_dir + "ss_" + number_of_pairs + "_Residue_Pairs_Distance_Z_scores.txt", 6, 1);
 								counts = cv.get_counts();
-								Matrix_IO.write_Matrix(counts, out_dir + number_of_pairs + "_Residue_Pairs_Outliers_Per_Variable.txt", 6, 0);
+								Matrix_IO.write_Matrix(counts, out_dir + "ss_" + number_of_pairs + "_Residue_Pairs_Outliers_Per_Variable.txt", 6, 0);
 							}
 					}
 				if (z_cutoff == 0) distance_matrix_cond = distance_matrix;
@@ -210,7 +210,7 @@ public class JED_Do_Dist_Pairs
 			{
 				try
 					{
-						path = out_dir + number_of_pairs + "_Residue_Pairs_Distance_Stats.txt";
+						path = out_dir + "ss_" + number_of_pairs + "_Residue_Pairs_Distance_Stats.txt";
 						File d_stats = new File(path);
 						BufferedWriter d_stats_writer = new BufferedWriter(new FileWriter(d_stats));
 						d_stats_writer.write("MEANs and STANDARD DEVIATIONS for the Residue Pair Distances: " + "\n");
@@ -246,7 +246,7 @@ public class JED_Do_Dist_Pairs
 			{
 				try
 					{
-						path = out_dir + number_of_pairs + "_Residue_Pairs_Distance_Stats.txt";
+						path = out_dir + "ss_" + number_of_pairs + "_Residue_Pairs_Distance_Stats.txt";
 						File d_stats = new File(path);
 						BufferedWriter d_stats_writer = new BufferedWriter(new FileWriter(d_stats));
 						d_stats_writer.write("MEANs and STANDARD DEVIATIONS for the Residue Pair Distances: " + "\n");

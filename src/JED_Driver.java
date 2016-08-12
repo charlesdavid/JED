@@ -46,7 +46,7 @@ public class JED_Driver
 		static double trace_COV, trace_d_cov, trace_CORR, trace_d_corr, trace_d_pcorr, trace_PCORR, cond_cov, cond_d_cov, cond_corr, cond_d_corr, cond_pcorr,
 				cond_d_pcorr, det_cov, det_d_cov, det_corr, det_d_corr, det_pcorr, det_d_pcorr, rank_cov, rank_d_cov, rank_corr, rank_d_corr, rank_pcorr,
 				rank_d_pcorr, mode_amplitude, z_cut, percent;
-		static List<Integer> residue_list, residue_list_dp1, residue_list_dp2, residue_list_dp_original1, residue_list_dp_original2, residues_read;
+		static List<Integer> residue_list_original, residue_list_dp1, residue_list_dp2, residue_list_dp_original1, residue_list_dp_original2, residues_read;
 		static List<String> lines, pdb_file_names, chain_idents, chain_idents1, chain_idents2, chain_ids_read;
 		static List<Double> original_conformation_rmsds, transformed_conformation_rmsds, transformed_residue_rmsds, top_cartesian_eigenvalues_COV,
 				top_distance_eigenvalues_COV, top_cartesian_eigenvalues_CORR, top_distance_eigenvalues_CORR;
@@ -172,7 +172,7 @@ public class JED_Driver
 				line = lines.get(line_count);
 				sToken = new StringTokenizer(line);
 				count = sToken.countTokens();
-				if (count < 4)
+				if (count < 3)
 					{
 						System.err.println("Expected AT LEAST 3 parameters: #Cartesian Modes, #Distance Pair Modes, and #Modes Viz, but only got: " + count);
 						System.err.println("Terminating program execution.");
@@ -212,8 +212,8 @@ public class JED_Driver
 					{
 						if (!sToken.hasMoreElements())
 							{
-								System.err.println("The number of Cartesian Modes to Visualize is > 0: " + number_of_modes_viz);
-								System.err.println("Expected the Mode Amplitude parameter on this line (Field 5).");
+								System.err.println("The number of Cartesian Modes to Visualize is greater than zero:  " + number_of_modes_viz);
+								System.err.println("Expected the Mode Amplitude parameter on this line (Field 4).");
 								System.err.println("Setting mode apmlitude to default value of 1.000");
 								mode_amplitude = 1.000;
 							}
@@ -531,6 +531,7 @@ public class JED_Driver
 				if (do_multi) cSS.do_Cartesian_Multi();
 
 				number_of_residues_cartesian = cSS.getNumber_of_residues();
+				residue_list_original = cSS.get_residue_list_original();
 				atoms = cSS.get_atoms();
 				trace_COV = cSS.get_Trace_COV();
 				trace_CORR = cSS.get_Trace_CORR();
@@ -860,18 +861,18 @@ public class JED_Driver
 		private static void do_Mode_Visualization()
 			{
 
-				JED_PCA_Mode_Vizualization cov = new JED_PCA_Mode_Vizualization(directory, description, atoms, top_cartesian_evectors_COV, square_pca_modes_COV,
-						pca_mode_max_COV, pca_mode_min_COV, mode_amplitude, number_of_modes_viz, Q);
+				JED_PCA_Mode_Vizualization cov = new JED_PCA_Mode_Vizualization(directory, description, residue_list_original, atoms,
+						top_cartesian_evectors_COV, square_pca_modes_COV, pca_mode_max_COV, pca_mode_min_COV, mode_amplitude, number_of_modes_viz, Q);
 				cov.get_Mode_Visualizations_SS();
 
 				System.gc();
 
-				JED_PCA_Mode_Vizualization corr = new JED_PCA_Mode_Vizualization(directory, description, atoms, top_cartesian_evectors_CORR,
-						square_pca_modes_CORR, pca_mode_max_CORR, pca_mode_min_CORR, mode_amplitude, number_of_modes_viz, R);
+				JED_PCA_Mode_Vizualization corr = new JED_PCA_Mode_Vizualization(directory, description, residue_list_original, atoms,
+						top_cartesian_evectors_CORR, square_pca_modes_CORR, pca_mode_max_CORR, pca_mode_min_CORR, mode_amplitude, number_of_modes_viz, R);
 				corr.get_Mode_Visualizations_SS();
 
-				JED_PCA_Mode_Vizualization pcorr = new JED_PCA_Mode_Vizualization(directory, description, atoms, top_cartesian_evectors_PCORR,
-						square_pca_modes_PCORR, pca_mode_max_PCORR, pca_mode_min_PCORR, mode_amplitude, number_of_modes_viz, PC);
+				JED_PCA_Mode_Vizualization pcorr = new JED_PCA_Mode_Vizualization(directory, description, residue_list_original, atoms,
+						top_cartesian_evectors_PCORR, square_pca_modes_PCORR, pca_mode_max_PCORR, pca_mode_min_PCORR, mode_amplitude, number_of_modes_viz, PC);
 				pcorr.get_Mode_Visualizations_SS();
 
 				System.gc();
@@ -884,7 +885,7 @@ public class JED_Driver
 				try
 					{
 						log_writer.write("\nPerforming Cartesian Mode Visualization on Top  " + number_of_modes_viz + "  cPCA modes.\n");
-						log_writer.write("\n" + "Sets of 20 structures were generated to animate each cPCA mode, using Q, R, an PCORR PCA models.\n");
+						log_writer.write("\n" + "Sets of 20 structures were generated to animate each cPCA mode, using COV, CORR, and PCORR PCA models.\n");
 						log_writer.write("MODE AMPLITUDE = " + nf.format(mode_amplitude) + "\n");
 						log_writer.flush();
 
@@ -959,7 +960,7 @@ public class JED_Driver
 
 				if (read_PDBs)
 					{
-						System.out.println("Reading PDB files... ");
+						System.out.print("Reading PDB files... ");
 						startTime = System.nanoTime();
 						read_pdb_files();
 						endTime = System.nanoTime();
@@ -967,7 +968,7 @@ public class JED_Driver
 						System.out.println("Done. (" + nf.format(totalTime / 1000000000.0) + " seconds)");
 					} else
 					{
-						System.out.println("Reading Coordinate File... ");
+						System.out.print("Reading Coordinate File... ");
 						startTime = System.nanoTime();
 						read_coordinate_file();
 						endTime = System.nanoTime();
@@ -977,7 +978,7 @@ public class JED_Driver
 
 				if (do_cartesian)
 					{
-						System.out.println("Performing cPCA analysis... ");
+						System.out.print("Performing cPCA analysis... ");
 						startTime = System.nanoTime();
 						do_cPCA();
 						endTime = System.nanoTime();
@@ -986,7 +987,7 @@ public class JED_Driver
 					}
 				if (do_dist_pairs)
 					{
-						System.out.println("Performing dpPCA analysis... ");
+						System.out.print("Performing dpPCA analysis... ");
 						startTime = System.nanoTime();
 						do_dpPCA();
 						endTime = System.nanoTime();
@@ -995,7 +996,7 @@ public class JED_Driver
 					}
 				if (do_no_pca)
 					{
-						System.out.println("Performing Pre-Processing of PDB files for JED Analysis... ");
+						System.out.print("Performing Pre-Processing of PDB files for JED Analysis... ");
 						startTime = System.nanoTime();
 						do_NO_PCA();
 						endTime = System.nanoTime();
@@ -1004,7 +1005,7 @@ public class JED_Driver
 					}
 				if (do_mode_viz)
 					{
-						System.out.println("Performing mode visualization... ");
+						System.out.print("Performing mode visualization... ");
 						startTime = System.nanoTime();
 						do_Mode_Visualization();
 						endTime = System.nanoTime();
