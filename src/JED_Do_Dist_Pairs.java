@@ -172,17 +172,11 @@ public class JED_Do_Dist_Pairs
 
 						// CORRELATION METHOD
 						trace_dist_CORR = dp_pca.getTrace_CORR();
-						cond_corr = dp_pca.get_cond_CORR();
-						det_corr = dp_pca.getDet_CORR();
-						rank_corr = dp_pca.getRank_CORR();
 						top_distance_evectors_CORR = dp_pca.getTop_evectors_dist_CORR();
 						top_distance_eigenvalues_CORR = dp_pca.getTop_eigenvalues_CORR();
 
 						// PARTIAL CORRELATION METHOD
-						trace_dist_P_CORR = dp_pca.getTrace_CORR();
-						cond_pcorr = dp_pca.get_cond_CORR();
-						det_pcorr = dp_pca.getDet_CORR();
-						rank_pcorr = dp_pca.getRank_CORR();
+						trace_dist_P_CORR = dp_pca.getTrace_P_CORR();
 						top_distance_evectors_P_CORR = dp_pca.getTop_evectors_P_CORR();
 						top_distance_eigenvalues_P_CORR = dp_pca.getTop_eigenvalues_P_CORR();
 					}
@@ -288,7 +282,7 @@ public class JED_Do_Dist_Pairs
 
 				if (number_of_modes_dist_pairs > (number_of_pairs))
 					{
-						System.err.println("FATAL ERROR!");
+						System.err.println("ERROR!");
 						System.err.println("Number of Distance Pair Modes REQUESTED: " + number_of_modes_dist_pairs);
 						System.err.println("Number of Distance Pair Modes AVAILABLE: " + number_of_pairs);
 						System.err.println("Possible number of Distance Pair Modes is ALWAYS <= Number of Residues Pairs.");
@@ -317,7 +311,7 @@ public class JED_Do_Dist_Pairs
 
 				if (number_of_modes_dist_pairs > (number_of_pairs))
 					{
-						System.err.println("FATAL ERROR!");
+						System.err.println("ERROR!");
 						System.err.println("Number of Distance Pair Modes REQUESTED: " + number_of_modes_dist_pairs);
 						System.err.println("Number of Distance Pair Modes AVAILABLE: " + number_of_pairs);
 						System.err.println("Possible number of Distance Pair Modes is ALWAYS <= Number of Residues Pairs.");
@@ -869,5 +863,4 @@ public class JED_Do_Dist_Pairs
 			{
 				return rm;
 			}
-
 	}

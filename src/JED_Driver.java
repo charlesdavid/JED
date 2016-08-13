@@ -127,8 +127,7 @@ public class JED_Driver
 						System.exit(0);
 					}
 				line_count++;
-				/* *********************************************************************************************************************************************
-				 * ***** */
+				/* **************************************************************************************************************************************** */
 				System.out.println("Processing line: " + (line_count + 1));
 				line = lines.get(line_count);
 				sToken = new StringTokenizer(line);
@@ -143,8 +142,7 @@ public class JED_Driver
 						System.exit(0);
 					}
 				line_count++;
-				/* *********************************************************************************************************************************************
-				 * ***** */
+				/* **************************************************************************************************************************************** */
 				System.out.println("Processing line: " + (line_count + 1));
 				line = lines.get(line_count);
 				sToken = new StringTokenizer(line);
@@ -166,8 +164,7 @@ public class JED_Driver
 				System.out.println("\tMULTI CHAIN PDBs = " + do_multi);
 
 				line_count++;
-				/* *********************************************************************************************************************************************
-				 * ***** */
+				/* **************************************************************************************************************************************** */
 				System.out.println("Processing line: " + (line_count + 1));
 				line = lines.get(line_count);
 				sToken = new StringTokenizer(line);
@@ -175,6 +172,7 @@ public class JED_Driver
 				if (count < 3)
 					{
 						System.err.println("Expected AT LEAST 3 parameters: #Cartesian Modes, #Distance Pair Modes, and #Modes Viz, but only got: " + count);
+						System.err.println(line);
 						System.err.println("Terminating program execution.");
 						System.exit(0);
 					}
@@ -210,12 +208,22 @@ public class JED_Driver
 					}
 				if (number_of_modes_viz > 0)
 					{
+						if (number_of_modes_viz > number_of_modes_cartesian)
+							{
+								System.err.println("The number of Cartesian Modes to Visualize is greater than the number of Cartesian Modes Available:");
+								System.err.println("Number of Cartesian Modes to Visualize: " + number_of_modes_viz);
+								System.err.println("Number of Cartesian Modes AVAILABLE: " + number_of_modes_cartesian);
+								System.err.println("The Possible number of Cartesial Modes to Visualize is always <= Number of Cartesian Modes requested.");
+								System.err.println("Setting the number of Cartesian Modes to Visualize to the number of Cartesian Modes Available:");
+								number_of_modes_viz = number_of_modes_cartesian;
+								mode_amplitude = 1.5;
+							}
 						if (!sToken.hasMoreElements())
 							{
 								System.err.println("The number of Cartesian Modes to Visualize is greater than zero:  " + number_of_modes_viz);
 								System.err.println("Expected the Mode Amplitude parameter on this line (Field 4).");
-								System.err.println("Setting mode apmlitude to default value of 1.000");
-								mode_amplitude = 1.000;
+								System.err.println("Setting mode apmlitude to default value of 1.5");
+								mode_amplitude = 1.5;
 							}
 						if (sToken.hasMoreElements())
 							{
@@ -226,8 +234,9 @@ public class JED_Driver
 								if (!OK || mode_amplitude <= 0)
 									{
 										System.err.println("Mode Amplitude MUST be a decimal number > 0.");
-										System.err.println("Terminating program execution.");
-										System.exit(0);
+										System.err.println("Suggested values range from 1.5 to 3.5 depending on the system");
+										System.err.println("Setting mode apmlitude to default value of 1.5");
+										mode_amplitude = 1.5;
 									}
 							}
 					}
@@ -268,8 +277,7 @@ public class JED_Driver
 								System.exit(0);
 							}
 					}
-				/* *********************************************************************************************************************************************
-				 * ***** */
+				/* **************************************************************************************************************************************** */
 				System.out.println("Processing line: " + (line_count + 1));
 				line = lines.get(line_count);
 				sToken = new StringTokenizer(line);
@@ -289,8 +297,7 @@ public class JED_Driver
 						System.exit(0);
 					}
 				line_count++;
-				/* *********************************************************************************************************************************************
-				 * ***** */
+				/* **************************************************************************************************************************************** */
 				System.out.println("Processing line: " + (line_count + 1));
 				line = lines.get(line_count);
 				sToken = new StringTokenizer(line);
@@ -298,6 +305,7 @@ public class JED_Driver
 				if (count < 2)
 					{
 						System.err.println("Expected 2 parameters: Job Description and Reference PDB File, but only got: " + count);
+						System.err.println(line);
 						System.err.println("Terminating program execution.");
 						System.exit(0);
 					}
@@ -324,8 +332,7 @@ public class JED_Driver
 							}
 					}
 				line_count++;
-				/* *********************************************************************************************************************************************
-				 * ***** */
+				/* **************************************************************************************************************************************** */
 				if (do_cartesian)
 					{
 						System.out.println("Processing line: " + (line_count + 1));
@@ -342,8 +349,7 @@ public class JED_Driver
 							}
 						line_count++;
 					}
-				/* *********************************************************************************************************************************************
-				 * ***** */
+				/* **************************************************************************************************************************************** */
 				if (do_dist_pairs)
 					{
 
@@ -362,8 +368,7 @@ public class JED_Driver
 							}
 						line_count++;
 					}
-				/* *********************************************************************************************************************************************
-				 * ***** */
+				/* **************************************************************************************************************************************** */
 				if (!read_PDBs)
 					{
 
@@ -375,6 +380,7 @@ public class JED_Driver
 						if (count < 2)
 							{
 								System.err.println("Expected 2 parameters: Coordinate File Matrix and the Reference Column, but only got: " + count);
+								System.err.println(line);
 								System.err.println("Terminating program execution.");
 								System.exit(0);
 							}
@@ -537,14 +543,8 @@ public class JED_Driver
 				trace_CORR = cSS.get_Trace_CORR();
 				trace_PCORR = cSS.get_Trace_P_CORR();
 				cond_cov = cSS.get_cond_COV();
-				cond_corr = cSS.get_cond_CORR();
-				cond_pcorr = cSS.get_Cond_P_CORR();
 				det_cov = cSS.get_Det_COV();
-				det_corr = cSS.get_Det_CORR();
-				det_pcorr = cSS.get_Det_P_CORR();
 				rank_cov = cSS.get_Rank_COV();
-				rank_corr = cSS.get_Rank_CORR();
-				rank_pcorr = cSS.get_Rank_P_CORR();
 				top_cartesian_evectors_COV = cSS.getTop_cartesian_evectors_COV();
 				top_cartesian_evectors_CORR = cSS.getTop_cartesian_evectors_CORR();
 				top_cartesian_evectors_PCORR = cSS.getTop_cartesian_evectors_P_CORR();
@@ -593,31 +593,34 @@ public class JED_Driver
 			{
 				try
 					{
-						log_writer.write("\nPERFORMING cPCA, Computing Top " + number_of_modes_cartesian + " modes." + "\n");
-						log_writer.write("\nResidue list for Cartesian subset:  " + rl_cartesian + "\n");
+						log_writer.write("\nPERFORMING cPCA, Computing Top " + number_of_modes_cartesian + " modes." + "\n\n");
+						log_writer.write("Residue list for Cartesian subset:  " + rl_cartesian + "\n");
 						log_writer.write("Number of residues in Cartesian subset: " + number_of_residues_cartesian + "\n");
 						if (percent > 0) log_writer.write("The transformed data was trimmed by removing " + (percent * 100)
 								+ " percent of the samples based on conformation RMSD." + "\n");
 						else log_writer.write("No samples were removed from the data" + "\n");
 						if (z_cut > 0) log_writer.write("The coordinate values with Z-scores beyond |" + z_cut + "| were set to their mean value.\n\n");
-						else log_writer.write("No coordinate outliers were adjusted.\n\n");
-
+						else log_writer.write("No coordinate outliers were adjusted.\n");
 						if (trace_COV >= 1.00) log_writer.write("Trace of the Covariance Matrix = " + nff.format(trace_COV) + "\n");
 						if (trace_COV < 1.00) log_writer.write("Trace of the Covariance Matrix = " + nf.format(trace_COV) + "\n");
-
 						log_writer.write("Condition Number of the Covariance Matrix = " + nff.format(cond_cov) + "\n");
 						log_writer.write("Determinant of the Covariance Matrix = " + (det_cov) + "\n");
-						log_writer.write("Rank of the Covariance Matrix = " + nff.format(rank_cov) + "\n\n");
+						log_writer.write("Rank of the Covariance Matrix = " + nff.format(rank_cov) + "\n");
 						log_writer.write("Trace of the Correlation Matrix = " + nff.format(trace_CORR) + "\n");
-						log_writer.write("Condition Number of the Correlation Matrix = " + nff.format(cond_corr) + "\n");
-						log_writer.write("Determinant of the Correlation Matrix = " + (det_corr) + "\n");
-						log_writer.write("Rank of the Correlation Matrix = " + nff.format(rank_corr) + "\n\n");
 						log_writer.write("Trace of the Partial Correlation Matrix = " + nff.format(trace_PCORR) + "\n");
-						log_writer.write("Condition Number of the Partial Correlation Matrix = " + nff.format(cond_pcorr) + "\n");
-						log_writer.write("Determinant of the Partial Correlation Matrix = " + (det_pcorr) + "\n");
-						log_writer.write("Rank of the Partial Correlation Matrix = " + nff.format(rank_pcorr) + "\n\n");
-
-						log_writer.write("\nPDB file with B-factors replaced by residue RMSDs: ss_" + number_of_residues_cartesian + "_RMSF_edited.pdb" + "\n");
+						log_writer.write("PDB file with B-factors replaced by residue RMSDs: ss_" + number_of_residues_cartesian + "_RMSF_edited.pdb" + "\n");
+						log_writer.write("The DVPs (PCs) from from the 3 different models were calculated using:" + "\n");
+						log_writer.write("Standard dot product(dp), normed dp, weighted dp (by eigenvalue), and weighted normed dp" + "\n");
+						if (number_of_modes_cartesian < 2) log_writer.write("Since the number of modes is less than 2, no FE calculation will be done." + "\n");
+						if (number_of_modes_cartesian >= 2)
+							{
+								log_writer.write("The Free energy (delta_G) was determined using the first 2 standard DVPs as order parameters." + "\n");
+								log_writer.write("Probabilities were calculated using 2D Kernel Density Estimation with Gaussian kernels." + "\n");
+							}
+						log_writer.write("Subspace analysis was done comparing the top vector spaces from the 3 different models." + "\n");
+						log_writer.write("Comparators include RMSIP and Principle Angles, for the essential subspace and iterated comparisons from dim 1 to "
+								+ number_of_modes_cartesian + "\n");
+						log_writer.write("Additional log files can be found in the /SSA directory tree." + "\n\n");
 						log_writer.flush();
 
 					} catch (IOException e)
@@ -653,16 +656,8 @@ public class JED_Driver
 				cond_d_cov = dpSS.getCond_cov();
 				det_d_cov = dpSS.getDet_cov();
 				rank_d_cov = dpSS.getRank_cov();
-
 				trace_d_corr = dpSS.getTrace_dist_CORR();
-				cond_d_corr = dpSS.getCond_corr();
-				det_d_corr = dpSS.getDet_corr();
-				rank_d_corr = dpSS.getRank_corr();
-
 				trace_d_pcorr = dpSS.getTrace_dist_P_CORR();
-				cond_d_pcorr = dpSS.getCond_pcorr();
-				det_d_pcorr = dpSS.getDet_pcorr();
-				rank_d_pcorr = dpSS.getRank_pcorr();
 
 				top_distance_evectors_COV = dpSS.getTop_distance_evectors_COV();
 				top_distance_evectors_CORR = dpSS.getTop_distance_evectors_CORR();
@@ -709,23 +704,14 @@ public class JED_Driver
 						log_writer.write("\nResidue Pair list:  " + rl_dist_pairs + "\n");
 						log_writer.write("Number of residues pairs: " + number_of_residue_pairs + "\n");
 						if (z_cut > 0) log_writer.write("The distance values with Z-scores beyond |" + z_cut + "| were set to their mean value.\n\n");
-						else log_writer.write("No coordinate outliers were adjusted.\n\n");
-
+						else log_writer.write("No coordinate outliers were adjusted.\n");
 						if (trace_d_cov >= 1.00) log_writer.write("Trace of the Covariance Matrix = " + nff.format(trace_d_cov) + "\n");
 						if (trace_d_cov < 1.00) log_writer.write("Trace of the Covariance Matrix = " + nf.format(trace_d_cov) + "\n");
-
 						log_writer.write("Condition Number of the Covariance Matrix = " + nff.format(cond_d_cov) + "\n");
 						log_writer.write("Determinant of the Covariance Matrix = " + nff.format(det_d_cov) + "\n");
-						log_writer.write("Rank of the Covariance Matrix = " + nff.format(rank_d_cov) + "\n\n");
+						log_writer.write("Rank of the Covariance Matrix = " + nff.format(rank_d_cov) + "\n");
 						log_writer.write("Trace of the Correlation Matrix = " + nff.format(trace_d_corr) + "\n");
-						log_writer.write("Condition Number of the Correlation Matrix = " + nff.format(cond_d_corr) + "\n");
-						log_writer.write("Determinant of the Correlation Matrix = " + nff.format(det_d_corr) + "\n");
-						log_writer.write("Rank of the Correlation Matrix = " + nff.format(rank_d_corr) + "\n\n");
 						log_writer.write("Trace of the Partial Correlation Matrix = " + nff.format(trace_d_pcorr) + "\n");
-						log_writer.write("Condition Number of the Partial Correlation Matrix = " + nff.format(cond_d_pcorr) + "\n");
-						log_writer.write("Determinant of the Partial Correlation Matrix = " + nff.format(det_d_pcorr) + "\n");
-						log_writer.write("Rank of the Partial Correlation Matrix = " + nff.format(rank_d_pcorr) + "\n\n");
-
 						log_writer.write("\nMEANs and STANDARD DEVIATIONs for the Residue Pair Distances: " + "\n\n");
 						log_writer.write(String.format("%-12s%-16s%-16s%-16s%n", "Res1", "Res2", "Mean", "Std_Dev"));
 						for (int i = 0; i < number_of_residue_pairs; i++)
@@ -734,6 +720,19 @@ public class JED_Driver
 										chain_idents2.get(i) + residue_list_dp_original2.get(i), nf.format(residue_distance_means[i]),
 										nf.format(residue_distance_std_devs[i])));
 							}
+						log_writer.write("\nThe DVPs (PCs) from from the 3 different models were calculated using:" + "\n");
+						log_writer.write("Standard dot product(dp), normed dp, weighted dp (by eigenvalue), and weighted normed dp." + "\n");
+						if (number_of_modes_dist_pairs < 2)
+							log_writer.write("Since the number of modes is less than 2, no FE calculation will be done." + "\n");
+						if (number_of_modes_dist_pairs >= 2)
+							{
+								log_writer.write("The Free energy (delta_G) was determined using the first 2 standard DVPs as order parameters." + "\n");
+								log_writer.write("Probabilities were calculated using 2D Kernel Density Estimation with Gaussian kernels." + "\n");
+							}
+						log_writer.write("Subspace analysis was done to compare the top vector spaces from the 3 different models." + "\n");
+						log_writer.write("Comparators include RMSIP and Principle Angles, for the essential subspace and iterated comparisons from dim 1 to "
+								+ number_of_modes_dist_pairs + "\n");
+						log_writer.write("Additional log files can be found in the /SSA directory tree." + "\n\n");
 						log_writer.flush();
 
 					} catch (IOException e)
@@ -751,27 +750,19 @@ public class JED_Driver
 				try
 					{
 						log_writer.write("\nPERFORMING dpPCA, Computing Top " + number_of_modes_dist_pairs + " modes.\n");
+						if (number_of_modes_dist_pairs < 2)
+							log_writer.write("\nSince the number of modes is less than 2, no FE calculation will be done." + "\n");
 						log_writer.write("\nResidue Pair list:  " + rl_dist_pairs + "\n");
 						log_writer.write("Number of residue pairs: " + number_of_residue_pairs + "\n");
 						if (z_cut > 0) log_writer.write("The distance values with Z-scores beyond |" + z_cut + "| were set to their mean value.\n\n");
-						else log_writer.write("No coordinate outliers were adjusted.\n\n");
-
+						else log_writer.write("No coordinate outliers were adjusted.\n");
 						if (trace_d_cov >= 1.00) log_writer.write("Trace of the Covariance Matrix = " + nff.format(trace_d_cov) + "\n");
 						if (trace_d_cov < 1.00) log_writer.write("Trace of the Covariance Matrix = " + nf.format(trace_d_cov) + "\n");
-
 						log_writer.write("Condition Number of the Covariance Matrix = " + nff.format(cond_d_cov) + "\n");
 						log_writer.write("Determinant of the Covariance Matrix = " + nff.format(det_d_cov) + "\n");
-						log_writer.write("Rank of the Covariance Matrix = " + nff.format(rank_d_cov) + "\n\n");
+						log_writer.write("Rank of the Covariance Matrix = " + nff.format(rank_d_cov) + "\n");
 						log_writer.write("Trace of the Correlation Matrix = " + nff.format(trace_d_corr) + "\n");
-						log_writer.write("Condition Number of the Correlation Matrix = " + nff.format(cond_d_corr) + "\n");
-						log_writer.write("Determinant of the Correlation Matrix = " + nff.format(det_d_corr) + "\n");
-						log_writer.write("Rank of the Correlation Matrix = " + nff.format(rank_d_corr) + "\n\n");
 						log_writer.write("Trace of the Partial Correlation Matrix = " + nff.format(trace_d_pcorr) + "\n");
-						log_writer.write("Condition Number of the Partial Correlation Matrix = " + nff.format(cond_d_pcorr) + "\n");
-						log_writer.write("Determinant of the Partial Correlation Matrix = " + nff.format(det_d_pcorr) + "\n");
-						log_writer.write("Rank of the Partial Correlation Matrix = " + nff.format(rank_d_pcorr) + "\n\n");
-
-
 						log_writer.write("\nMEANs and STANDARD DEVIATIONs for the Residue Pair Distances: " + "\n\n");
 						log_writer.write(String.format("%-12s%-16s%-16s%-16s%n", "Res1", "Res2", "Mean", "Std_Dev"));
 						for (int i = 0; i < number_of_residue_pairs; i++)
@@ -779,6 +770,17 @@ public class JED_Driver
 								log_writer.write(String.format("%-12s%-16s%-16s%-16s%n", residue_list_dp_original1.get(i), residue_list_dp_original2.get(i),
 										nf.format(residue_distance_means[i]), nf.format(residue_distance_std_devs[i])));
 							}
+						log_writer.write("\nThe DVPs (PCs) from from the 3 different models were calculated using:" + "\n");
+						log_writer.write("Standard dot product(dp), normed dp, weighted dp (by eigenvalue), and weighted normed dp." + "\n");
+						if (number_of_modes_dist_pairs >= 2)
+							{
+								log_writer.write("The Free energy (delta_G) was determined using the first 2 standard DVPs as order parameters." + "\n");
+								log_writer.write("Probabilities were calculated using 2D Kernel Density Estimation with Gaussian kernels." + "\n");
+							}
+						log_writer.write("Subspace analysis was done to compare the top vector spaces from the 3 different models." + "\n");
+						log_writer.write("Comparators include RMSIP and Principle Angles, for the essential subspace and iterated comparisons from dim 1 to "
+								+ number_of_modes_dist_pairs + "\n");
+						log_writer.write("Additional log files can be found in the /SSA directory tree." + "\n\n");
 						log_writer.flush();
 
 					} catch (IOException e)
@@ -884,8 +886,10 @@ public class JED_Driver
 			{
 				try
 					{
-						log_writer.write("\nPerforming Cartesian Mode Visualization on Top  " + number_of_modes_viz + "  cPCA modes.\n");
-						log_writer.write("\n" + "Sets of 20 structures were generated to animate each cPCA mode, using COV, CORR, and PCORR PCA models.\n");
+						log_writer.write("Performing Cartesian Mode Visualization on Top  " + number_of_modes_viz + "  cPCA modes.\n");
+						log_writer.write("Sets of 20 structures were generated to animate each selected cPCA mode, for the COV, CORR, and PCORR PCA models.\n");
+						log_writer.write("Atoms of each residue were perturbed along the mode eigenvector using a sine function ranging from 0 to 2PI.\n");
+						log_writer.write("A Pymol(TM) script was generated for each mode to play the mode structures as a movie.\n");
 						log_writer.write("MODE AMPLITUDE = " + nf.format(mode_amplitude) + "\n");
 						log_writer.flush();
 

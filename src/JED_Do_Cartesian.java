@@ -134,7 +134,7 @@ public class JED_Do_Cartesian
 					}
 				if (number_of_modes_SS > 3 * number_of_residues)
 					{
-						System.err.println("FATAL ERROR!");
+						System.err.println("ERROR!");
 						System.err.println("Number of Cartesian Modes REQUESTED: " + number_of_modes_SS);
 						System.err.println("Number of Cartesian Modes AVAILABLE: " + 3 * number_of_residues);
 						System.err.println("Possible number of Cartesial Modes is always <= 3*Number_of_Residues in the chosen subset.");
@@ -158,7 +158,7 @@ public class JED_Do_Cartesian
 					}
 				if (number_of_modes_SS > 3 * number_of_residues)
 					{
-						System.err.println("FATAL ERROR!");
+						System.err.println("ERROR!");
 						System.err.println("Number of Cartesian Modes REQUESTED: " + number_of_modes_SS);
 						System.err.println("Number of Cartesian Modes AVAILABLE: " + 3 * number_of_residues);
 						System.err.println("Possible number of Cartesial Modes is always <= 3*Number_of_Residues in the chosen subset.");
@@ -238,10 +238,7 @@ public class JED_Do_Cartesian
 						pca_mode_min_COV = c_pca.get_pca_mode_COV_min();
 						pca_mode_max_COV = c_pca.get_pca_mode_COV_max();
 						// CORRELATION METHOD
-						cond_CORR = c_pca.get_cond_CORR();
 						trace_CORR = c_pca.get_trace_CORR();
-						det_CORR = c_pca.get_det_CORR();
-						rank_CORR = c_pca.get_rank_CORR();
 						eigenvalues_CORR = c_pca.getEigenvalues_CORR();
 						top_cartesian_evectors_CORR = c_pca.getTop_evectors_CORR();
 						top_cartesian_eigenvalues_CORR = c_pca.getEigenvalues_CORR();
@@ -252,10 +249,7 @@ public class JED_Do_Cartesian
 						pca_mode_min_CORR = c_pca.get_pca_mode_CORR_min();
 						pca_mode_max_CORR = c_pca.get_pca_mode_CORR_max();
 						// PARTIAL CORRELATION METHOD
-						cond_P_CORR = c_pca.get_cond_P_CORR();
 						trace_P_CORR = c_pca.get_trace_P_CORR();
-						det_P_CORR = c_pca.get_det_P_CORR();
-						rank_P_CORR = c_pca.get_rank_P_CORR();
 						eigenvalues_P_CORR = c_pca.getEigenvalues_P_CORR();
 						top_cartesian_evectors_P_CORR = c_pca.getTop_evectors_P_CORR();
 						top_cartesian_eigenvalues_P_CORR = c_pca.getEigenvalues_P_CORR();
@@ -289,7 +283,7 @@ public class JED_Do_Cartesian
 				System.gc();
 			}
 
-		/* ************************************** SETTERS ******************************************************* */
+		/* *********************************************** SETTERS ********************************************************************* */
 
 		/**
 		 * Sets the Z cutoff for outlier processing

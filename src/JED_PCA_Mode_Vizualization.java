@@ -39,7 +39,7 @@ public class JED_PCA_Mode_Vizualization
 
 		String directory, out_dir, description, output_file, file_name_head, type, CA = "CA", C = "C", N = "N", O = "O";
 		int number_of_modes_viz, number_of_residues, ROWS_Evectors, ROWS_Modes, COLS;
-		double mode_amplitude;
+		double mode_amplitude, normed_mode_amplitude;
 		final double FLOOR = 1.00E-3, delta_y = 99;
 		double[] pca_mode_max, pca_mode_min;
 		List<Integer> residue_list_original;
@@ -97,7 +97,7 @@ public class JED_PCA_Mode_Vizualization
 
 				if (number_of_modes_viz > COLS)
 					{
-						System.err.println("FATAL ERROR!");
+						System.err.println("ERROR!");
 						System.err.println("Number of Cartesian Modes to Visualize REQUESTED: " + number_of_modes_viz);
 						System.err.println("Number of Cartesian Modes AVAILABLE: " + COLS);
 						System.err.println("The Possible number of Cartesial Modes to Visualize is always <= Number of Cartesian Modes requested.");
@@ -145,16 +145,13 @@ public class JED_PCA_Mode_Vizualization
 						double[] evector_array = evector.getColumnPackedCopy();
 						Arrays.sort(evector_array);
 						double evector_max = Math.max(Math.abs(evector_array[0]), Math.abs(evector_array[ROWS_Evectors - 1]));
-						mode_amplitude = 1.00 - evector_max;
+						normed_mode_amplitude = mode_amplitude - evector_max;
 
 						try
 							{
-								for (float mc = -1; mc < 1; mc += .1) // perturbs the eigenvector components
+								for (double mc = 0; mc < (2 * Math.PI); mc += (Math.PI / 10)) // perturbs the eigenvector components sinusoidally
 									{
-										frame_index = (int) (mc * 10 + 10);
-
 										f_index = String.format("%03d", frame_index + 1);
-
 										String output_file = file_name_head + "_Mode_" + (outer + 1) + "_" + type + "_frame_" + f_index + ".pdb";
 										output_file_writer = new BufferedWriter(new FileWriter(output_file));
 										for (int index = 0; index < residue_list_original.size(); index++) // iterates over each residue in the subset
@@ -170,15 +167,13 @@ public class JED_PCA_Mode_Vizualization
 																double v_x = evector.get(index, 0);
 																double v_y = evector.get((index + number_of_residues), 0);
 																double v_z = evector.get((index + 2 * number_of_residues), 0);
-
-																double w_x = v_x * mc * mode_amplitude;
-																double w_y = v_y * mc * mode_amplitude;
-																double w_z = v_z * mc * mode_amplitude;
-
-																a.x = x_coord + w_x;
-																a.y = y_coord + w_y;
-																a.z = z_coord + w_z;
-
+																double w = Math.sin(mc);
+																double shift_x = v_x * w * mode_amplitude;
+																double shift_y = v_y * w * mode_amplitude;
+																double shift_z = v_z * w * mode_amplitude;
+																a.x = x_coord + shift_x;
+																a.y = y_coord + shift_y;
+																a.z = z_coord + shift_z;
 																double bff = (mode.get(index, 0));
 																if (bff < FLOOR) bff = FLOOR;
 																double log_bff = Math.log10(bff);
@@ -190,6 +185,7 @@ public class JED_PCA_Mode_Vizualization
 										parser.write_PDB(output_file_writer, atoms, formatter);
 										output_file_writer.close();
 										output_file_writer = null;
+										frame_index++;
 										System.gc();
 									}
 

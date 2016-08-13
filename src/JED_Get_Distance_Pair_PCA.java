@@ -139,7 +139,7 @@ public class JED_Get_Distance_Pair_PCA
 				path = file_name_head + "_Std_Devs_of_Variables.txt";
 				Matrix_IO.write_Matrix(residue_std_devs, path, 12, 6);
 
-				file_name_head = out_dir_COV + "_ss_" + number_of_pairs + "_Residue_Pairs";
+				file_name_head = out_dir_COV + "ss_" + number_of_pairs + "_Residue_Pairs";
 
 				path = file_name_head + "_covariance_matrix.txt";
 				Matrix_IO.write_Matrix(COV_dist, path, 12, 6);
@@ -162,9 +162,9 @@ public class JED_Get_Distance_Pair_PCA
 				System.gc();
 
 				trace_CORR = CORR_dist.trace();
-				cond_CORR = CORR_dist.cond();
-				det_CORR = CORR_dist.det();
-				rank_CORR = CORR_dist.rank();
+				// cond_CORR = CORR_dist.cond();
+				// det_CORR = CORR_dist.det();
+				// rank_CORR = CORR_dist.rank();
 
 				file_name_head = out_dir_CORR + "ss_" + number_of_pairs + "_Residue_Pairs";
 				path = file_name_head + "_correlation_matrix.txt";
@@ -186,9 +186,9 @@ public class JED_Get_Distance_Pair_PCA
 				pcorr_dist = PCA.get_partial_correlation_matrix(precision_cov);
 
 				trace_P_CORR = pcorr_dist.trace();
-				cond_P_CORR = pcorr_dist.cond();
-				det_P_CORR = pcorr_dist.det();
-				rank_P_CORR = pcorr_dist.rank();
+				// cond_P_CORR = pcorr_dist.cond();
+				// det_P_CORR = pcorr_dist.det();
+				// rank_P_CORR = pcorr_dist.rank();
 
 				file_name_head = out_dir_P_CORR + "ss_" + number_of_pairs;
 				Matrix_IO.write_Matrix(pcorr_dist, file_name_head + "_partial_correlation_matrix.txt", 12, 6);
@@ -218,7 +218,7 @@ public class JED_Get_Distance_Pair_PCA
 					}
 				Collections.sort(eigenvalues_COV, Collections.reverseOrder());
 				path = file_name_head + "_eigenvalues_COV.txt";
-				List_IO.write_Double_List(eigenvalues_COV, path, 6);
+				List_IO.write_Double_List(eigenvalues_COV, path, 12);
 			}
 
 		private void write_top_evals_COV()
@@ -270,7 +270,7 @@ public class JED_Get_Distance_Pair_PCA
 				path = file_name_head + "_top_" + number_of_modes + "_eigenvectors_COV.txt";
 				Matrix_IO.write_Matrix(top_evectors_dist_COV, path, 12, 6);
 				path = file_name_head + "_inverse_covariance_matrix.txt";
-				Matrix_IO.write_Matrix(precision_cov, path, 12, 3);
+				Matrix_IO.write_Matrix(precision_cov, path, 12, 6);
 				ss_evectors = null;
 			}
 
@@ -336,7 +336,7 @@ public class JED_Get_Distance_Pair_PCA
 					}
 				Collections.sort(eigenvalues_CORR, Collections.reverseOrder());
 				path = file_name_head + "_eigenvalues_CORR.txt";
-				List_IO.write_Double_List(eigenvalues_CORR, path, 6);
+				List_IO.write_Double_List(eigenvalues_CORR, path, 12);
 			}
 
 		private void write_top_evals_CORR()
@@ -388,7 +388,7 @@ public class JED_Get_Distance_Pair_PCA
 				path = file_name_head + "_top_" + number_of_modes + "_eigenvectors_CORR.txt";
 				Matrix_IO.write_Matrix(top_evectors_dist_CORR, path, 12, 6);
 				path = file_name_head + "_inverse_correlation_matrix.txt";
-				Matrix_IO.write_Matrix(precision_corr, path, 12, 3);
+				Matrix_IO.write_Matrix(precision_corr, path, 12, 6);
 				ss_evectors = null;
 				System.gc();
 			}

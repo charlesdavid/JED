@@ -31,7 +31,7 @@ public class JED_Get_Distance_Pair_DVPs
 
 		String directory, out_dir, description, type, file_name_head, path, Q = "COV", R = "CORR", PC = "PCORR";
 		int number_of_modes, reference_column, number_of_conformations, number_of_pairs, ROWS, COLS;
-		Matrix input_coords, delta_vector_series, top_evectors, projections, normed_projections, weighted_projections, weighted_normed_projections;
+		Matrix FE, input_coords, delta_vector_series, top_evectors, projections, normed_projections, weighted_projections, weighted_normed_projections;
 		Projector P;
 		List<Double> top_eigenvals;
 		boolean exist, success;
@@ -113,7 +113,7 @@ public class JED_Get_Distance_Pair_DVPs
 						delta_vector_series.setMatrix(0, ROWS - 1, b, b, delta);
 					}
 				input_coords = null;
-				path = directory + "JED_RESULTS_" + description + "/dpPCA/" + number_of_pairs + "_Residue_Pairs_Delta_Vectors.txt";
+				path = directory + "JED_RESULTS_" + description + "/dpPCA/ss_" + number_of_pairs + "_Residue_Pairs_Delta_Vectors.txt";
 				Matrix_IO.write_Matrix(delta_vector_series, path, 9, 3);
 			}
 
@@ -126,10 +126,6 @@ public class JED_Get_Distance_Pair_DVPs
 				normed_projections = new Matrix(number_of_conformations, number_of_modes);
 				weighted_projections = new Matrix(number_of_conformations, number_of_modes);
 				weighted_normed_projections = new Matrix(number_of_conformations, number_of_modes);
-				double[] order_parameter_1 = new double[number_of_conformations];
-				double[] order_parameter_1_sorted = new double[number_of_conformations];
-				double[] order_parameter_2 = new double[number_of_conformations];
-				double[] order_parameter_2_sorted = new double[number_of_conformations];
 
 				for (int outer = 0; outer < number_of_modes; outer++)
 					{
@@ -152,52 +148,58 @@ public class JED_Get_Distance_Pair_DVPs
 								normed_projections.set(inner, outer, normed_dp);
 								weighted_projections.set(inner, outer, w_dp);
 								weighted_normed_projections.set(inner, outer, weighted_normed_dp);
-								if (outer == 0) order_parameter_1[inner] = w_dp;
-								if (outer == 0) order_parameter_1_sorted[inner] = w_dp;
-								if (outer == 1) order_parameter_2[inner] = w_dp;
-								if (outer == 1) order_parameter_2_sorted[inner] = w_dp;
 							}
 					}
-
-				double[] kde_array = new double[2 * number_of_conformations];// 2D KDE using Gaussian Functions
-				for (int i = 0; i < number_of_conformations; i++)
+				if (number_of_modes >= 2) // Check to see if there are enough modes to do the FE Calculations
 					{
-						kde_array[i + i] = order_parameter_1[i];
-						kde_array[i + i + 1] = order_parameter_2[i];
-					}
-				Arrays.sort(order_parameter_1_sorted);
-				Arrays.sort(order_parameter_2_sorted);
-				double op1max = order_parameter_1_sorted[number_of_conformations - 1];
-				double op2max = order_parameter_2_sorted[number_of_conformations - 1];
-				double op1min = order_parameter_1_sorted[0];
-				double op2min = order_parameter_2_sorted[0];
-				double[] bounds =
-					{ op1min, op2min, op1max, op2max };
+						/* Get the first 2 DVPs to use as order parameters in the deltaG free energy calculations */
+						double[] order_parameter_1 = projections.getMatrix(0, number_of_conformations - 1, 0, 0).getColumnPackedCopy();
+						double[] order_parameter_2 = projections.getMatrix(0, number_of_conformations - 1, 1, 1).getColumnPackedCopy();
+						double[] order_parameter_1_sorted = projections.getMatrix(0, number_of_conformations - 1, 0, 0).getColumnPackedCopy();
+						double[] order_parameter_2_sorted = projections.getMatrix(0, number_of_conformations - 1, 1, 1).getColumnPackedCopy();
+						/* 2D KDE using Gaussian Functions */
+						double[] kde_array = new double[2 * number_of_conformations];
+						for (int i = 0; i < number_of_conformations; i++)
+							{
+								kde_array[i + i] = order_parameter_1[i];
+								kde_array[i + i + 1] = order_parameter_2[i];
+							}
+						Arrays.sort(order_parameter_1_sorted);
+						Arrays.sort(order_parameter_2_sorted);
+						double op1max = order_parameter_1_sorted[number_of_conformations - 1];
+						double op2max = order_parameter_2_sorted[number_of_conformations - 1];
+						double op1min = order_parameter_1_sorted[0];
+						double op2min = order_parameter_2_sorted[0];
+						double[] bounds = { op1min, op2min, op1max, op2max };
 
-				KDE = KernelDensityEstimate2d.compute(kde_array, 0, (number_of_conformations - 1), bounds, null, null);
+						KDE = KernelDensityEstimate2d.compute(kde_array, 0, (number_of_conformations - 1), bounds, null, null);
 
-				double[] probabilities = new double[number_of_conformations];
-				double[] probabilities_sorted = new double[number_of_conformations];
-				for (int i = 0; i < number_of_conformations; i++)
-					{
-						double prob = KDE.apply(order_parameter_1[i], order_parameter_2[i]);
-						probabilities[i] = prob;
-						probabilities_sorted[i] = prob;
-					}
-				Arrays.sort(probabilities_sorted);
-				final double prob_max = probabilities_sorted[number_of_conformations - 1];
-				final double ln_prob_max = Math.log(prob_max);
-				final double KBT = (-0.600); // Units are in kcal/mol, T = 300K (room temp)
-				Matrix FE = new Matrix(number_of_conformations, 3);
-				for (int i = 0; i < number_of_conformations; i++)
-					{
-						double prob = probabilities[i];
-						double ln_prob = Math.log(prob);
-						double delta_G = KBT * (ln_prob - ln_prob_max);
-						if (delta_G <= 0) delta_G = 0.00;// solves the -0.0000000000000 problem...
-						FE.set(i, 0, order_parameter_1[i]);
-						FE.set(i, 1, order_parameter_2[i]);
-						FE.set(i, 2, delta_G);
+						double[] probabilities = new double[number_of_conformations];
+						double[] probabilities_sorted = new double[number_of_conformations];
+						for (int i = 0; i < number_of_conformations; i++)
+							{
+								double prob = KDE.apply(order_parameter_1[i], order_parameter_2[i]);
+								probabilities[i] = prob;
+								probabilities_sorted[i] = prob;
+							}
+						Arrays.sort(probabilities_sorted);
+						final double prob_max = probabilities_sorted[number_of_conformations - 1];
+						final double ln_prob_max = Math.log(prob_max);
+						final double KBT = (-0.600); // Units are in kcal/mol, T = 300K (room temp)
+						FE = new Matrix(number_of_conformations, 3);
+						for (int i = 0; i < number_of_conformations; i++)
+							{
+								double prob = probabilities[i];
+								double ln_prob = Math.log(prob);
+								double delta_G = KBT * (ln_prob - ln_prob_max);
+								if (delta_G <= 0) delta_G = 0.00;// solves the -0.0000000000000 problem...
+								FE.set(i, 0, order_parameter_1[i]);
+								FE.set(i, 1, order_parameter_2[i]);
+								FE.set(i, 2, delta_G);
+							}
+						path = file_name_head + "_top_2_DVPs_&_Delta_G_" + type + ".txt";
+						Matrix_IO.write_Matrix(FE, path, 12, 6);
+						FE = null;
 					}
 
 				delta_vector_series = null;
@@ -213,9 +215,8 @@ public class JED_Get_Distance_Pair_DVPs
 				path = file_name_head + "_Residue_Pairs_top_" + number_of_modes + "_weighted_normed_DVPs_" + type + ".txt";
 				Matrix_IO.write_Matrix(weighted_normed_projections, path, 9, 3);
 				weighted_normed_projections = null;
-				path = file_name_head + "_top_2_DVPs_&_Delta_G_" + type + ".txt";
-				Matrix_IO.write_Matrix(FE, path, 24, 6);
-				FE = null;
+				
+				System.gc();
 			}
 
 		/* ******************************************************************************************************************************* */
