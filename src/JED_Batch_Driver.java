@@ -678,7 +678,7 @@ public class JED_Batch_Driver
 					log_writer.write("Trace of the Correlation Matrix = " + nff.format(trace_CORR) + "\n");
 					log_writer.write("Trace of the Partial Correlation Matrix = " + nff.format(trace_PCORR) + "\n");
 					log_writer.write("PDB file with B-factors replaced by residue RMSDs: ss_" + number_of_residues_cartesian + "_RMSF_edited.pdb" + "\n");
-					log_writer.write("The DVPs (PCs) from from the 3 different models were calculated using:" + "\n");
+					log_writer.write("The DVPs (PCs) from the 3 different models were calculated using:" + "\n");
 					log_writer.write("Standard dot product(dp), normed dp, weighted dp (by eigenvalue), and weighted normed dp" + "\n");
 					if (number_of_modes_cartesian < 2) log_writer.write("Since the number of modes is less than 2, no FE calculation will be done." + "\n");
 					if (number_of_modes_cartesian >= 2)
