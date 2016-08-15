@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -44,11 +45,12 @@ import Jama.Matrix;
 public class VIZ_Driver
 {
 
-	static String line, input_path, out_dir, PDB, eigenvectors, modes, maxes, mins, file_name_head, CA = "CA", C = "C", N = "N", O = "O", date;
+	static String line, input_path, out_dir, PDB, eigenvectors, modes, maxes, mins, file_name_head, CA = "CA", C = "C", N = "N", O = "O", date, type;
 	static int number_Of_Input_Lines, line_count, number_of_modes_viz, number_of_residues, ROWS_Evectors, ROWS_Modes, COLS;
-	static double mode_amplitude;
+	static double mode_amplitude, normed_mode_amplitude;
 	static final double FLOOR = 1.00E-3, delta_y = 99;
 	static int number_of_jobs, job_number;
+	static List<Integer> residue_list_original;
 	static List<Double> pca_mode_maxs, pca_mode_mins;
 	static Matrix top_evectors, square_pca_modes;
 	static BufferedWriter output_file_writer;
@@ -62,9 +64,10 @@ public class VIZ_Driver
 	static RoundingMode rm;
 	static long startTime, endTime, totalTime;
 	static List<String> lines;
+	static FortranFormat formatter;
+	static PDB_File_Parser parser;
 	static boolean exist, success, OK;
 
-	@SuppressWarnings("unchecked")
 	private static void read_data_files()
 		{
 			atoms = PDB_IO.Read_PDB(PDB);
@@ -85,7 +88,7 @@ public class VIZ_Driver
 
 			if (number_of_modes_viz > COLS)
 				{
-					System.err.println("FATAL ERROR!");
+					System.err.println("ERROR!");
 					System.err.println("Number of Cartesian Modes to Visualize REQUESTED: " + number_of_modes_viz);
 					System.err.println("Number of Cartesian Modes AVAILABLE: " + COLS);
 					System.err.println("The Possible number of Cartesial Modes to Visualize is always <= Number of Cartesian Modes requested.");
@@ -111,56 +114,53 @@ public class VIZ_Driver
 					String f_index = "";
 					int frame_index = 0;
 
+					Matrix evector = top_evectors.getMatrix(0, ROWS_Evectors - 1, outer, outer);
+					Matrix mode = square_pca_modes.getMatrix(0, ROWS_Modes - 1, outer, outer);
+
+					double[] evector_array = evector.getColumnPackedCopy();
+					Arrays.sort(evector_array);
+					double evector_max = Math.max(Math.abs(evector_array[0]), Math.abs(evector_array[ROWS_Evectors - 1]));
+					normed_mode_amplitude = (mode_amplitude - evector_max);
+
 					try
 						{
-							for (float mc = -1; mc < 1; mc += .1)
+							for (double mc = 0; mc < (2 * Math.PI); mc += (Math.PI / 10)) // perturbs the eigenvector components sinusoidally
 								{
-									frame_index = (int) (mc * 10 + 10);
-									Matrix evector = top_evectors.getMatrix(0, ROWS_Evectors - 1, outer, outer);
-									Matrix d_mode = square_pca_modes.getMatrix(0, ROWS_Modes - 1, outer, outer);
-
 									f_index = String.format("%03d", frame_index + 1);
-
-									String output_file = file_name_head + "_Mode_" + (outer + 1) + "_frame_" + f_index + ".pdb";
+									String output_file = file_name_head + "_Mode_" + (outer + 1) + "_" + type + "_frame_" + f_index + ".pdb";
 									output_file_writer = new BufferedWriter(new FileWriter(output_file));
-									int index = 0;
-									int count = 0;
-									for (Atom a : atoms)
+									for (int index = 0; index < residue_list_original.size(); index++) // iterates over each residue in the subset
 										{
-											index = (count / 4);  // there are 4 atom symbols in the if statement
-											if (a.symbol.equals(N) || a.symbol.equals(CA) || a.symbol.equals(C) || a.symbol.equals(O))
+											int residue_number = residue_list_original.get(index);
+											for (Atom a : atoms) // Iterates through the vector of atoms; shifts all atoms along the eigenvector
 												{
-													count++;
-													double x_coord = a.x;
-													double y_coord = a.y;
-													double z_coord = a.z;
-													double v_x = evector.get(index, 0);
-													double v_y = evector.get((index + number_of_residues), 0);
-													double v_z = evector.get((index + 2 * number_of_residues), 0);
-
-													double w_x = v_x * mc * mode_amplitude;
-													double w_y = v_y * mc * mode_amplitude;
-													double w_z = v_z * mc * mode_amplitude;
-
-													a.x = x_coord + w_x;
-													a.y = y_coord + w_y;
-													a.z = z_coord + w_z;
-
-													double bff = (d_mode.get(index, 0));
-													if (bff < FLOOR) bff = FLOOR;
-													double log_bff = Math.log10(bff);
-
-													double bf = ((slope * log_bff) - y_min);
-
-													a.setB_factor(bf);
-												} else
-												{
-													a.setB_factor(0);
+													if (a.res_number == residue_number)
+														{
+															double x_coord = a.x;
+															double y_coord = a.y;
+															double z_coord = a.z;
+															double v_x = evector.get(index, 0);
+															double v_y = evector.get((index + number_of_residues), 0);
+															double v_z = evector.get((index + 2 * number_of_residues), 0);
+															double w = Math.sin(mc);
+															double shift_x = v_x * w * normed_mode_amplitude;
+															double shift_y = v_y * w * normed_mode_amplitude;
+															double shift_z = v_z * w * normed_mode_amplitude;
+															a.x = x_coord + shift_x;
+															a.y = y_coord + shift_y;
+															a.z = z_coord + shift_z;
+															double bff = (mode.get(index, 0));
+															if (bff < FLOOR) bff = FLOOR;
+															double log_bff = Math.log10(bff);
+															double bf = ((slope * log_bff) - y_min);
+															a.setB_factor(bf);
+														}
 												}
 										}
-
-									PDB_IO.Write_PDB(output_file, atoms);
-
+									parser.write_PDB(output_file_writer, atoms, formatter);
+									output_file_writer.close();
+									output_file_writer = null;
+									frame_index++;
 									System.gc();
 								}
 
@@ -259,7 +259,7 @@ public class VIZ_Driver
 			if (OK) number_of_jobs = Integer.parseInt(test);
 			System.out.println("\tThe number of jobs =  " + number_of_jobs);
 			line_count++;
-			/* ************************************************************************************************************************************************** */
+			/* *********************************************************************************************************************************** */
 			System.out.println("Reading line " + (line_count + 1)); // Reads the divider line between the number of jobs and the first job
 			line = lines.get(line_count);
 			System.out.println(line + "\n");
@@ -277,7 +277,7 @@ public class VIZ_Driver
 					System.err.println("Terminating program execution.");
 					System.exit(0);
 				}
-			/* ************************************************************************************************************************************************** */
+			/* ************************************************************************************************************************************ */
 			System.out.println("Reading line " + (line_count + 1) + ", the FIRST LINE of job: " + (job_number + 1));
 			line = lines.get(line_count);
 			sToken = new StringTokenizer(line);
@@ -302,7 +302,7 @@ public class VIZ_Driver
 					System.exit(0);
 				}
 			line_count++;
-			/* ************************************************************************************************************************************************** */
+			/* ************************************************************************************************************************************ */
 			System.out.println("Reading line " + (line_count + 1) + ", the SECOND LINE of job: " + (job_number + 1));
 			line = lines.get(line_count);
 			sToken = new StringTokenizer(line);
@@ -315,7 +315,7 @@ public class VIZ_Driver
 					System.exit(0);
 				}
 			line_count++;
-			/* ************************************************************************************************************************************************** */
+			/* ************************************************************************************************************************************ */
 			System.out.println("Reading line " + (line_count + 1) + ", the THIRD LINE of job: " + (job_number + 1));
 			line = lines.get(line_count);
 			sToken = new StringTokenizer(line);
@@ -328,7 +328,7 @@ public class VIZ_Driver
 					System.exit(0);
 				}
 			line_count++;
-			/* ************************************************************************************************************************************************** */
+			/* ************************************************************************************************************************************ */
 			System.out.println("Reading line " + (line_count + 1) + ", the FOURTH LINE of job: " + (job_number + 1));
 			line = lines.get(line_count);
 			sToken = new StringTokenizer(line);
@@ -341,7 +341,7 @@ public class VIZ_Driver
 					System.exit(0);
 				}
 			line_count++;
-			/* ************************************************************************************************************************************************** */
+			/* ************************************************************************************************************************************ */
 			System.out.println("Reading line " + (line_count + 1) + ", the FIFTH LINE of job: " + (job_number + 1));
 			line = lines.get(line_count);
 			sToken = new StringTokenizer(line);
@@ -354,7 +354,7 @@ public class VIZ_Driver
 					System.exit(0);
 				}
 			line_count++;
-			/* ************************************************************************************************************************************************** */
+			/* ************************************************************************************************************************************ */
 			System.out.println("Reading line " + (line_count + 1) + ", the SIXTH LINE of job: " + (job_number + 1));
 			line = lines.get(line_count);
 			sToken = new StringTokenizer(line);
@@ -367,7 +367,7 @@ public class VIZ_Driver
 					System.exit(0);
 				}
 			line_count++;
-			/* ************************************************************************************************************************************************** */
+			/* ************************************************************************************************************************************ */
 			System.out.println("Reading line " + (line_count + 1) + ", the SEVENTH LINE of job: " + (job_number + 1));
 			line = lines.get(line_count);
 			sToken = new StringTokenizer(line);
@@ -393,12 +393,12 @@ public class VIZ_Driver
 						}
 				}
 			line_count++;
-			/* ************************************************************************************************************************************************** */
+			/* ************************************************************************************************************************************ */
 			line = lines.get(line_count); // Reads the divider line between jobs
 			System.out.println("Reading line " + (line_count + 1));
 			System.out.println(line + "\n");
 			line_count++;
-			/* ************************************************************************************************************************************************** */
+			/* ************************************************************************************************************************************ */
 		}
 
 	private static void initialize_Job_Log()
@@ -409,6 +409,7 @@ public class VIZ_Driver
 					log_writer = new BufferedWriter(new FileWriter(log));
 					log_writer.write("JED Cartesian Mode Visualization Driver version 1.0" + "\n");
 					log_writer.write("Reference PDB file: " + PDB + "\n");
+					log_writer.write("Residue list: " + residue_list_original + "\n");
 					log_writer.write("Eigenvector file: " + eigenvectors + "\n");
 					log_writer.write("Modes file: " + modes + "\n");
 					log_writer.write("Mode Maxes file: " + maxes + "\n");
