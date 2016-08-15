@@ -1,0 +1,18 @@
+2
+****************************************************************************************************************************
+3	1.5
+C:/Users/Charles/workspace/JED_1.0/JED_Test/Single/JED_RESULTS_TEST/cPCA/ss_151_RMSF_edited.pdb
+C:/Users/Charles/workspace/JED_1.0/JED_Test/Single/JED_RESULTS_TEST/cPCA/COV/ss_151_top_20_eigenvectors_COV.txt
+C:/Users/Charles/workspace/JED_1.0/JED_Test/Single/JED_RESULTS_TEST/cPCA/COV/ss_151_top_20_square_pca_modes_COV.txt
+C:/Users/Charles/workspace/JED_1.0/JED_Test/Single/JED_RESULTS_TEST/cPCA/COV/ss_151_top_20_square_pca_mode_MAXES_COV.txt
+C:/Users/Charles/workspace/JED_1.0/JED_Test/Single/JED_RESULTS_TEST/cPCA/COV/ss_151_top_20_square_pca_mode_MINS_COV.txt
+C:/Users/Charles/workspace/JED_1.0/JED_Test/Single/VIZ_TEST1/
+****************************************************************************************************************************
+3	1.5
+C:/Users/Charles/workspace/JED_1.0/JED_Test/Single/JED_RESULTS_TEST/cPCA/ss_151_RMSF_edited.pdb
+C:/Users/Charles/workspace/JED_1.0/JED_Test/Single/JED_RESULTS_TEST/cPCA/COV/ss_151_top_20_eigenvectors_COV.txt
+C:/Users/Charles/workspace/JED_1.0/JED_Test/Single/JED_RESULTS_TEST/cPCA/COV/ss_151_top_20_square_pca_modes_COV.txt
+C:/Users/Charles/workspace/JED_1.0/JED_Test/Single/JED_RESULTS_TEST/cPCA/COV/ss_151_top_20_square_pca_mode_MAXES_COV.txt
+C:/Users/Charles/workspace/JED_1.0/JED_Test/Single/JED_RESULTS_TEST/cPCA/COV/ss_151_top_20_square_pca_mode_MINS_COV.txt
+C:/Users/Charles/workspace/JED_1.0/JED_Test/Single/VIZ_TEST2/
+****************************************************************************************************************************
