@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Vector;
 
 import Jama.Matrix;
@@ -42,7 +41,6 @@ public class JED_PCA_Mode_Vizualization
 	double mode_amplitude, normed_mode_amplitude;
 	final double FLOOR = 1.00E-3, delta_y = 99;
 	double[] pca_mode_max, pca_mode_min;
-	List<Integer> residue_list_original;
 	Matrix top_evectors, square_pca_modes;
 	BufferedWriter output_file_writer;
 	Vector<Atom> atoms;
@@ -77,11 +75,10 @@ public class JED_PCA_Mode_Vizualization
 	 * @param T
 	 *            The PCA model: COV, CORR, or PCORR
 	 */
-	JED_PCA_Mode_Vizualization(String dir, String des, List<Integer> residues, Vector<Atom> atms, Matrix evects, Matrix modes, double[] maxs, double[] mins, double mode_amp, int num_modes, String T)
+	JED_PCA_Mode_Vizualization(String dir, String des, Vector<Atom> atms, Matrix evects, Matrix modes, double[] maxs, double[] mins, double mode_amp, int num_modes, String T)
 		{
 			directory = dir;
 			description = des;
-			residue_list_original = residues;
 			type = T;
 			out_dir = directory + "JED_RESULTS_" + description + "/" + "VIZ/" + type + "/";
 			exist = new File(out_dir).exists();
@@ -127,17 +124,17 @@ public class JED_PCA_Mode_Vizualization
 					double[] evector_array = evector.getColumnPackedCopy();
 					Arrays.sort(evector_array);
 					double evector_max = Math.max(Math.abs(evector_array[0]), Math.abs(evector_array[ROWS_Evectors - 1]));
-					normed_mode_amplitude = mode_amplitude - evector_max;
+					normed_mode_amplitude = Math.abs(mode_amplitude - evector_max);
 					try
 						{
-							for (double mc = 0; mc < (2 * Math.PI); mc += (Math.PI / 10)) // perturbs the eigenvector components sinusoidally
+							for (double mc = 0; mc < (2 * Math.PI); mc += (Math.PI / 10)) // loop for perturbing the eigenvector components sinusoidally
 								{
 									f_index = String.format("%03d", frame_index + 1);
 									String output_file = file_name_head + "_Mode_" + (outer + 1) + "_" + type + "_frame_" + f_index + ".pdb";
 									output_file_writer = new BufferedWriter(new FileWriter(output_file));
 									int index = 0;
 									int count = 0;
-									for (Atom a : atoms) // Iterates through the vector of atoms; shifts all atoms along the eigenvector
+									for (Atom a : atoms) // Iterates through the vector of atoms; shifts all backbone atoms along the eigenvector
 										{
 											index = (count / 4);  // there are 4 atom symbols in the if statement
 											if (a.symbol.equals(N) || a.symbol.equals(CA) || a.symbol.equals(C) || a.symbol.equals(O))
@@ -149,7 +146,8 @@ public class JED_PCA_Mode_Vizualization
 													double v_x = evector.get(index, 0);
 													double v_y = evector.get((index + number_of_residues), 0);
 													double v_z = evector.get((index + 2 * number_of_residues), 0);
-													double w = Math.sin(mc);
+													double w = Math.sin(mc); // sine function ensures the first structure is unperturbed;
+																			 // preserves chain connectivity in PyMol movies...
 													double shift_x = v_x * w * normed_mode_amplitude;
 													double shift_y = v_y * w * normed_mode_amplitude;
 													double shift_z = v_z * w * normed_mode_amplitude;

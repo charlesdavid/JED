@@ -523,7 +523,6 @@ public class JED_Driver
 			if (do_multi) cSS.do_Cartesian_Multi();
 
 			number_of_residues_cartesian = cSS.getNumber_of_residues();
-			residue_list_original = cSS.get_residue_list_original();
 			atoms = cSS.get_atoms();
 			trace_COV = cSS.get_Trace_COV();
 			trace_CORR = cSS.get_Trace_CORR();
@@ -593,12 +592,6 @@ public class JED_Driver
 					log_writer.write("PDB file with B-factors replaced by residue RMSDs: ss_" + number_of_residues_cartesian + "_RMSF_edited.pdb" + "\n");
 					log_writer.write("The DVPs (PCs) from the 3 different models were calculated using:" + "\n");
 					log_writer.write("Standard dot product(dp), normed dp, weighted dp (by eigenvalue), and weighted normed dp" + "\n");
-					if (number_of_modes_cartesian < 2) log_writer.write("Since the number of modes is less than 2, no FE calculation will be done." + "\n");
-					if (number_of_modes_cartesian >= 2)
-						{
-							log_writer.write("The Free energy (delta_G) was determined using the first 2 standard DVPs as order parameters." + "\n");
-							log_writer.write("Probabilities were calculated using 2D Kernel Density Estimation with Gaussian kernels." + "\n");
-						}
 					log_writer.write("Subspace analysis was done comparing the top vector spaces from the 3 different models." + "\n");
 					log_writer.write("Comparators include RMSIP and Principle Angles, for the essential subspace and iterated comparisons from dim 1 to " + number_of_modes_cartesian + "\n");
 					log_writer.write("Additional log files can be found in the /SSA directory tree." + "\n\n");
@@ -698,12 +691,6 @@ public class JED_Driver
 						}
 					log_writer.write("\nThe DVPs (PCs) from from the 3 different models were calculated using:" + "\n");
 					log_writer.write("Standard dot product(dp), normed dp, weighted dp (by eigenvalue), and weighted normed dp." + "\n");
-					if (number_of_modes_dist_pairs < 2) log_writer.write("Since the number of modes is less than 2, no FE calculation will be done." + "\n");
-					if (number_of_modes_dist_pairs >= 2)
-						{
-							log_writer.write("The Free energy (delta_G) was determined using the first 2 standard DVPs as order parameters." + "\n");
-							log_writer.write("Probabilities were calculated using 2D Kernel Density Estimation with Gaussian kernels." + "\n");
-						}
 					log_writer.write("Subspace analysis was done to compare the top vector spaces from the 3 different models." + "\n");
 					log_writer.write("Comparators include RMSIP and Principle Angles, for the essential subspace and iterated comparisons from dim 1 to " + number_of_modes_dist_pairs + "\n");
 					log_writer.write("Additional log files can be found in the /SSA directory tree." + "\n\n");
@@ -745,11 +732,6 @@ public class JED_Driver
 						}
 					log_writer.write("\nThe DVPs (PCs) from from the 3 different models were calculated using:" + "\n");
 					log_writer.write("Standard dot product(dp), normed dp, weighted dp (by eigenvalue), and weighted normed dp." + "\n");
-					if (number_of_modes_dist_pairs >= 2)
-						{
-							log_writer.write("The Free energy (delta_G) was determined using the first 2 standard DVPs as order parameters." + "\n");
-							log_writer.write("Probabilities were calculated using 2D Kernel Density Estimation with Gaussian kernels." + "\n");
-						}
 					log_writer.write("Subspace analysis was done to compare the top vector spaces from the 3 different models." + "\n");
 					log_writer.write("Comparators include RMSIP and Principle Angles, for the essential subspace and iterated comparisons from dim 1 to " + number_of_modes_dist_pairs + "\n");
 					log_writer.write("Additional log files can be found in the /SSA directory tree." + "\n\n");
@@ -833,18 +815,18 @@ public class JED_Driver
 	private static void do_Mode_Visualization()
 		{
 
-			JED_PCA_Mode_Vizualization cov = new JED_PCA_Mode_Vizualization(directory, description, residue_list_original, atoms, top_cartesian_evectors_COV, square_pca_modes_COV, pca_mode_max_COV,
-					pca_mode_min_COV, mode_amplitude, number_of_modes_viz, Q);
+			JED_PCA_Mode_Vizualization cov = new JED_PCA_Mode_Vizualization(directory, description, atoms, top_cartesian_evectors_COV, square_pca_modes_COV, pca_mode_max_COV, pca_mode_min_COV,
+					mode_amplitude, number_of_modes_viz, Q);
 			cov.get_Mode_Visualizations_SS();
 
 			System.gc();
 
-			JED_PCA_Mode_Vizualization corr = new JED_PCA_Mode_Vizualization(directory, description, residue_list_original, atoms, top_cartesian_evectors_CORR, square_pca_modes_CORR,
-					pca_mode_max_CORR, pca_mode_min_CORR, mode_amplitude, number_of_modes_viz, R);
+			JED_PCA_Mode_Vizualization corr = new JED_PCA_Mode_Vizualization(directory, description, atoms, top_cartesian_evectors_CORR, square_pca_modes_CORR, pca_mode_max_CORR, pca_mode_min_CORR,
+					mode_amplitude, number_of_modes_viz, R);
 			corr.get_Mode_Visualizations_SS();
 
-			JED_PCA_Mode_Vizualization pcorr = new JED_PCA_Mode_Vizualization(directory, description, residue_list_original, atoms, top_cartesian_evectors_PCORR, square_pca_modes_PCORR,
-					pca_mode_max_PCORR, pca_mode_min_PCORR, mode_amplitude, number_of_modes_viz, PC);
+			JED_PCA_Mode_Vizualization pcorr = new JED_PCA_Mode_Vizualization(directory, description, atoms, top_cartesian_evectors_PCORR, square_pca_modes_PCORR, pca_mode_max_PCORR,
+					pca_mode_min_PCORR, mode_amplitude, number_of_modes_viz, PC);
 			pcorr.get_Mode_Visualizations_SS();
 
 			System.gc();

@@ -62,7 +62,6 @@ public class JED_Batch_Driver
 	static RoundingMode rm;
 	static boolean read_PDBs, do_cartesian, do_dist_pairs, do_mode_viz, do_multi, do_no_pca;
 	static long startTime, endTime, totalTime;
-	private static List<Integer> residue_list_original;
 
 	private static void read_input_file()
 		{
@@ -610,7 +609,6 @@ public class JED_Batch_Driver
 			if (do_multi) cSS.do_Cartesian_Multi();
 
 			number_of_residues_cartesian = cSS.getNumber_of_residues();
-			residue_list_original = cSS.get_residue_list_original();
 			atoms = cSS.get_atoms();
 			trace_COV = cSS.get_Trace_COV();
 			trace_CORR = cSS.get_Trace_CORR();
@@ -920,18 +918,18 @@ public class JED_Batch_Driver
 
 	private static void do_Mode_Visualization()
 		{
-			JED_PCA_Mode_Vizualization cov = new JED_PCA_Mode_Vizualization(directory, description, residue_list_original, atoms, top_cartesian_evectors_COV, square_pca_modes_COV, pca_mode_max_COV,
-					pca_mode_min_COV, mode_amplitude, number_of_modes_viz, Q);
+			JED_PCA_Mode_Vizualization cov = new JED_PCA_Mode_Vizualization(directory, description, atoms, top_cartesian_evectors_COV, square_pca_modes_COV, pca_mode_max_COV, pca_mode_min_COV,
+					mode_amplitude, number_of_modes_viz, Q);
 			cov.get_Mode_Visualizations_SS();
 
 			System.gc();
 
-			JED_PCA_Mode_Vizualization corr = new JED_PCA_Mode_Vizualization(directory, description, residue_list_original, atoms, top_cartesian_evectors_CORR, square_pca_modes_CORR,
-					pca_mode_max_CORR, pca_mode_min_CORR, mode_amplitude, number_of_modes_viz, R);
+			JED_PCA_Mode_Vizualization corr = new JED_PCA_Mode_Vizualization(directory, description, atoms, top_cartesian_evectors_CORR, square_pca_modes_CORR, pca_mode_max_CORR, pca_mode_min_CORR,
+					mode_amplitude, number_of_modes_viz, R);
 			corr.get_Mode_Visualizations_SS();
 
-			JED_PCA_Mode_Vizualization pcorr = new JED_PCA_Mode_Vizualization(directory, description, residue_list_original, atoms, top_cartesian_evectors_PCORR, square_pca_modes_PCORR,
-					pca_mode_max_PCORR, pca_mode_min_PCORR, mode_amplitude, number_of_modes_viz, PC);
+			JED_PCA_Mode_Vizualization pcorr = new JED_PCA_Mode_Vizualization(directory, description, atoms, top_cartesian_evectors_PCORR, square_pca_modes_PCORR, pca_mode_max_PCORR,
+					pca_mode_min_PCORR, mode_amplitude, number_of_modes_viz, PC);
 			pcorr.get_Mode_Visualizations_SS();
 
 			System.gc();
