@@ -46,7 +46,7 @@ public class JED_Batch_Driver
 	static List<Integer> residue_list, residue_list_dp1, residue_list_dp2, residue_list_dp_original1, residue_list_dp_original2, residues_read;
 	static List<String> lines, pdb_file_names, chain_idents, chain_idents1, chain_idents2, chain_ids_read;
 	static List<Double> transformed_conformation_rmsds, transformed_residue_rmsds, top_cartesian_eigenvalues_COV, top_distance_eigenvalues_COV, top_cartesian_eigenvalues_CORR,
-			top_distance_eigenvalues_CORR;
+			top_distance_eigenvalues_CORR, top_cartesian_eigenvalues_PCORR, top_distance_eigenvalues_PCORR;
 	static double[] pca_mode_min_COV, pca_mode_max_COV, pca_mode_min_CORR, pca_mode_max_CORR, pca_mode_max_PCORR, pca_mode_min_PCORR, residue_distance_means, residue_distance_std_devs;
 	static Matrix original_PDB_coordinates, subset_PDB_coordinates_cartesian, weighted_pca_modes_COV, square_pca_modes_COV, weighted_square_pca_modes_COV, transformed_PDB_coordinates_cartesian,
 			distance_matrix, top_cartesian_evectors_COV, top_distance_evectors_COV, projections_COV, normed_projections_COV, weighted_pca_modes_CORR, square_pca_modes_CORR,
@@ -616,6 +616,9 @@ public class JED_Batch_Driver
 			cond_cov = cSS.get_cond_COV();
 			det_cov = cSS.get_Det_COV();
 			rank_cov = cSS.get_Rank_COV();
+			top_cartesian_eigenvalues_COV = cSS.getTop_cartesian_eigenvalues_COV();
+			top_cartesian_eigenvalues_CORR = cSS.getTop_cartesian_eigenvalues_CORR();
+			top_cartesian_eigenvalues_PCORR = cSS.getTop_cartesian_eigenvalues_P_CORR();
 			top_cartesian_evectors_COV = cSS.getTop_cartesian_evectors_COV();
 			top_cartesian_evectors_CORR = cSS.getTop_cartesian_evectors_CORR();
 			top_cartesian_evectors_PCORR = cSS.getTop_cartesian_evectors_P_CORR();
@@ -918,19 +921,22 @@ public class JED_Batch_Driver
 
 	private static void do_Mode_Visualization()
 		{
-			JED_PCA_Mode_Vizualization cov = new JED_PCA_Mode_Vizualization(directory, description, atoms, top_cartesian_evectors_COV, square_pca_modes_COV, pca_mode_max_COV, pca_mode_min_COV,
-					mode_amplitude, number_of_modes_viz, Q);
+			JED_PCA_Mode_Vizualization cov = new JED_PCA_Mode_Vizualization(directory, description, atoms, top_cartesian_eigenvalues_COV, top_cartesian_evectors_COV, square_pca_modes_COV,
+					pca_mode_max_COV, pca_mode_min_COV, mode_amplitude, number_of_modes_viz, Q);
 			cov.get_Mode_Visualizations_SS();
+			cov.get_Essential_Visualization();
 
 			System.gc();
 
-			JED_PCA_Mode_Vizualization corr = new JED_PCA_Mode_Vizualization(directory, description, atoms, top_cartesian_evectors_CORR, square_pca_modes_CORR, pca_mode_max_CORR, pca_mode_min_CORR,
-					mode_amplitude, number_of_modes_viz, R);
+			JED_PCA_Mode_Vizualization corr = new JED_PCA_Mode_Vizualization(directory, description, atoms, top_cartesian_eigenvalues_CORR, top_cartesian_evectors_CORR, square_pca_modes_CORR,
+					pca_mode_max_CORR, pca_mode_min_CORR, mode_amplitude, number_of_modes_viz, R);
 			corr.get_Mode_Visualizations_SS();
+			corr.get_Essential_Visualization();
 
-			JED_PCA_Mode_Vizualization pcorr = new JED_PCA_Mode_Vizualization(directory, description, atoms, top_cartesian_evectors_PCORR, square_pca_modes_PCORR, pca_mode_max_PCORR,
-					pca_mode_min_PCORR, mode_amplitude, number_of_modes_viz, PC);
+			JED_PCA_Mode_Vizualization pcorr = new JED_PCA_Mode_Vizualization(directory, description, atoms, top_cartesian_eigenvalues_PCORR, top_cartesian_evectors_PCORR, square_pca_modes_PCORR,
+					pca_mode_max_PCORR, pca_mode_min_PCORR, mode_amplitude, number_of_modes_viz, PC);
 			pcorr.get_Mode_Visualizations_SS();
+			pcorr.get_Essential_Visualization();
 
 			System.gc();
 
