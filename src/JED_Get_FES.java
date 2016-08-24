@@ -15,10 +15,13 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 
 import Jama.Matrix;
+import bits.kde.DiagonalBandwidthSelector2d;
 import bits.kde.KernelDensityEstimate2d;
 
 /**
- * JED class JED_Get_FES: Driver program for getting the free energy of two order parameters.
+ * JED class JED_Get_FES: Driver program for getting the free energy of two order parameters using 2D KDE
+ * This class imports bits/kde developed by Philip DeCamp.
+ * 
  * Input file is "FES.txt"
  * Copyright (C) 2012 Dr. Charles David
  *
@@ -44,6 +47,7 @@ public class JED_Get_FES
 	static Integer OP1, OP2, number_of_points, OP_offset, KDE_offset;
 	static double cellsize;
 	static long startTime, endTime, totalTime;
+	static double[] KDE_bounds, KDE_bandwidths;
 	static Matrix FE, delta_vector_series, order_param1, order_param2;
 	static ArrayList<String> lines;
 	static File dvp_file, Job_log, Batch_log;
@@ -256,9 +260,9 @@ public class JED_Get_FES
 			System.out.println("Reading line " + (line_count + 1) + ",  LINE " + index + " of job: " + (job_number + 1));
 			line = lines.get(line_count);
 			sToken = new StringTokenizer(line);
-			OP1 = Integer.parseInt(sToken.nextToken());
+			OP1 = Integer.parseInt(sToken.nextToken()) - 1; // to adjust for Java numbering starting with 0
 			System.out.println("\tOP1 = " + OP1);
-			OP2 = Integer.parseInt(sToken.nextToken());
+			OP2 = Integer.parseInt(sToken.nextToken()) - 1; // to adjust for Java numbering starting with 0
 			System.out.println("\tOP2 = " + OP2);
 			number_of_points = Integer.parseInt(sToken.nextToken());
 			System.out.println("\tNumber of points to use = " + number_of_points);
@@ -266,15 +270,11 @@ public class JED_Get_FES
 			System.out.println("\tOffset = " + OP_offset);
 			cellsize = Double.parseDouble(sToken.nextToken());
 			System.out.println("\tCellsize = " + cellsize);
+			if (cellsize < 0) cellsize = 0;
 			if (cellsize == 0) System.out.println("Program will automatically calculate a cellsize.");
-			if (cellsize < 0 || cellsize > 1.0)
-				{
-					System.out.println("Invalid value. Resetting the value of cellsize to 0.01");
-					cellsize = 0.01; // a good compromise
-				}
 			if (OP1 == null || OP1 < 0 || OP1 > COLS) OP1 = 0; // default value
 			if (OP2 == null || OP2 < 0 || OP2 > COLS) OP2 = 1; // default value
-			if (number_of_points == null || number_of_points < 0) number_of_points = ROWS; // use all the points
+			if (number_of_points == null || number_of_points <= 0) number_of_points = ROWS; // use all the points
 			if (OP_offset == null || OP_offset < 0) OP_offset = 0;
 			line_count++;
 			/* *************************************************************************************************************************************** */
@@ -324,12 +324,16 @@ public class JED_Get_FES
 			Job_log_writer.write("Order Parameter 2 (Col# 2): " + OP2 + "\n");
 			Job_log_writer.write("Number of points to extract from the OPs to use for KDE: " + number_of_points + "\n");
 			Job_log_writer.write("Offset in selecting points from the order parameters: " + OP_offset + "\n");
-			Job_log_writer.write("Entered cellsize of the 2D grid for KDE: " + cellsize + "\n");
+			Job_log_writer.write("The cellsize used for the 2D grid for KDE: " + nf.format(cellsize) + "\n");
+			Job_log_writer.write("The bounds for the KDE are: OP1(" + nf.format(KDE_bounds[0]) + "," + nf.format(KDE_bounds[2]) + "); OP2(" + nf.format(KDE_bounds[1]) + "," + nf.format(KDE_bounds[3])
+					+ ")" + "\n");
+			Job_log_writer.write("The kernel bandwidths were: " + nf.format(KDE_bandwidths[0]) + "   " + nf.format(KDE_bandwidths[3]) + "\n");
 			Job_log_writer.write("The two order parameters and the free energy are:\n");
 			Job_log_writer.flush();
 			FE.print(Job_log_writer, 12, 3);
-			Batch_log_Writer.write(
-					String.format("%-25s%-16s%-8s%-8s%-8s%-8s%-8s%-12s%-8s\n", description, "Conformations =", order_param1.getRowDimension(), "OP1 =", OP1, "OP2 =", OP2, "Cellsize =", cellsize));
+			Batch_log_Writer.write(String.format("%-24s%-16s%-8s%-8s%-8s%-8s%-8s%-12s%-12s%-12s%-8s%-4s", description, "Conformations =", order_param1.getRowDimension(), "OP1 =", OP1, "OP2 =", OP2,
+					"Bounds are: OP1(", nf.format(KDE_bounds[0]) + "," + nf.format(KDE_bounds[2]) + "); OP2(" + nf.format(KDE_bounds[1]) + "," + nf.format(KDE_bounds[3]), ") ", "KDE Bandwidths are: ",
+					nf.format(KDE_bandwidths[0])) + ", " + nf.format(KDE_bandwidths[3]) + "\n");
 			date = DateUtils.now();
 			Job_log_writer.write("\nAnalysis completed: " + date);
 			Job_log_writer.close();
@@ -341,8 +345,8 @@ public class JED_Get_FES
 	 */
 	private void get_FES()
 		{
-			/* Get the first 2 DVPs to use as order parameters in the deltaG free energy calculations */
-			if (OP_offset + number_of_points > ROWS) System.out.println("ERROR! The OP offset plus the number of points exceeds the length of the DVPs!");
+			/* Get the DVPs to use as order parameters in the deltaG free energy calculations */
+			if (OP_offset + number_of_points > ROWS) System.err.println("ERROR! The OP offset plus the number of points exceeds the length of the DVPs!");
 			double[] order_parameter_1 = order_param1.getColumnPackedCopy();
 			double[] order_parameter_2 = order_param2.getColumnPackedCopy();
 			double[] order_parameter_1_sorted = order_param1.getColumnPackedCopy();
@@ -362,18 +366,21 @@ public class JED_Get_FES
 			double op2max = order_parameter_2_sorted[length - 1];
 			double op1min = order_parameter_1_sorted[0];
 			double op2min = order_parameter_2_sorted[0];
-			double[] bounds = { op1min, op2min, op1max, op2max };
+			KDE_bounds = new double[] { op1min, op2min, op1max, op2max };
+			System.out.println("The bounds for the KDE are: OP1(" + KDE_bounds[0] + "," + KDE_bounds[2] + "); OP2(" + KDE_bounds[1] + "," + KDE_bounds[3] + ")");
 
 			/* Define the KDE offset and number of points to use in calculating the KDE */
 			KDE_offset = 0;
 			number_of_points = length;
 			if (cellsize == 0)
 				{
-					double maxDim = Math.max(bounds[2] - bounds[0], bounds[3] - bounds[1]);
+					double maxDim = Math.max(KDE_bounds[2] - KDE_bounds[0], KDE_bounds[3] - KDE_bounds[1]);
 					cellsize = (maxDim / 256);
+					System.out.println("The effective cellsize is: " + cellsize);
 				}
-			KDE = KernelDensityEstimate2d.compute(kde_array, KDE_offset, number_of_points, bounds, cellsize, null);
-
+			KDE = KernelDensityEstimate2d.compute(kde_array, KDE_offset, number_of_points, KDE_bounds, cellsize, null);
+			KDE_bandwidths = DiagonalBandwidthSelector2d.get_Bandwidths();
+			System.out.println("Kernel Bandwidths are: " + nf.format(KDE_bandwidths[0]) + "\t" + nf.format(KDE_bandwidths[3]));
 			double[] probabilities = new double[length];
 			double[] probabilities_sorted = new double[length];
 			for (int i = 0; i < length; i++)
@@ -412,6 +419,7 @@ public class JED_Get_FES
 			nf = NumberFormat.getInstance();
 			nf.setMaximumFractionDigits(3);
 			nf.setMinimumFractionDigits(3);
+			nf.setRoundingMode(RoundingMode.HALF_UP);
 
 			System.out.println("Running FES Driver: ");
 			System.out.println("Getting the input file: ");
