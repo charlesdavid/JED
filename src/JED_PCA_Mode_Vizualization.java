@@ -127,7 +127,6 @@ public class JED_PCA_Mode_Vizualization
 					double[] evector_array = evector.getColumnPackedCopy();
 					Arrays.sort(evector_array);
 					double evector_max = Math.max(Math.abs(evector_array[0]), Math.abs(evector_array[ROWS_Evectors - 1]));
-					normed_mode_amplitude = Math.abs(mode_amplitude - evector_max);
 					try
 						{
 							for (double mc = 0; mc < (2 * Math.PI); mc += (Math.PI / 10)) // loop for perturbing the eigenvector components sinusoidally
@@ -151,9 +150,9 @@ public class JED_PCA_Mode_Vizualization
 													double v_z = evector.get((index + 2 * number_of_residues), 0);
 													double w = Math.sin(mc); // sine function ensures the first structure is unperturbed;
 																			 // preserves chain connectivity in PyMol movies...
-													double shift_x = v_x * w * normed_mode_amplitude;
-													double shift_y = v_y * w * normed_mode_amplitude;
-													double shift_z = v_z * w * normed_mode_amplitude;
+													double shift_x = v_x * w * mode_amplitude;
+													double shift_y = v_y * w * mode_amplitude;
+													double shift_z = v_z * w * mode_amplitude;
 													a.x = x_coord + shift_x;
 													a.y = y_coord + shift_y;
 													a.z = z_coord + shift_z;
@@ -199,23 +198,24 @@ public class JED_PCA_Mode_Vizualization
 
 			/* Get the top combined square mode */
 			Matrix sum = square_pca_modes.getMatrix(0, ROWS_Modes - 1, 0, 0);
+			double eval_abs = Math.abs(eigenvalues.get(0));
+			Matrix w_sum = sum.times(eval_abs);
 			for (int i = 1; i < number_of_modes_viz; i++)
 				{
 					Matrix plus = square_pca_modes.getMatrix(0, ROWS_Modes - 1, i, i);
-					sum = sum.plus(plus);
+					eval_abs = Math.abs(eigenvalues.get(i));
+					Matrix w_plus =plus.times(eval_abs);
+					w_sum = w_sum.plus(plus);
 				}
-			// sum.print(12, 3);
 
 			/* Norm and sort the vector */
-			Matrix sum_normed = Projector.get_Normed_array(sum);
-			double[] sorted_sum_normed = sum_normed.getColumnPackedCopy();
-			Arrays.sort(sorted_sum_normed);
-
-			// sum_normed.print(12, 3);
+			Matrix w_sum_normed = Projector.get_Normed_array(w_sum);
+			double[] sorted_w_sum_normed = w_sum_normed.getColumnPackedCopy();
+			Arrays.sort(sorted_w_sum_normed);
 
 			/* Establish the Log coloring scheme */
-			double MODE_MIN = sorted_sum_normed[0];
-			double MODE_MAX = sorted_sum_normed[COLS - 1];
+			double MODE_MIN = sorted_w_sum_normed[0];
+			double MODE_MAX = sorted_w_sum_normed[COLS - 1];
 			if (MODE_MIN < FLOOR) MODE_MIN = FLOOR;
 			double LOG_MODE_MIN = Math.log10(MODE_MIN);
 			double LOG_MODE_MAX = Math.log10(MODE_MAX);
@@ -270,7 +270,7 @@ public class JED_PCA_Mode_Vizualization
 											a.x = x_coord + shift_x;
 											a.y = y_coord + shift_y;
 											a.z = z_coord + shift_z;
-											double bff = (sum_normed.get(index, 0));
+											double bff = (w_sum_normed.get(index, 0));
 											if (bff < FLOOR) bff = FLOOR;
 											double log_bff = Math.log10(bff);
 											double bf = ((slope * log_bff) - y_min);
