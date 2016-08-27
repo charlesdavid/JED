@@ -169,9 +169,9 @@ public class JED_Do_Dist_Pairs
 					top_distance_eigenvalues_CORR = dp_pca.getTop_eigenvalues_CORR();
 
 					// PARTIAL CORRELATION METHOD
-					trace_dist_P_CORR = dp_pca.getTrace_P_CORR();
-					top_distance_evectors_P_CORR = dp_pca.getTop_evectors_P_CORR();
-					top_distance_eigenvalues_P_CORR = dp_pca.getTop_eigenvalues_P_CORR();
+					trace_dist_P_CORR = dp_pca.getTrace_PCORR();
+					top_distance_evectors_P_CORR = dp_pca.getTop_evectors_PCORR();
+					top_distance_eigenvalues_P_CORR = dp_pca.getTop_eigenvalues_PCORR();
 				}
 		}
 
@@ -432,7 +432,7 @@ public class JED_Do_Dist_Pairs
 	/**
 	 * @return the trace_dist_P_CORR
 	 */
-	public double getTrace_dist_P_CORR()
+	public double getTrace_dist_PCORR()
 		{
 			return trace_dist_P_CORR;
 		}
@@ -768,7 +768,7 @@ public class JED_Do_Dist_Pairs
 	/**
 	 * @return the top_distance_evectors_P_CORR
 	 */
-	public Matrix getTop_distance_evectors_P_CORR()
+	public Matrix getTop_distance_evectors_PCORR()
 		{
 			return top_distance_evectors_P_CORR;
 		}

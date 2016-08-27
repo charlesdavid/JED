@@ -36,14 +36,14 @@ import Jama.Matrix;
 public class JED_Get_Cartesian_PCA
 {
 
-	public String directory, out_dir_cPCA, out_dir_COV, out_dir_CORR, out_dir_P_CORR, description, file_name_head, path;
+	public String directory, out_dir_cPCA, out_dir_COV, out_dir_CORR, out_dir_PCORR, description, file_name_head, path;
 	public int number_of_modes, number_of_residues, ROWS, COLS;
-	public double trace_COV, trace_CORR, trace_P_CORR, cond_COV, cond_CORR, cond_P_CORR, rank_COV, rank_CORR, rank_P_CORR, det_COV, det_CORR, det_P_CORR;
-	public List<Double> eigenvalues_COV, top_eigenvalues_COV, eigenvalues_CORR, top_eigenvalues_CORR, eigenvalues_P_CORR, top_eigenvalues_P_CORR;
-	public double[] pca_mode_COV_min, pca_mode_COV_max, pca_mode_CORR_min, pca_mode_CORR_max, pca_mode_P_CORR_min, pca_mode_P_CORR_max;
+	public double trace_COV, trace_CORR, trace_PCORR, cond_COV, cond_CORR, cond_PCORR, rank_COV, rank_CORR, rank_PCORR, det_COV, det_CORR, det_PCORR;
+	public List<Double> eigenvalues_COV, top_eigenvalues_COV, eigenvalues_CORR, top_eigenvalues_CORR, eigenvalues_PCORR, top_eigenvalues_PCORR;
+	public double[] pca_mode_COV_min, pca_mode_COV_max, pca_mode_CORR_min, pca_mode_CORR_max, pca_mode_PCORR_min, pca_mode_PCORR_max;
 	static Matrix input_data, centered_input_data, cov, corr, pcorr, precision_cov, precision_corr, top_evectors_COV, square_pca_modes_COV, weighted_square_pca_modes_COV, weighted_pca_modes_COV,
-			top_evectors_CORR, square_pca_modes_CORR, weighted_square_pca_modes_CORR, weighted_pca_modes_CORR, pca_modes_COV, pca_modes_CORR, top_evectors_P_CORR, square_pca_modes_P_CORR,
-			weighted_square_pca_modes_P_CORR, weighted_pca_modes_P_CORR, pca_modes_P_CORR;
+			top_evectors_CORR, square_pca_modes_CORR, weighted_square_pca_modes_CORR, weighted_pca_modes_CORR, pca_modes_COV, pca_modes_CORR, top_evectors_PCORR, square_pca_modes_PCORR,
+			weighted_square_pca_modes_PCORR, weighted_pca_modes_PCORR, pca_modes_PCORR;
 	public EigenvalueDecomposition evd;
 	public NumberFormat nf;
 	public RoundingMode rm;
@@ -86,9 +86,9 @@ public class JED_Get_Cartesian_PCA
 			exist = new File(out_dir_CORR).exists();
 			if (!exist) success = (new File(out_dir_CORR)).mkdirs();
 
-			out_dir_P_CORR = out_dir_cPCA + "PCORR/";
-			exist = new File(out_dir_P_CORR).exists();
-			if (!exist) success = (new File(out_dir_P_CORR)).mkdirs();
+			out_dir_PCORR = out_dir_cPCA + "PCORR/";
+			exist = new File(out_dir_PCORR).exists();
+			if (!exist) success = (new File(out_dir_PCORR)).mkdirs();
 
 			number_of_modes = num_modes;
 			input_data = data;
@@ -101,7 +101,7 @@ public class JED_Get_Cartesian_PCA
 	/* *************************************** PRIMARY METHODS ****************************************************** */
 
 	/**
-	 * Performs the COV, CORR, and P_CORR PCA methods
+	 * Performs the COV, CORR, and PCORR PCA methods
 	 */
 	public void get_Cartesian_PCA()
 		{
@@ -113,7 +113,7 @@ public class JED_Get_Cartesian_PCA
 
 			Do_Cov_PCA();
 			Do_Corr_PCA();
-			Do_P_Corr_PCA();
+			Do_PCorr_PCA();
 
 		}
 
@@ -179,26 +179,26 @@ public class JED_Get_Cartesian_PCA
 			System.gc();
 		}
 
-	private void Do_P_Corr_PCA()
+	private void Do_PCorr_PCA()
 		{
 
 			pcorr = PCA.get_partial_correlation_matrix(precision_cov);
 
-			trace_P_CORR = pcorr.trace();
-			// cond_P_CORR = pcorr.cond();
-			// det_P_CORR = pcorr.det();
-			// rank_P_CORR = pcorr.rank();
+			trace_PCORR = pcorr.trace();
+			// cond_PCORR = pcorr.cond();
+			// det_PCORR = pcorr.det();
+			// rank_PCORR = pcorr.rank();
 
-			file_name_head = out_dir_P_CORR + "ss_" + number_of_residues;
+			file_name_head = out_dir_PCORR + "ss_" + number_of_residues;
 
 			Matrix_IO.write_Matrix(pcorr, file_name_head + "_partial_correlation_matrix.txt", 12, 6);
 
 			evd = PCA.get_eigenvalue_decomposition(pcorr);
 
-			get_eigenvalues_P_CORR();
-			write_top_evals_P_CORR();
-			get_top_evects_P_CORR();
-			construct_PCA_Modes_P_CORR();
+			get_eigenvalues_PCORR();
+			write_top_evals_PCORR();
+			get_top_evects_PCORR();
+			construct_PCA_Modes_PCORR();
 
 			pcorr = null;
 			evd = null;
@@ -431,119 +431,119 @@ public class JED_Get_Cartesian_PCA
 			Matrix_IO.write_Matrix(weighted_square_pca_modes_CORR, path, 12, 6);
 		}
 
-	/* ********************************************* P_CORR METHODS ************************************************************** */
+	/* ********************************************* PCORR METHODS ************************************************************** */
 
-	private void get_eigenvalues_P_CORR()
+	private void get_eigenvalues_PCORR()
 		{
 
 			/* Note that the pcorr matrix has -1's along its main diagonal, making it a 'negative definite' matrix */
 			/* Therefore, the eigenvalues with the largest absolute value are the smallest (most negative). */
 
 			double[] ss_evals = evd.getRealEigenvalues();
-			eigenvalues_P_CORR = new ArrayList<Double>();
+			eigenvalues_PCORR = new ArrayList<Double>();
 			for (double k : ss_evals)
 				{
-					eigenvalues_P_CORR.add(k);
+					eigenvalues_PCORR.add(k);
 				}
-			Collections.sort(eigenvalues_P_CORR, Collections.reverseOrder());
-			List_IO.write_Double_List(eigenvalues_P_CORR, file_name_head + "_eigenvalues_P_CORR.txt", 12);
+			Collections.sort(eigenvalues_PCORR, Collections.reverseOrder());
+			List_IO.write_Double_List(eigenvalues_PCORR, file_name_head + "_eigenvalues_PCORR.txt", 12);
 		}
 
-	private void write_top_evals_P_CORR()
+	private void write_top_evals_PCORR()
 		{
 			try
 				{
-					File top_ss_evals_cov = new File(file_name_head + "_top_" + number_of_modes + "_eigenvalues_P_CORR.txt");
+					File top_ss_evals_cov = new File(file_name_head + "_top_" + number_of_modes + "_eigenvalues_PCORR.txt");
 					BufferedWriter top_ss_evals_writer = new BufferedWriter(new FileWriter(top_ss_evals_cov));
 					top_ss_evals_writer.write(String.format("%-16s%-16s%-16s%n", "Eigenvalue", "% Variance", "Cumulative Variance"));
-					top_eigenvalues_P_CORR = new ArrayList<Double>();
+					top_eigenvalues_PCORR = new ArrayList<Double>();
 					double cumulative_variance = 0;
 					for (int i = 0; i < number_of_modes; i++)
 						{
-							double val = eigenvalues_P_CORR.get(i);
-							double normed_val = (val / trace_P_CORR);
+							double val = eigenvalues_PCORR.get(i);
+							double normed_val = (val / trace_PCORR);
 							cumulative_variance += normed_val;
 							top_ss_evals_writer.write(String.format("%-16s%-16s%-16s%n", nf.format(val), nf.format(normed_val), nf.format(cumulative_variance)));
-							top_eigenvalues_P_CORR.add(val);
+							top_eigenvalues_PCORR.add(val);
 						}
 					top_ss_evals_writer.close();
 				} catch (IOException io)
 				{
-					System.err.println("Could not write to the file: " + file_name_head + "_top_" + number_of_modes + "_eigenvalues_P_CORR.txt");
+					System.err.println("Could not write to the file: " + file_name_head + "_top_" + number_of_modes + "_eigenvalues_PCORR.txt");
 					io.getMessage();
 					io.getStackTrace();
 				}
 		}
 
-	private void get_top_evects_P_CORR()
+	private void get_top_evects_PCORR()
 		{
 			Matrix ss_evectors = evd.getV();
 			evd = null;
 			System.gc();
 
-			top_evectors_P_CORR = ss_evectors.getMatrix(0, ROWS - 1, ROWS - number_of_modes, ROWS - 1);
+			top_evectors_PCORR = ss_evectors.getMatrix(0, ROWS - 1, ROWS - number_of_modes, ROWS - 1);
 			Matrix modes_reversed = new Matrix(ROWS, COLS);
 			for (int r = 0; r < COLS; r++)
 				{
-					Matrix col = top_evectors_P_CORR.getMatrix(0, ROWS - 1, COLS - 1 - r, COLS - 1 - r);
+					Matrix col = top_evectors_PCORR.getMatrix(0, ROWS - 1, COLS - 1 - r, COLS - 1 - r);
 					modes_reversed.setMatrix(0, ROWS - 1, r, r, col);
 				}
-			top_evectors_P_CORR = modes_reversed;
+			top_evectors_PCORR = modes_reversed;
 
-			path = file_name_head + "_top_" + number_of_modes + "_eigenvectors_P_CORR.txt";
-			Matrix_IO.write_Matrix(top_evectors_P_CORR, path, 12, 6);
+			path = file_name_head + "_top_" + number_of_modes + "_eigenvectors_PCORR.txt";
+			Matrix_IO.write_Matrix(top_evectors_PCORR, path, 12, 6);
 			ss_evectors = null;
 			System.gc();
 		}
 
-	private void construct_PCA_Modes_P_CORR()
+	private void construct_PCA_Modes_PCORR()
 		{
 
-			pca_modes_P_CORR = new Matrix(number_of_residues, number_of_modes);
-			weighted_pca_modes_P_CORR = new Matrix(number_of_residues, number_of_modes);
-			square_pca_modes_P_CORR = new Matrix(number_of_residues, number_of_modes);
-			weighted_square_pca_modes_P_CORR = new Matrix(number_of_residues, number_of_modes);
-			pca_mode_P_CORR_max = new double[number_of_modes];
-			pca_mode_P_CORR_min = new double[number_of_modes];
+			pca_modes_PCORR = new Matrix(number_of_residues, number_of_modes);
+			weighted_pca_modes_PCORR = new Matrix(number_of_residues, number_of_modes);
+			square_pca_modes_PCORR = new Matrix(number_of_residues, number_of_modes);
+			weighted_square_pca_modes_PCORR = new Matrix(number_of_residues, number_of_modes);
+			pca_mode_PCORR_max = new double[number_of_modes];
+			pca_mode_PCORR_min = new double[number_of_modes];
 			for (int a = 0; a < number_of_modes; a++)
 				{
 					double max = 0;
 					double min = 1;
 					for (int b = 0; b < number_of_residues; b++)
 						{
-							double x = top_evectors_P_CORR.get(b, a);
-							double y = top_evectors_P_CORR.get(b + number_of_residues, a);
-							double z = top_evectors_P_CORR.get((b + 2 * number_of_residues), a);
+							double x = top_evectors_PCORR.get(b, a);
+							double y = top_evectors_PCORR.get(b + number_of_residues, a);
+							double z = top_evectors_PCORR.get((b + 2 * number_of_residues), a);
 							double sq = (x * x + y * y + z * z);
 							double sqrt_sq = Math.sqrt(sq);
-							/* Note that the 'top' eigenvalues for P_CORR will be close to zero */
-							double value = eigenvalues_P_CORR.get(a);
+							/* Note that the 'top' eigenvalues for PCORR will be close to zero */
+							double value = eigenvalues_PCORR.get(a);
 							double value_abs = Math.abs(value);
 							double sqrt_val = Math.sqrt(value_abs);
 							double w_sq = sq * value_abs;
 							double w_m = sqrt_sq * sqrt_val;
-							pca_modes_P_CORR.set(b, a, sqrt_sq);
-							weighted_pca_modes_P_CORR.set(b, a, w_m);
-							square_pca_modes_P_CORR.set(b, a, sq);
-							weighted_square_pca_modes_P_CORR.set(b, a, w_sq);
+							pca_modes_PCORR.set(b, a, sqrt_sq);
+							weighted_pca_modes_PCORR.set(b, a, w_m);
+							square_pca_modes_PCORR.set(b, a, sq);
+							weighted_square_pca_modes_PCORR.set(b, a, w_sq);
 							if (sq > max) max = sq;
 							if (sq < min) min = sq;
 						}
-					pca_mode_P_CORR_max[a] = max;
-					pca_mode_P_CORR_min[a] = min;
+					pca_mode_PCORR_max[a] = max;
+					pca_mode_PCORR_min[a] = min;
 				}
-			path = file_name_head + "_top_" + number_of_modes + "_square_pca_mode_MAXES_P_CORR.txt";
-			Array_IO.write_Double_Array(pca_mode_P_CORR_max, path, 6);
-			path = file_name_head + "_top_" + number_of_modes + "_square_pca_mode_MINS_P_CORR.txt";
-			Array_IO.write_Double_Array(pca_mode_P_CORR_min, path, 6);
-			path = file_name_head + "_top_" + number_of_modes + "_pca_modes_P_CORR.txt";
-			Matrix_IO.write_Matrix(pca_modes_P_CORR, path, 12, 6);
-			path = file_name_head + "_top_" + number_of_modes + "_weighted_pca_modes_P_CORR.txt";
-			Matrix_IO.write_Matrix(weighted_pca_modes_P_CORR, path, 18, 12);
-			path = file_name_head + "_top_" + number_of_modes + "_square_pca_modes_P_CORR.txt";
-			Matrix_IO.write_Matrix(square_pca_modes_P_CORR, path, 18, 12);
-			path = file_name_head + "_top_" + number_of_modes + "_weighted_square_pca_modes_P_CORR.txt";
-			Matrix_IO.write_Matrix(weighted_square_pca_modes_P_CORR, path, 18, 12);
+			path = file_name_head + "_top_" + number_of_modes + "_square_pca_mode_MAXES_PCORR.txt";
+			Array_IO.write_Double_Array(pca_mode_PCORR_max, path, 6);
+			path = file_name_head + "_top_" + number_of_modes + "_square_pca_mode_MINS_PCORR.txt";
+			Array_IO.write_Double_Array(pca_mode_PCORR_min, path, 6);
+			path = file_name_head + "_top_" + number_of_modes + "_pca_modes_PCORR.txt";
+			Matrix_IO.write_Matrix(pca_modes_PCORR, path, 12, 6);
+			path = file_name_head + "_top_" + number_of_modes + "_weighted_pca_modes_PCORR.txt";
+			Matrix_IO.write_Matrix(weighted_pca_modes_PCORR, path, 18, 12);
+			path = file_name_head + "_top_" + number_of_modes + "_square_pca_modes_PCORR.txt";
+			Matrix_IO.write_Matrix(square_pca_modes_PCORR, path, 18, 12);
+			path = file_name_head + "_top_" + number_of_modes + "_weighted_square_pca_modes_PCORR.txt";
+			Matrix_IO.write_Matrix(weighted_square_pca_modes_PCORR, path, 18, 12);
 		}
 
 	/* ******************************************* GETTERS ***************************************************** */
@@ -575,10 +575,10 @@ public class JED_Get_Cartesian_PCA
 	 *
 	 * @return
 	 */
-	public double get_cond_P_CORR()
+	public double get_cond_PCORR()
 		{
 
-			return cond_P_CORR;
+			return cond_PCORR;
 		}
 
 	/**
@@ -608,10 +608,10 @@ public class JED_Get_Cartesian_PCA
 	 *
 	 * @return
 	 */
-	public double get_trace_P_CORR()
+	public double get_trace_PCORR()
 		{
 
-			return trace_P_CORR;
+			return trace_PCORR;
 		}
 
 	/**
@@ -641,10 +641,10 @@ public class JED_Get_Cartesian_PCA
 	 *
 	 * @return
 	 */
-	public List<Double> getEigenvalues_P_CORR()
+	public List<Double> getEigenvalues_PCORR()
 		{
 
-			return eigenvalues_P_CORR;
+			return eigenvalues_PCORR;
 		}
 
 	/**
@@ -674,10 +674,10 @@ public class JED_Get_Cartesian_PCA
 	 *
 	 * @return
 	 */
-	public double get_det_P_CORR()
+	public double get_det_PCORR()
 		{
 
-			return det_P_CORR;
+			return det_PCORR;
 		}
 
 	/**
@@ -707,10 +707,10 @@ public class JED_Get_Cartesian_PCA
 	 *
 	 * @return
 	 */
-	public double get_rank_P_CORR()
+	public double get_rank_PCORR()
 		{
 
-			return rank_P_CORR;
+			return rank_PCORR;
 		}
 
 	/**
@@ -760,25 +760,25 @@ public class JED_Get_Cartesian_PCA
 	/**
 	 *
 	 * /**
-	 * Returns the array of the PCA mode minimums from the P_CORR analysis
+	 * Returns the array of the PCA mode minimums from the PCORR analysis
 	 *
 	 * @return
 	 */
-	public double[] get_pca_mode_P_CORR_min()
+	public double[] get_pca_mode_PCORR_min()
 		{
 
-			return pca_mode_P_CORR_min;
+			return pca_mode_PCORR_min;
 		}
 
 	/**
-	 * Returns the array of the PCA mode maximums from the P_CORR analysis
+	 * Returns the array of the PCA mode maximums from the PCORR analysis
 	 *
 	 * @return
 	 */
-	public double[] get_pca_mode_P_CORR_max()
+	public double[] get_pca_mode_PCORR_max()
 		{
 
-			return pca_mode_P_CORR_max;
+			return pca_mode_PCORR_max;
 		}
 
 	/**
@@ -914,57 +914,57 @@ public class JED_Get_Cartesian_PCA
 		}
 
 	/**
-	 * Returns the Top eigenvectors from the P_CORR analysis
+	 * Returns the Top eigenvectors from the PCORR analysis
 	 *
 	 * @return
 	 */
-	public Matrix getTop_evectors_P_CORR()
+	public Matrix getTop_evectors_PCORR()
 		{
 
-			return top_evectors_P_CORR;
+			return top_evectors_PCORR;
 		}
 
 	/**
-	 * Returns the Square PCA modes from the P_CORR analysis
+	 * Returns the Square PCA modes from the PCORR analysis
 	 *
 	 * @return
 	 */
-	public Matrix getSquare_pca_modes_P_CORR()
+	public Matrix getSquare_pca_modes_PCORR()
 		{
 
-			return square_pca_modes_P_CORR;
+			return square_pca_modes_PCORR;
 		}
 
 	/**
-	 * Returns the Weighted Square PCA modes from the P_CORR analysis
+	 * Returns the Weighted Square PCA modes from the PCORR analysis
 	 *
 	 * @return
 	 */
-	public Matrix getWeighted_square_pca_modes_P_CORR()
+	public Matrix getWeighted_square_pca_modes_PCORR()
 		{
 
-			return weighted_square_pca_modes_P_CORR;
+			return weighted_square_pca_modes_PCORR;
 		}
 
 	/**
-	 * Returns the Weighted PCA modes from the P_CORR analysis
+	 * Returns the Weighted PCA modes from the PCORR analysis
 	 *
 	 * @return
 	 */
-	public Matrix getWeighted_pca_modes_P_CORR()
+	public Matrix getWeighted_pca_modes_PCORR()
 		{
 
-			return weighted_pca_modes_P_CORR;
+			return weighted_pca_modes_PCORR;
 		}
 
 	/**
-	 * Returns the PCA modes from the P_CORR analysis
+	 * Returns the PCA modes from the PCORR analysis
 	 *
 	 * @return
 	 */
-	public Matrix getPca_modes_P_CORR()
+	public Matrix getPca_modes_PCORR()
 		{
 
-			return pca_modes_P_CORR;
+			return pca_modes_PCORR;
 		}
 }

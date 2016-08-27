@@ -244,16 +244,16 @@ public class JED_Do_Cartesian
 					pca_mode_min_CORR = c_pca.get_pca_mode_CORR_min();
 					pca_mode_max_CORR = c_pca.get_pca_mode_CORR_max();
 					// PARTIAL CORRELATION METHOD
-					trace_P_CORR = c_pca.get_trace_P_CORR();
-					eigenvalues_P_CORR = c_pca.getEigenvalues_P_CORR();
-					top_cartesian_evectors_P_CORR = c_pca.getTop_evectors_P_CORR();
-					top_cartesian_eigenvalues_P_CORR = c_pca.getEigenvalues_P_CORR();
-					pca_modes_P_CORR = c_pca.getPca_modes_P_CORR();
-					square_pca_modes_P_CORR = c_pca.getSquare_pca_modes_P_CORR();
-					weighted_square_pca_modes_P_CORR = c_pca.getWeighted_square_pca_modes_P_CORR();
-					weighted_pca_modes_P_CORR = c_pca.getWeighted_pca_modes_P_CORR();
-					pca_mode_min_P_CORR = c_pca.get_pca_mode_P_CORR_min();
-					pca_mode_max_P_CORR = c_pca.get_pca_mode_P_CORR_max();
+					trace_P_CORR = c_pca.get_trace_PCORR();
+					eigenvalues_P_CORR = c_pca.getEigenvalues_PCORR();
+					top_cartesian_evectors_P_CORR = c_pca.getTop_evectors_PCORR();
+					top_cartesian_eigenvalues_P_CORR = c_pca.getEigenvalues_PCORR();
+					pca_modes_P_CORR = c_pca.getPca_modes_PCORR();
+					square_pca_modes_P_CORR = c_pca.getSquare_pca_modes_PCORR();
+					weighted_square_pca_modes_P_CORR = c_pca.getWeighted_square_pca_modes_PCORR();
+					weighted_pca_modes_P_CORR = c_pca.getWeighted_pca_modes_PCORR();
+					pca_mode_min_P_CORR = c_pca.get_pca_mode_PCORR_min();
+					pca_mode_max_P_CORR = c_pca.get_pca_mode_PCORR_max();
 				}
 		}
 
@@ -336,7 +336,7 @@ public class JED_Do_Cartesian
 			return cond_CORR;
 		}
 
-	public double get_Trace_P_CORR()
+	public double get_Trace_PCORR()
 		{
 			return trace_P_CORR;
 		}
@@ -629,7 +629,7 @@ public class JED_Do_Cartesian
 	/**
 	 * @return the top_cartesian_eigenvalues_P_CORR
 	 */
-	public List<Double> getTop_cartesian_eigenvalues_P_CORR()
+	public List<Double> getTop_cartesian_eigenvalues_PCORR()
 		{
 			return top_cartesian_eigenvalues_P_CORR;
 		}
@@ -661,7 +661,7 @@ public class JED_Do_Cartesian
 	/**
 	 * @return the top_cartesian_evectors_P_CORR
 	 */
-	public Matrix getTop_cartesian_evectors_P_CORR()
+	public Matrix getTop_cartesian_evectors_PCORR()
 		{
 			return top_cartesian_evectors_P_CORR;
 		}
@@ -669,7 +669,7 @@ public class JED_Do_Cartesian
 	/**
 	 * @return the pca_mode_max_P_CORR
 	 */
-	public double[] getPca_mode_max_P_CORR()
+	public double[] getPca_mode_max_PCORR()
 		{
 			return pca_mode_max_P_CORR;
 		}
@@ -677,7 +677,7 @@ public class JED_Do_Cartesian
 	/**
 	 * @return the pca_mode_min_P_CORR
 	 */
-	public double[] getPca_mode_min_P_CORR()
+	public double[] getPca_mode_min_PCORR()
 		{
 			return pca_mode_min_P_CORR;
 		}
@@ -685,7 +685,7 @@ public class JED_Do_Cartesian
 	/**
 	 * @return the square_pca_modes_P_CORR
 	 */
-	public Matrix getSquare_pca_modes_P_CORR()
+	public Matrix getSquare_pca_modes_PCORR()
 		{
 			return square_pca_modes_P_CORR;
 		}

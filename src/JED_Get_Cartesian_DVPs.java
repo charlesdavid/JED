@@ -29,7 +29,7 @@ import Jama.Matrix;
 public class JED_Get_Cartesian_DVPs
 {
 
-	static String directory, out_dir, description, type, file_name_head, path, Q = "COV", R = "CORR", PC = "P_CORR";
+	static String directory, out_dir, description, type, file_name_head, path, Q = "COV", R = "CORR", PC = "PCORR";
 	static int number_of_modes, reference_column, number_of_conformations;
 	static int ROWS, COLS, number_of_residues;
 	static List<Double> eigenvalues;
@@ -54,7 +54,7 @@ public class JED_Get_Cartesian_DVPs
 	 * @param des
 	 *            The job description
 	 * @param T
-	 *            The type of PCA: COV or CORR (Q or R)
+	 *            The type of PCA: COV, CORR, or PCORR (Q, R, PC)
 	 */
 	JED_Get_Cartesian_DVPs(Matrix data, Matrix evects, List<Double> evals, int ref, String dir, String des, String T)
 		{

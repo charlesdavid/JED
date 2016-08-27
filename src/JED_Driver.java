@@ -526,25 +526,25 @@ public class JED_Driver
 			atoms = cSS.get_atoms();
 			trace_COV = cSS.get_Trace_COV();
 			trace_CORR = cSS.get_Trace_CORR();
-			trace_PCORR = cSS.get_Trace_P_CORR();
+			trace_PCORR = cSS.get_Trace_PCORR();
 			cond_cov = cSS.get_cond_COV();
 			det_cov = cSS.get_Det_COV();
 			rank_cov = cSS.get_Rank_COV();
 			top_cartesian_eigenvalues_COV = cSS.getTop_cartesian_eigenvalues_COV();
 			top_cartesian_eigenvalues_CORR = cSS.getTop_cartesian_eigenvalues_CORR();
-			top_cartesian_eigenvalues_PCORR = cSS.getTop_cartesian_eigenvalues_P_CORR();
+			top_cartesian_eigenvalues_PCORR = cSS.getTop_cartesian_eigenvalues_PCORR();
 			top_cartesian_evectors_COV = cSS.getTop_cartesian_evectors_COV();
 			top_cartesian_evectors_CORR = cSS.getTop_cartesian_evectors_CORR();
-			top_cartesian_evectors_PCORR = cSS.getTop_cartesian_evectors_P_CORR();
+			top_cartesian_evectors_PCORR = cSS.getTop_cartesian_evectors_PCORR();
 			square_pca_modes_COV = cSS.getSquare_pca_modes_COV();
 			square_pca_modes_CORR = cSS.getSquare_pca_modes_CORR();
-			square_pca_modes_PCORR = cSS.getSquare_pca_modes_P_CORR();
+			square_pca_modes_PCORR = cSS.getSquare_pca_modes_PCORR();
 			pca_mode_max_COV = cSS.getPca_mode_max_COV();
 			pca_mode_max_CORR = cSS.getPca_mode_max_CORR();
-			pca_mode_max_PCORR = cSS.getPca_mode_max_P_CORR();
+			pca_mode_max_PCORR = cSS.getPca_mode_max_PCORR();
 			pca_mode_min_COV = cSS.getPca_mode_min_COV();
 			pca_mode_min_CORR = cSS.getPca_mode_min_CORR();
-			pca_mode_min_PCORR = cSS.getPca_mode_min_P_CORR();
+			pca_mode_min_PCORR = cSS.getPca_mode_min_PCORR();
 
 			System.gc();
 
@@ -633,11 +633,11 @@ public class JED_Driver
 			det_d_cov = dpSS.getDet_cov();
 			rank_d_cov = dpSS.getRank_cov();
 			trace_d_corr = dpSS.getTrace_dist_CORR();
-			trace_d_pcorr = dpSS.getTrace_dist_P_CORR();
+			trace_d_pcorr = dpSS.getTrace_dist_PCORR();
 
 			top_distance_evectors_COV = dpSS.getTop_distance_evectors_COV();
 			top_distance_evectors_CORR = dpSS.getTop_distance_evectors_CORR();
-			top_distance_evectors_PCORR = dpSS.getTop_distance_evectors_P_CORR();
+			top_distance_evectors_PCORR = dpSS.getTop_distance_evectors_PCORR();
 
 			System.gc();
 
