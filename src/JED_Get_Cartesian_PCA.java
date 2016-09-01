@@ -251,7 +251,8 @@ public class JED_Get_Cartesian_PCA
 
 			Matrix ss_evectors = evd.getV();
 			Matrix D = evd.getD();
-			precision_cov = ss_evectors.times(D.inverse()).times(ss_evectors.transpose());
+			// precision_cov = ss_evectors.times(D.inverse()).times(ss_evectors.transpose());
+			precision_cov = ss_evectors.times(D.inverse()).times(ss_evectors.inverse());
 			top_evectors_COV = ss_evectors.getMatrix(0, ROWS - 1, ROWS - number_of_modes, ROWS - 1);
 			Matrix modes_reversed = new Matrix(ROWS, COLS);
 			for (int r = 0; r < COLS; r++)
@@ -365,7 +366,8 @@ public class JED_Get_Cartesian_PCA
 
 			Matrix ss_evectors = evd.getV();
 			Matrix D = evd.getD();
-			precision_corr = ss_evectors.times(D.inverse()).times(ss_evectors.transpose());
+			// precision_corr = ss_evectors.times(D.inverse()).times(ss_evectors.transpose());
+			precision_corr = ss_evectors.times(D.inverse()).times(ss_evectors.inverse());
 			top_evectors_CORR = ss_evectors.getMatrix(0, ROWS - 1, ROWS - number_of_modes, ROWS - 1);
 			Matrix modes_reversed = new Matrix(ROWS, COLS);
 			for (int r = 0; r < COLS; r++)

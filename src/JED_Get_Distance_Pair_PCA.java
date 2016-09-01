@@ -253,7 +253,8 @@ public class JED_Get_Distance_Pair_PCA
 
 			Matrix ss_evectors = evd.getV();
 			Matrix D = evd.getD();
-			precision_cov = ss_evectors.times(D.inverse()).times(ss_evectors.transpose());
+			// precision_cov = ss_evectors.times(D.inverse()).times(ss_evectors.transpose());
+			precision_cov = ss_evectors.times(D.inverse()).times(ss_evectors.inverse());
 			evd = null;
 
 			top_evectors_dist_COV = ss_evectors.getMatrix(0, ROWS_DP - 1, ROWS_DP - number_of_modes, ROWS_DP - 1);
@@ -369,7 +370,8 @@ public class JED_Get_Distance_Pair_PCA
 
 			Matrix ss_evectors = evd.getV();
 			Matrix D = evd.getD();
-			precision_corr = ss_evectors.times(D.inverse()).times(ss_evectors.transpose());
+			// precision_corr = ss_evectors.times(D.inverse()).times(ss_evectors.transpose());
+			precision_corr = ss_evectors.times(D.inverse()).times(ss_evectors.inverse());
 			evd = null;
 			System.gc();
 
