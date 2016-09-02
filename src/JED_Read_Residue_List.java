@@ -13,27 +13,27 @@ import Jama.Matrix;
 /**
  * JED class JED_Read_Residue_List: Reads a specified list of residues using the reference PDB file as a guide to select a subset.
  * Copyright (C) 2012 Dr. Charles David
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/license>.
- * 
+ *
  * @author Dr.Charles David
  */
 
 public class JED_Read_Residue_List
 {
 	public String directory, description, pdb_ref_file, rl_SS;
-	public int number_of_residues;
+	public int number_of_residues, number_of_modes;
 	public List<Integer> residue_list, residue_list_original, residues_read;
 	public StringTokenizer sToken;
 	public List<String> chain_idents, chain_idents_read, residue_ID_pairs_read;
@@ -44,7 +44,7 @@ public class JED_Read_Residue_List
 
 	/**
 	 * Constructor for reading residue lists
-	 * 
+	 *
 	 * @param dir
 	 *            The working directory
 	 * @param desc
@@ -79,7 +79,7 @@ public class JED_Read_Residue_List
 					residues_read = rPDB.get_Residues_Read();
 					if (3 * residues_read.size() != original_PDB_coordinates.getRowDimension())
 						{
-							System.err.println("FATAL ERROR! The Reference PDB File DOES NOT MATCH the specified matrix of coordinates.");
+							System.err.println("ERROR! The Reference PDB File DOES NOT MATCH the specified matrix of coordinates.");
 							System.err.println("Terminating program execution.");
 							System.exit(0);
 						}
@@ -93,12 +93,19 @@ public class JED_Read_Residue_List
 						{
 							sToken = new StringTokenizer(line);
 							String r = sToken.nextToken();
+							if (sToken.hasMoreTokens())
+								{
+									System.err.println("ERROR! Residue list for SINGLE chain PDB file must have a SINGLE column of numbers!");
+									System.err.println("Terminating program execution.");
+									System.exit(0);
+
+								}
 							int res = Integer.parseInt(r);
 							residue_list_original.add(res);
 							int res_index = residues_read.indexOf(res);
 							if (res_index == -1)
 								{
-									System.err.println("FATAL ERROR! Requested Residue DOES NOT EXIST in the Reference PDB File: " + res);
+									System.err.println("ERROR! Requested Residue DOES NOT EXIST in the Reference PDB File: " + res);
 									System.err.println("Terminating program execution.");
 									System.exit(0);
 								}
@@ -141,7 +148,7 @@ public class JED_Read_Residue_List
 
 					if (3 * residues_read.size() != original_PDB_coordinates.getRowDimension())
 						{
-							System.err.println("FATAL ERROR! The Reference PDB File DOES NOT MATCH the specified matrix of coordinates.");
+							System.err.println("ERROR! The Reference PDB File DOES NOT MATCH the specified matrix of coordinates.");
 							System.err.println("Terminating program execution.");
 							System.exit(0);
 						}
@@ -155,15 +162,27 @@ public class JED_Read_Residue_List
 					while ((line = residue_reader.readLine()) != null)
 						{
 							sToken = new StringTokenizer(line);
+							if (sToken.countTokens() < 2)
+								{
+									System.err.println("ERROR! Multi Chain PDB residue file list must have 2 columns: Res# and ChainID!!");
+									System.err.println("Terminating program execution.");
+									System.exit(0);
+								}
 							Chain_ID = sToken.nextToken();
 							chain_idents.add(Chain_ID);
 							int res = Integer.parseInt(sToken.nextToken());
+							if (sToken.hasMoreTokens())
+								{
+									System.err.println("ERROR! MULTI chain PDB residue list must only have two columns: Res# and ChainID!");
+									System.err.println("Terminating program execution.");
+									System.exit(0);
+								}
 							residue_list_original.add(res);
 							String ID_Pair = Chain_ID + res;
 							int res_index = residue_ID_pairs_read.indexOf(ID_Pair);
 							if (res_index == -1)
 								{
-									System.err.println("FATAL ERROR! Requested Residue DOES NOT EXIST in the Reference PDB File: " + Chain_ID + res);
+									System.err.println("ERROR! Requested Residue DOES NOT EXIST in the Reference PDB File: " + Chain_ID + res);
 									System.err.println("Terminating program execution.");
 									System.exit(0);
 								}

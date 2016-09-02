@@ -358,21 +358,15 @@ public class FortranFormat
 			int open = withParen.indexOf('(');
 			try
 				{
-					if (open == -1)
-						{
-							throw new ParseException(
-									"Fortran format specification strings must begin with an open parenthesis '(' and end with a close parenthesis ')'. Blank spaces are tolerated before an open parenthesis and any characters are tolerated after a close parenthesis. No characters outside of the root parenthesis affect the format specification.",
-									0);
-						}
+					if (open == -1) { throw new ParseException(
+							"Fortran format specification strings must begin with an open parenthesis '(' and end with a close parenthesis ')'. Blank spaces are tolerated before an open parenthesis and any characters are tolerated after a close parenthesis. No characters outside of the root parenthesis affect the format specification.",
+							0); }
 					int close = findClosingParenthesis(withParen, open);
 					String before = withParen.substring(0, open);
 					String content = withParen.substring(open + 1, close);
 					for (int i = 0; i < before.length(); i++)
 						{
-							if (before.charAt(i) != ' ')
-								{
-									throw new ParseException("Only spaces may precede the root parenthesis.", 0);
-								}
+							if (before.charAt(i) != ' ') { throw new ParseException("Only spaces may precede the root parenthesis.", 0); }
 						}
 					content = content.replaceAll(" ", "");
 					sb.append(recursiveRemoveParenthesis(content));
@@ -561,8 +555,8 @@ public class FortranFormat
 											end = end.substring(1);
 										}
 									complete = complete.substring(0, complete.indexOf("E"));
-									returning.add(complete.length() == 0 ? null : Double.parseDouble(complete) / (complete.indexOf('.') == -1 ? Math.pow(10, u.decimalLength) : 1)
-											* Math.pow(10, Integer.parseInt(end)));
+									returning.add(complete.length() == 0 ? null
+											: Double.parseDouble(complete) / (complete.indexOf('.') == -1 ? Math.pow(10, u.decimalLength) : 1) * Math.pow(10, Integer.parseInt(end)));
 								} else
 								{
 									returning.add(complete.length() == 0 ? null : Double.parseDouble(complete) / (complete.indexOf('.') == -1 ? Math.pow(10, u.decimalLength) : 1));
@@ -592,7 +586,6 @@ public class FortranFormat
 	 * 
 	 * @return the formatted string
 	 */
-	@SuppressWarnings("null")
 	public String format(Vector<Object> objects)
 		{
 			int minus = 0;

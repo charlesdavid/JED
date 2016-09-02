@@ -44,7 +44,7 @@ import Jama.Matrix;
 
 public class JED_Pool_Data
 {
-	static String line, input_path, out_dir, path;
+	static String line, description, input_path, out_dir, path;
 	static int number_Of_Input_Lines, line_count, number_of_jobs, job_number, number_of_input_matrices, ROWS, COLS, Col_sum;
 	static ArrayList<double[]> matrices;
 	static ArrayList<String> lines, paths;
@@ -108,7 +108,7 @@ public class JED_Pool_Data
 			if (OK) number_of_jobs = Integer.parseInt(test);
 			System.out.println("\tThe number of jobs =  " + number_of_jobs);
 			line_count++;
-			/* ************************************************************************************************************************************************** */
+			/* *********************************************************************************************************************************** */
 			System.out.println("Reading line " + (line_count + 1)); // Reads the divider line between the number of jobs and the first job
 			line = lines.get(line_count);
 			System.out.println(line + "\n");
@@ -119,6 +119,7 @@ public class JED_Pool_Data
 
 	private static void read_job_parameters()
 		{
+			int index = 1;
 			if (line_count >= lines.size())
 				{
 					System.err.println("No more data in input file for remaining jobs in batch.");
@@ -126,8 +127,8 @@ public class JED_Pool_Data
 					System.err.println("Terminating program execution.");
 					System.exit(0);
 				}
-			/* ************************************************************************************************************************************************** */
-			System.out.println("Reading line " + (line_count + 1) + ", the FIRST LINE of job: " + (job_number + 1));
+			/* *********************************************************************************************************************************** */
+			System.out.println("Reading line " + (line_count + 1) + ", LINE " + index + " of job: " + (job_number + 1));
 			line = lines.get(line_count);
 			sToken = new StringTokenizer(line);
 			String test = sToken.nextToken();
@@ -141,8 +142,18 @@ public class JED_Pool_Data
 					System.exit(0);
 				}
 			line_count++;
-			/* ************************************************************************************************************************************************** */
-			System.out.println("Reading line " + (line_count + 1) + ", the SECOND LINE of job: " + (job_number + 1));
+			index++;
+			/* *********************************************************************************************************************************** */
+
+			System.out.println("Reading line " + (line_count + 1) + ", LINE " + index + " of job: " + (job_number + 1));
+			line = lines.get(line_count);
+			sToken = new StringTokenizer(line);
+			description = sToken.nextToken();
+			System.out.println("\tJob Description = " + description);
+			line_count++;
+			index++;
+			/* *********************************************************************************************************************************** */
+			System.out.println("Reading line " + (line_count + 1) + ", LINE " + index + " of job: " + (job_number + 1));
 			line = lines.get(line_count);
 			sToken = new StringTokenizer(line);
 			out_dir = sToken.nextToken();
@@ -167,7 +178,8 @@ public class JED_Pool_Data
 						}
 				}
 			line_count++;
-			/* ************************************************************************************************************************************************** */
+			index++;
+			/* *********************************************************************************************************************************** */
 			paths = new ArrayList<String>();
 			for (int i = 0; i < number_of_input_matrices; i++)
 				{
@@ -186,17 +198,17 @@ public class JED_Pool_Data
 						}
 					line_count++;
 				}
-			/* ************************************************************************************************************************************************** */
+			/* *********************************************************************************************************************************** */
 			line = lines.get(line_count); // Reads the divider line between jobs
 			System.out.println("Reading line " + (line_count + 1));
 			System.out.println(line + "\n");
 			line_count++;
-			/* ************************************************************************************************************************************************** */
+			/* *********************************************************************************************************************************** */
 		}
 
 	private static void initialize_Log()
 		{
-			Job_Log = new File(out_dir + "JED_Pool_Log_" + number_of_input_matrices + ".txt");
+			Job_Log = new File(out_dir + "JED_Pool_Log_" + description + "_" + number_of_input_matrices + ".txt");
 			try
 				{
 					Job_Log_Writer = new PrintWriter(new BufferedWriter(new FileWriter(Job_Log)));
@@ -210,6 +222,7 @@ public class JED_Pool_Data
 
 	private static void write_Log()
 		{
+			Job_Log_Writer.write("The job description is: " + description + "\n");
 			Job_Log_Writer.write("The number of matrices that were combined is: " + number_of_input_matrices + "\n");
 			Job_Log_Writer.write("The output directory is: " + out_dir + "\n");
 			Job_Log_Writer.write("The number of ROWS: " + ROWS + "\n");
@@ -311,7 +324,7 @@ public class JED_Pool_Data
 						}
 					matrices.clear();
 
-					path = out_dir + "Pooled_Coordinates_Matrix_" + number_of_input_matrices + ".txt";
+					path = out_dir + "Pooled_Coordinates_Matrix_" + description + "_" + number_of_input_matrices + ".txt";
 					Matrix_IO.write_Matrix(augmented_matrix, path, 9, 3);
 
 					augmented_matrix = null;

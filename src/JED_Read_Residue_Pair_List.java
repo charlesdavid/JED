@@ -13,20 +13,20 @@ import Jama.Matrix;
 /**
  * JED class JED_Read_Residue_Pair_List: Reads a specified list of residue pairs using the reference PDB file as a guide to select a subset.
  * Copyright (C) 2012 Dr. Charles David
- * 
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/license>.
- * 
+ *
  * @author Dr. Charles David
  */
 
@@ -44,7 +44,7 @@ public class JED_Read_Residue_Pair_List
 
 	/**
 	 * Constructor to read a residue pair list
-	 * 
+	 *
 	 * @param dir
 	 *            The working directory
 	 * @param desc
@@ -82,7 +82,7 @@ public class JED_Read_Residue_Pair_List
 					residues_read = rPDB.get_Residues_Read();
 					if (3 * residues_read.size() != original_PDB_coordinates.getRowDimension())
 						{
-							System.err.println("FATAL ERROR! The Reference PDB File DOES NOT MATCH the specified matrix of coordinates.");
+							System.err.println("ERROR! The Reference PDB File DOES NOT MATCH the specified matrix of coordinates.");
 							System.err.println("Terminating program execution.");
 							System.exit(0);
 						}
@@ -100,36 +100,32 @@ public class JED_Read_Residue_Pair_List
 					while ((line = residue_reader.readLine()) != null)
 						{
 							sToken = new StringTokenizer(line);
+							if (sToken.countTokens() < 2)
+								{
+									System.err.println("ERROR! Single Chain PDB residue pair list must have 2 columns!");
+									System.err.println("Terminating program execution.");
+									System.exit(0);
+								}
 							element = sToken.nextToken();
 							int res1 = Integer.parseInt(element);
 							residue_list_original1.add(res1);
 							int res1_index = residues_read.indexOf(res1);
 							residue_list1.add(res1_index);
 							element = sToken.nextToken();
+							if (sToken.hasMoreTokens()) System.err.println("ERROR! Residue list for SINGLE chain PDB file should have a ONLY 2 columns of numbers!");
 							int res2 = Integer.parseInt(element);
 							residue_list_original2.add(res2);
 							int res2_index = residues_read.indexOf(res2);
 							residue_list2.add(res2_index);
 							if (res1_index == -1 || res2_index == -1)
 								{
-									System.err.println("FATAL ERROR! Requested Residue Pair DOES NOT EXIST in the Reference PDB File: " + res1 + "\t" + res2);
+									System.err.println("ERROR! Requested Residue Pair DOES NOT EXIST in the Reference PDB File: " + res1 + "\t" + res2);
 									System.err.println("Terminating program execution.");
 									System.exit(0);
 								}
 						}
 					residue_reader.close();
 					number_of_pairs = residue_list1.size();
-
-					if (number_of_modes > (number_of_pairs))
-						{
-							System.err.println("FATAL ERROR!");
-							System.err.println("Number of Distance Pair Modes REQUESTED: " + number_of_modes);
-							System.err.println("Number of Distance Pair Modes AVAILABLE: " + number_of_pairs);
-							System.err.println("Possible number of Distance Pair Modes is ALWAYS <= Number of Residues Pairs.");
-							System.err.println("Terminating program execution.");
-							System.exit(0);
-						}
-
 					res_list1 = new int[number_of_pairs];
 					res_list_orig1 = new int[number_of_pairs];
 					res_list2 = new int[number_of_pairs];
@@ -168,7 +164,7 @@ public class JED_Read_Residue_Pair_List
 
 					if (3 * residues_read.size() != original_PDB_coordinates.getRowDimension())
 						{
-							System.err.println("FATAL ERROR! The Reference PDB File DOES NOT MATCH the specified matrix of coordinates.");
+							System.err.println("ERROR! The Reference PDB File DOES NOT MATCH the specified matrix of coordinates.");
 							System.err.println("Terminating program execution.");
 							System.exit(0);
 						}
@@ -189,6 +185,12 @@ public class JED_Read_Residue_Pair_List
 							// Reading the first list of residues: Column 1: chain IDs and Column 2: residue numbers
 
 							sToken = new StringTokenizer(line);
+							if (sToken.countTokens() < 4)
+								{
+									System.err.println("ERROR! Multi Chain PDB residue pairs list must have 4 columns: 2 Res# and 2 ChainID!");
+									System.err.println("Terminating program execution.");
+									System.exit(0);
+								}
 							String chain_ID1 = sToken.nextToken();
 							chain_idents1.add(chain_ID1);
 							element = sToken.nextToken();
@@ -198,7 +200,7 @@ public class JED_Read_Residue_Pair_List
 							int res_index1 = residue_ID_pairs_read.indexOf(ID_Pair1);
 							if (res_index1 == -1)
 								{
-									System.err.println("FATAL ERROR! Requested Residue DOES NOT EXIST in the Reference PDB File: " + chain_ID1 + res1);
+									System.err.println("ERROR! Requested Residue DOES NOT EXIST in the Reference PDB File: " + chain_ID1 + res1);
 									System.err.println("Terminating program execution.");
 									System.exit(0);
 								}
@@ -209,13 +211,14 @@ public class JED_Read_Residue_Pair_List
 							String chain_ID2 = sToken.nextToken();
 							chain_idents2.add(chain_ID2);
 							element = sToken.nextToken();
+							if (sToken.hasMoreTokens()) System.err.println("ERROR! MULTI chain PDB residue pair list should only have 4 columns: 2 Res# and 2 ChainID!");
 							int res2 = Integer.parseInt(element);
 							residue_list_original2.add(res2);
 							String ID_Pair2 = chain_ID2 + res2;
 							int res_index2 = residue_ID_pairs_read.indexOf(ID_Pair2);
 							if (res_index2 == -1)
 								{
-									System.err.println("FATAL ERROR! Requested Residue DOES NOT EXIST in the Reference PDB File: " + chain_ID2 + res2);
+									System.err.println("ERROR! Requested Residue DOES NOT EXIST in the Reference PDB File: " + chain_ID2 + res2);
 									System.err.println("Terminating program execution.");
 									System.exit(0);
 								}
@@ -223,17 +226,6 @@ public class JED_Read_Residue_Pair_List
 						}
 					residue_reader.close();
 					number_of_pairs = residue_list1.size();
-
-					if (number_of_modes > (number_of_pairs))
-						{
-							System.err.println("FATAL ERROR!");
-							System.err.println("Number of Distance Pair Modes REQUESTED: " + number_of_modes);
-							System.err.println("Number of Distance Pair Modes AVAILABLE: " + number_of_pairs);
-							System.err.println("Possible number of Distance Pair Modes is AWAYS <= Number of Residue Pairs.");
-							System.err.println("Terminating program execution.");
-							System.exit(0);
-						}
-
 					res_list1 = new int[number_of_pairs];
 					res_list_orig1 = new int[number_of_pairs];
 					res_list2 = new int[number_of_pairs];

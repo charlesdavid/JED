@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -18,7 +19,8 @@ import Jama.Matrix;
 
 /**
  * JED class VIZ_Driver: Driver program to visualize Cartesian PCA modes.
- * Constructs sets of 20 PDB files and a Pymol(TM) Script to animate the PCA modes derived from the Cartesian subset.
+ * Constructs sets of 20 PDB files and a Pymol(TM) Script to animate the individual PCA modes derived from the Cartesian subset.
+ * Constructs a set of frames and a Pymol(TM) Script to animate the essential motion in a combined group of PCA modes
  * Copyright (C) 2012 Dr. Charles David
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -44,15 +46,15 @@ import Jama.Matrix;
 public class VIZ_Driver
 {
 
-	static String line, input_path, out_dir, PDB, eigenvectors, modes, maxes, mins, file_name_head, CA = "CA", C = "C", N = "N", O = "O", date;
-	static int number_Of_Input_Lines, line_count, number_of_modes_viz, number_of_residues, ROWS_Evectors, ROWS_Modes, COLS;
-	static double mode_amplitude;
-	static final double FLOOR = 1.00E-3, delta_y = 99;
-	static int number_of_jobs, job_number;
-	static List<Double> pca_mode_maxs, pca_mode_mins;
-	static Matrix top_evectors, square_pca_modes;
+	static String line, input_path, out_dir, PDB, eigenvectors, evals, modes, maxes, mins, file_name_head, CA = "CA", C = "C", N = "N", O = "O", date, type;
+	static int number_of_jobs, job_number, number_of_frames, number_of_cycles, number_Of_Input_Lines, line_count, number_of_modes_start, number_of_modes_viz, number_of_residues, ROWS_Evectors,
+			ROWS_Modes, COLS;
+	static double mode_amplitude, normed_mode_amplitude, threshold_low, threshold_high;
+	static final double FLOOR = 1.00E-3, delta_y = 99, pi = Math.PI;
+	static List<Double> eigenvalues, pca_mode_maxs, pca_mode_mins;
+	static Matrix top_evectors, top_square_pca_modes;
 	static BufferedWriter output_file_writer;
-	static Vector<Atom> atoms;
+	static Vector<Atom> atoms, atoms_essential;
 	static File log;
 	static BufferedReader input_reader;
 	static BufferedWriter log_writer;
@@ -62,13 +64,17 @@ public class VIZ_Driver
 	static RoundingMode rm;
 	static long startTime, endTime, totalTime;
 	static List<String> lines;
-	static boolean exist, success, OK;
+	static FortranFormat formatter;
+	static PDB_File_Parser parser;
+	static boolean do_individual, exist, success, OK;
 
 	private static void read_data_files()
 		{
 			atoms = PDB_IO.Read_PDB(PDB);
+			atoms_essential = PDB_IO.Read_PDB(PDB);
 			top_evectors = Matrix_IO.read_Matrix(eigenvectors);
-			square_pca_modes = Matrix_IO.read_Matrix(modes);
+			top_square_pca_modes = Matrix_IO.read_Matrix(modes);
+			eigenvalues = List_IO.read_List(evals, "Double");
 			pca_mode_maxs = List_IO.read_List(maxes, "Double");
 			pca_mode_mins = List_IO.read_List(mins, "Double");
 		}
@@ -77,54 +83,38 @@ public class VIZ_Driver
 		{
 
 			ROWS_Evectors = top_evectors.getRowDimension();
-			ROWS_Modes = square_pca_modes.getRowDimension();
+			ROWS_Modes = top_square_pca_modes.getRowDimension();
 			number_of_residues = ROWS_Modes;
 			COLS = top_evectors.getColumnDimension();
 			file_name_head = out_dir + "ss_" + number_of_residues;
+			formatter = new FortranFormat("(A6,I5,1X,A4,A1,A3,1X,A1,I4,A1,3X,3F8.3,2F6.2,10X,2A2)");
+			formatter.setAddReturn(true);
+			parser = new PDB_File_Parser();
 
-			if (number_of_modes_viz > COLS)
-				{
-					System.err.println("FATAL ERROR!");
-					System.err.println("Number of Cartesian Modes to Visualize REQUESTED: " + number_of_modes_viz);
-					System.err.println("Number of Cartesian Modes AVAILABLE: " + COLS);
-					System.err.println("The Possible number of Cartesial Modes to Visualize is always <= Number of Cartesian Modes requested.");
-					System.err.println("Terminating program execution.");
-					System.exit(0);
-				}
-
-			for (int outer = 0; outer < number_of_modes_viz; outer++)
+			for (int outer = 0; outer < number_of_modes_viz; outer++) // iterates over the modes
 				{
 
 					double MODE_MIN = pca_mode_mins.get(outer);
 					double MODE_MAX = pca_mode_maxs.get(outer);
-
 					if (MODE_MIN < FLOOR) MODE_MIN = FLOOR;
-
 					double LOG_MODE_MIN = Math.log10(MODE_MIN);
 					double LOG_MODE_MAX = Math.log10(MODE_MAX);
-
 					double delta_x = (LOG_MODE_MAX - LOG_MODE_MIN);
 					double slope = (delta_y / delta_x);
-					double y_min = (slope * LOG_MODE_MIN);
-
 					String f_index = "";
 					int frame_index = 0;
-
+					Matrix evector = top_evectors.getMatrix(0, ROWS_Evectors - 1, outer, outer);
+					Matrix mode = top_square_pca_modes.getMatrix(0, ROWS_Modes - 1, outer, outer);
 					try
 						{
-							for (float mc = -1; mc < 1; mc += .1)
+							for (double mc = 0; mc < (2 * Math.PI); mc += (Math.PI / 10)) // loop for perturbing the eigenvector components sinusoidally
 								{
-									frame_index = (int) (mc * 10 + 10);
-									Matrix evector = top_evectors.getMatrix(0, ROWS_Evectors - 1, outer, outer);
-									Matrix d_mode = square_pca_modes.getMatrix(0, ROWS_Modes - 1, outer, outer);
-
 									f_index = String.format("%03d", frame_index + 1);
-
-									String output_file = file_name_head + "_Mode_" + (outer + 1) + "_frame_" + f_index + ".pdb";
+									String output_file = file_name_head + "_Mode_" + (outer + 1) + "_" + type + "_frame_" + f_index + ".pdb";
 									output_file_writer = new BufferedWriter(new FileWriter(output_file));
 									int index = 0;
 									int count = 0;
-									for (Atom a : atoms)
+									for (Atom a : atoms) // Iterates through the vector of atoms; shifts all backbone atoms along the eigenvector
 										{
 											index = (count / 4);  // there are 4 atom symbols in the if statement
 											if (a.symbol.equals(N) || a.symbol.equals(CA) || a.symbol.equals(C) || a.symbol.equals(O))
@@ -136,40 +126,149 @@ public class VIZ_Driver
 													double v_x = evector.get(index, 0);
 													double v_y = evector.get((index + number_of_residues), 0);
 													double v_z = evector.get((index + 2 * number_of_residues), 0);
-
-													double w_x = v_x * mc * mode_amplitude;
-													double w_y = v_y * mc * mode_amplitude;
-													double w_z = v_z * mc * mode_amplitude;
-
-													a.x = x_coord + w_x;
-													a.y = y_coord + w_y;
-													a.z = z_coord + w_z;
-
-													double bff = (d_mode.get(index, 0));
-													if (bff < FLOOR) bff = FLOOR;
-													double log_bff = Math.log10(bff);
-
-													double bf = ((slope * log_bff) - y_min);
-
+													double w = Math.sin(mc); // sine function ensures the first structure is unperturbed;
+																			 // preserves chain connectivity in PyMol movies...
+													double shift_x = v_x * w * mode_amplitude;
+													double shift_y = v_y * w * mode_amplitude;
+													double shift_z = v_z * w * mode_amplitude;
+													a.x = x_coord + shift_x;
+													a.y = y_coord + shift_y;
+													a.z = z_coord + shift_z;
+													double bff = (mode.get(index, 0));
+													if (bff < MODE_MIN) bff = MODE_MIN;
+													if (bff > MODE_MAX) bff = MODE_MAX;
+													double BFF = bff / MODE_MIN;
+													double log_bff = Math.log10(BFF);
+													double bf = (slope * log_bff);
 													a.setB_factor(bf);
 												} else
 												{
 													a.setB_factor(0);
 												}
 										}
-
-									PDB_IO.Write_PDB(output_file, atoms);
-
+									parser.write_PDB(output_file_writer, atoms, formatter);
+									output_file_writer.close();
+									frame_index++;
 									System.gc();
+
 								}
 
 						} catch (IOException io)
 						{
-							System.err.println("IO Exception thrown. Could not write the mode file: " + file_name_head + "_Mode_" + (outer + 1) + "_frame_" + f_index + ".pdb");
+							System.err.println("IO Exception thrown. Could not write the mode file: " + file_name_head + "_Mode_" + (outer + 1) + "_" + type + "_frame_" + f_index + ".pdb");
 							io.printStackTrace();
 							System.exit(0);
 						}
 					write_Pymol_Script(outer);
+				}
+		}
+
+	private static void get_Essential_Visualization() throws IOException
+		{
+
+			ROWS_Evectors = top_evectors.getRowDimension();
+			ROWS_Modes = top_square_pca_modes.getRowDimension();
+			number_of_residues = ROWS_Modes;
+			COLS = top_evectors.getColumnDimension();
+			file_name_head = out_dir + "ss_" + number_of_residues;
+			formatter = new FortranFormat("(A6,I5,1X,A4,A1,A3,1X,A1,I4,A1,3X,3F8.3,2F6.2,10X,2A2)");
+			formatter.setAddReturn(true);
+			parser = new PDB_File_Parser();
+
+			/* Get the top combined square mode */
+			Matrix sum = top_square_pca_modes.getMatrix(0, ROWS_Modes - 1, 0, 0);
+			double eval_abs = Math.abs(eigenvalues.get(0));
+			Matrix w_sum = sum.times(eval_abs);
+			for (int i = 1; i < number_of_modes_viz; i++)
+				{
+					Matrix plus = top_square_pca_modes.getMatrix(0, ROWS_Modes - 1, i, i);
+					eval_abs = Math.abs(eigenvalues.get(i));
+					Matrix w_plus = plus.times(eval_abs);
+					w_sum = w_sum.plus(w_plus);
+				}
+
+			/* Norm and sort the vector */
+			Matrix w_sum_normed = Projector.get_Normed_array(w_sum);
+			double[] sorted_w_sum_normed = w_sum_normed.getColumnPackedCopy();
+			Arrays.sort(sorted_w_sum_normed);
+
+			int threshold1 = (int) (ROWS_Modes * threshold_low);
+			int threshold2 = (int) (ROWS_Modes * threshold_high);
+
+			/* Establish the Log coloring scheme */
+			double MODE_MIN = sorted_w_sum_normed[threshold1];
+			double MODE_MAX = sorted_w_sum_normed[sorted_w_sum_normed.length - threshold2 - 1];
+			if (MODE_MIN < FLOOR) MODE_MIN = FLOOR;
+			double LOG_MODE_MIN = Math.log10(MODE_MIN);
+			double LOG_MODE_MAX = Math.log10(MODE_MAX);
+			double delta_x = (LOG_MODE_MAX - LOG_MODE_MIN);
+			double slope = (delta_y / delta_x);
+
+			final double eigenvalue_max = eigenvalues.get(number_of_modes_start); // the largest eigenvalue sets the wave number for the first mode
+			int frame_index = 0;
+			String f_index = "";
+
+			for (int t = 0; t < number_of_frames; t++) // loop for perturbing the eigenvector components sinusoidally over number of frames: FRAME LOOP
+				{
+					f_index = String.format("%03d", frame_index + 1);
+					frame_index++;
+					double omega = 0;
+					double weight = 0;
+
+					for (int mode = number_of_modes_start; mode < number_of_modes_viz; mode++) // iterates over the modes: MODE LOOP
+						{
+							Matrix evector = top_evectors.getMatrix(0, ROWS_Evectors - 1, mode, mode);
+							double eval = eigenvalues.get(mode);
+							double A_k = Math.sqrt(eval / eigenvalue_max);
+							omega = ((2 * number_of_cycles * pi / number_of_frames) * Math.sqrt(eigenvalue_max / eval));
+							weight = A_k * Math.sin(omega * t); // sine function ensures harmonic motion where the first structure is unperturbed;
+
+							if (type.equals("PCORR")) // adjust for inverse
+								{
+									omega = ((2 * number_of_cycles * pi / number_of_frames) * Math.sqrt(eval / eigenvalue_max)); // set the frequency for PCORR
+									A_k = Math.sqrt(eigenvalue_max / eval);
+									weight = A_k * Math.sin(omega * t);
+								}
+							int index = 0;
+							int count = 0;
+							for (Atom a : atoms_essential) // Iterates through the vector of atoms; shifts all backbone atoms along the eigenvector: ATOM LOOP
+								{
+									index = (count / 4);  // there are 4 atom symbols in the if statement
+									if (a.symbol.equals(N) || a.symbol.equals(CA) || a.symbol.equals(C) || a.symbol.equals(O))
+										{
+											count++;
+											double x_coord = a.x;
+											double y_coord = a.y;
+											double z_coord = a.z;
+											double v_x = evector.get(index, 0);
+											double v_y = evector.get((index + number_of_residues), 0);
+											double v_z = evector.get((index + 2 * number_of_residues), 0);
+											double shift_x = v_x * weight * mode_amplitude;
+											double shift_y = v_y * weight * mode_amplitude;
+											double shift_z = v_z * weight * mode_amplitude;
+											a.x = x_coord + shift_x;
+											a.y = y_coord + shift_y;
+											a.z = z_coord + shift_z;
+											double bff = (w_sum_normed.get(index, 0));
+											if (bff < MODE_MIN) bff = MODE_MIN;
+											if (bff > MODE_MAX) bff = MODE_MAX;
+											double BFF = bff / MODE_MIN;
+											double log_bff = Math.log10(BFF);
+											double bf = (slope * log_bff);
+											a.setB_factor(bf);
+
+										} else
+										{
+											a.setB_factor(0);
+										}
+								}
+						}
+					String output_file = file_name_head + "_Essential_Modes_" + (number_of_modes_start + 1) + "_" + (number_of_modes_start + number_of_modes_viz) + "_" + type + "_frame_" + f_index
+							+ ".pdb";
+					output_file_writer = new BufferedWriter(new FileWriter(output_file));
+					parser.write_PDB(output_file_writer, atoms_essential, formatter);
+					output_file_writer.close();
+					write_Pymol_Script_Essential(number_of_modes_viz);
 				}
 		}
 
@@ -178,13 +277,13 @@ public class VIZ_Driver
 			try
 				{
 					String name = "ss_" + number_of_residues;
-					File pymol_script_file = new File(file_name_head + "_Mode_" + (mode_number + 1) + ".pml");
+					File pymol_script_file = new File(file_name_head + "_Mode_" + (mode_number + 1) + "_" + type + ".pml");
 					BufferedWriter script_file_writer = new BufferedWriter(new FileWriter(pymol_script_file));
 					script_file_writer.write("from pymol import cmd" + "\n");
 					script_file_writer.write("from pymol.cgo import *" + "\n");
 					script_file_writer.write("bg_color white" + "\n");
 					script_file_writer.write("from glob import glob" + "\n");
-					script_file_writer.write("filelist = glob (" + " \"" + name + "_Mode_" + (mode_number + 1) + "*.pdb\" )" + "\n");
+					script_file_writer.write("filelist = glob (" + " \"" + name + "_Mode_" + (mode_number + 1) + "_" + type + "_frame*.pdb\" )" + "\n");
 					script_file_writer.write("for file in filelist: cmd.load( file, " + "\"" + "Mode_" + (mode_number + 1) + "\" )" + "\n");
 					script_file_writer.write("hide lines, " + "Mode_" + (mode_number + 1) + "\n");
 					script_file_writer.write("show cartoon, " + "Mode_" + (mode_number + 1) + "\n");
@@ -199,7 +298,40 @@ public class VIZ_Driver
 
 				} catch (IOException io)
 				{
-					System.err.println("IOException thrown. Could not write the Pymol script file: " + file_name_head + "_Mode_" + (mode_number + 1) + ".pml");
+					System.err.println("IOException thrown. Could not write the Pymol script file: " + file_name_head + "_Mode_" + (mode_number + 1) + "_" + type + ".pml");
+					io.getMessage();
+					io.getStackTrace();
+				}
+		}
+
+	private static void write_Pymol_Script_Essential(int modes)
+		{
+			try
+				{
+					String name = "ss_" + number_of_residues;
+					File pymol_script_file = new File(file_name_head + "_Essential_Modes_" + (number_of_modes_start + 1) + "_" + (number_of_modes_start + number_of_modes_viz) + "_" + type + ".pml");
+					BufferedWriter script_file_writer = new BufferedWriter(new FileWriter(pymol_script_file));
+					script_file_writer.write("from pymol import cmd" + "\n");
+					script_file_writer.write("from pymol.cgo import *" + "\n");
+					script_file_writer.write("bg_color white" + "\n");
+					script_file_writer.write("from glob import glob" + "\n");
+					script_file_writer.write("filelist = glob (" + " \"" + name + "_Essential_Modes_" + (number_of_modes_start + 1) + "_" + (number_of_modes_start + number_of_modes_viz) + "_" + type
+							+ "_frame*.pdb\" )" + "\n");
+					script_file_writer.write("for file in filelist: cmd.load( file, " + "\"" + "Essential_Modes_" + (modes) + "\" )" + "\n");
+					script_file_writer.write("hide lines, " + "Essential_Modes_" + (modes) + "\n");
+					script_file_writer.write("show cartoon, " + "Essential_Modes_" + (modes) + "\n");
+					script_file_writer.write("cmd.spectrum(\"b\",selection=\"((all)&*/ca)\",quiet=0)" + "\n");
+					script_file_writer.write("orient" + "\n");
+					script_file_writer.write("set two_sided_lighting,1" + "\n");
+					script_file_writer.write("set cartoon_fancy_helices,1" + "\n");
+					script_file_writer.write("set cartoon_highlight_color,grey50" + "\n");
+					script_file_writer.write("util.performance(0)" + "\n");
+					script_file_writer.write("rebuild" + "\n");
+					script_file_writer.close();
+
+				} catch (IOException io)
+				{
+					System.err.println("IOException thrown. Could not write the Pymol script file: " + file_name_head + "_Mode_" + (modes) + "_" + type + ".pml");
 					io.getMessage();
 					io.getStackTrace();
 				}
@@ -224,10 +356,10 @@ public class VIZ_Driver
 					input_reader.close();
 					System.out.println("--------------------------------------------------------------------------------------------------------------------------------");
 					System.out.println("The number of lines of parameters in the input file is: " + number_Of_Input_Lines + "\n");
-					if (number_Of_Input_Lines < 3)
+					if (number_Of_Input_Lines < 11)
 						{
 							System.err.println("INSUFFICIENT DATA IN THE INPUT FILE:");
-							System.err.println("THERE MUST BE AT LEAST 3 LINES OF PARAMETERS.");
+							System.err.println("THERE MUST BE AT LEAST 11 LINES OF PARAMETERS FOR A SINGLE JOB.");
 							System.err.println("Terminating program execution.");
 							System.exit(0);
 						}
@@ -258,7 +390,7 @@ public class VIZ_Driver
 			if (OK) number_of_jobs = Integer.parseInt(test);
 			System.out.println("\tThe number of jobs =  " + number_of_jobs);
 			line_count++;
-			/* ************************************************************************************************************************************************** */
+			/* *********************************************************************************************************************************** */
 			System.out.println("Reading line " + (line_count + 1)); // Reads the divider line between the number of jobs and the first job
 			line = lines.get(line_count);
 			System.out.println(line + "\n");
@@ -276,11 +408,21 @@ public class VIZ_Driver
 					System.err.println("Terminating program execution.");
 					System.exit(0);
 				}
-			/* ************************************************************************************************************************************************** */
+			/* ************************************************************************************************************************************ */
 			System.out.println("Reading line " + (line_count + 1) + ", the FIRST LINE of job: " + (job_number + 1));
 			line = lines.get(line_count);
 			sToken = new StringTokenizer(line);
 			String test = sToken.nextToken();
+			OK = Test_Numeric_Type.test_Integer(test);
+			if (OK) number_of_modes_start = (Integer.parseInt(test) - 1);
+			System.out.println("\tThe starting mode for essential motion visualization = " + number_of_modes_start);
+			if (!OK || number_of_modes_start < 0)
+				{
+					System.err.println("Expected the starting mode for essential motion visualization to be a positive integer, but got: " + test);
+					System.err.println("Terminating program execution.");
+					System.exit(0);
+				}
+			test = sToken.nextToken();
 			OK = Test_Numeric_Type.test_Integer(test);
 			if (OK) number_of_modes_viz = Integer.parseInt(test);
 			System.out.println("\tThe number of modes to visualize = " + number_of_modes_viz);
@@ -296,12 +438,59 @@ public class VIZ_Driver
 			System.out.println("\tThe Mode Amplitude = " + mode_amplitude);
 			if (!OK || mode_amplitude < 0)
 				{
-					System.err.println("Expected Percent to be a positive decimal, but got: " + test);
-					System.err.println("Terminating program execution.");
-					System.exit(0);
+					System.err.println("Expected Mode Amplitude to be a positive decimal, but got: " + test);
+					System.err.println("Setting Mode Amplitude to default value of 1.5");
+					mode_amplitude = 1.5;
 				}
+			test = sToken.nextToken();
+			OK = Test_Numeric_Type.test_Double(test);
+			if (OK) threshold_low = Double.parseDouble(test);
+			System.out.println("\tThe low threshold is " + threshold_low);
+			if (!OK || threshold_low < 0)
+				{
+					System.err.println("Expected low threshold percentage to be a positive decimal in range [0,1), but got: " + test);
+					System.err.println("Setting low threshold percentage to default value of 0.05");
+					threshold_low = 0.05;
+				}
+			test = sToken.nextToken();
+			OK = Test_Numeric_Type.test_Double(test);
+			if (OK) threshold_high = Double.parseDouble(test);
+			System.out.println("\tThe high threshold is " + threshold_high);
+			if (!OK || threshold_high < 0)
+				{
+					System.err.println("Expected high threshold percentage to be a positive decimal in range [0,1), but got: " + test);
+					System.err.println("Setting high threshold percentage to default value of 0.05");
+					threshold_high = 0.05;
+				}
+			test = sToken.nextToken();
+			OK = Test_Numeric_Type.test_Integer(test);
+			if (OK) number_of_frames = Integer.parseInt(test);
+			System.out.println("\tThe Number of frames to generate = " + number_of_frames);
+			if (!OK || number_of_frames < 0)
+				{
+					System.err.println("Expected Number of frames to be a positive integer, but got: " + test);
+					System.err.println("Setting number of frames to default value of 100");
+					number_of_frames = 100;
+				}
+			test = sToken.nextToken();
+			OK = Test_Numeric_Type.test_Integer(test);
+			if (OK) number_of_cycles = Integer.parseInt(test);
+			System.out.println("\tThe Number of Cycles to generate = " + number_of_cycles);
+			if (!OK || number_of_cycles < 1)
+				{
+					System.err.println("Expected Number of Cycles to be a positive integer, but got: " + test);
+					System.err.println("Setting number of cycles to default value of 5");
+					number_of_cycles = 5;
+				}
+			test = sToken.nextToken();
+			if (test.equals("1")) do_individual = true;
+			if (!test.equals("1")) do_individual = false;
+			System.out.println("\tGenerate individual modes = " + do_individual);
+			test = sToken.nextToken();
+			type = test;
+			System.out.println("\tThe type is " + type);
 			line_count++;
-			/* ************************************************************************************************************************************************** */
+			/* ************************************************************************************************************************************ */
 			System.out.println("Reading line " + (line_count + 1) + ", the SECOND LINE of job: " + (job_number + 1));
 			line = lines.get(line_count);
 			sToken = new StringTokenizer(line);
@@ -314,8 +503,21 @@ public class VIZ_Driver
 					System.exit(0);
 				}
 			line_count++;
-			/* ************************************************************************************************************************************************** */
+			/* ************************************************************************************************************************************ */
 			System.out.println("Reading line " + (line_count + 1) + ", the THIRD LINE of job: " + (job_number + 1));
+			line = lines.get(line_count);
+			sToken = new StringTokenizer(line);
+			evals = sToken.nextToken();
+			System.out.println("\tPath to the Eigenvalues file = " + evals);
+			exist = new File(evals).exists();
+			if (!exist)
+				{
+					System.err.println("The file does not exist:  " + evals);
+					System.exit(0);
+				}
+			line_count++;
+			/* ************************************************************************************************************************************ */
+			System.out.println("Reading line " + (line_count + 1) + ", the FOURTH LINE of job: " + (job_number + 1));
 			line = lines.get(line_count);
 			sToken = new StringTokenizer(line);
 			eigenvectors = sToken.nextToken();
@@ -327,8 +529,8 @@ public class VIZ_Driver
 					System.exit(0);
 				}
 			line_count++;
-			/* ************************************************************************************************************************************************** */
-			System.out.println("Reading line " + (line_count + 1) + ", the FOURTH LINE of job: " + (job_number + 1));
+			/* ************************************************************************************************************************************ */
+			System.out.println("Reading line " + (line_count + 1) + ", the FIFTH LINE of job: " + (job_number + 1));
 			line = lines.get(line_count);
 			sToken = new StringTokenizer(line);
 			modes = sToken.nextToken();
@@ -340,8 +542,8 @@ public class VIZ_Driver
 					System.exit(0);
 				}
 			line_count++;
-			/* ************************************************************************************************************************************************** */
-			System.out.println("Reading line " + (line_count + 1) + ", the FIFTH LINE of job: " + (job_number + 1));
+			/* ************************************************************************************************************************************ */
+			System.out.println("Reading line " + (line_count + 1) + ", the SIXTH LINE of job: " + (job_number + 1));
 			line = lines.get(line_count);
 			sToken = new StringTokenizer(line);
 			maxes = sToken.nextToken();
@@ -353,8 +555,8 @@ public class VIZ_Driver
 					System.exit(0);
 				}
 			line_count++;
-			/* ************************************************************************************************************************************************** */
-			System.out.println("Reading line " + (line_count + 1) + ", the SIXTH LINE of job: " + (job_number + 1));
+			/* ************************************************************************************************************************************ */
+			System.out.println("Reading line " + (line_count + 1) + ", the SEVENTH LINE of job: " + (job_number + 1));
 			line = lines.get(line_count);
 			sToken = new StringTokenizer(line);
 			mins = sToken.nextToken();
@@ -366,8 +568,8 @@ public class VIZ_Driver
 					System.exit(0);
 				}
 			line_count++;
-			/* ************************************************************************************************************************************************** */
-			System.out.println("Reading line " + (line_count + 1) + ", the SEVENTH LINE of job: " + (job_number + 1));
+			/* ************************************************************************************************************************************ */
+			System.out.println("Reading line " + (line_count + 1) + ", the EIGHTH LINE of job: " + (job_number + 1));
 			line = lines.get(line_count);
 			sToken = new StringTokenizer(line);
 			out_dir = sToken.nextToken();
@@ -392,12 +594,12 @@ public class VIZ_Driver
 						}
 				}
 			line_count++;
-			/* ************************************************************************************************************************************************** */
+			/* ************************************************************************************************************************************ */
 			line = lines.get(line_count); // Reads the divider line between jobs
 			System.out.println("Reading line " + (line_count + 1));
 			System.out.println(line + "\n");
 			line_count++;
-			/* ************************************************************************************************************************************************** */
+			/* ************************************************************************************************************************************ */
 		}
 
 	private static void initialize_Job_Log()
@@ -408,11 +610,16 @@ public class VIZ_Driver
 					log_writer = new BufferedWriter(new FileWriter(log));
 					log_writer.write("JED Cartesian Mode Visualization Driver version 1.0" + "\n");
 					log_writer.write("Reference PDB file: " + PDB + "\n");
-					log_writer.write("Eigenvector file: " + eigenvectors + "\n");
+					log_writer.write("Eigenvalues file: " + evals + "\n");
+					log_writer.write("Eigenvectors file: " + eigenvectors + "\n");
 					log_writer.write("Modes file: " + modes + "\n");
 					log_writer.write("Mode Maxes file: " + maxes + "\n");
 					log_writer.write("Mode Mins file: " + mins + "\n");
 					log_writer.write("Output directory: " + out_dir + "\n");
+					log_writer.write("Number of Frames = " + (number_of_frames) + "\n");
+					log_writer.write("Number of Cycles = " + (number_of_cycles) + "\n");
+					log_writer.write("Mode amplitutde = " + nf.format(mode_amplitude) + "\n");
+
 					log_writer.flush();
 
 				} catch (IOException e)
@@ -429,7 +636,7 @@ public class VIZ_Driver
 		{
 			try
 				{
-					log_writer.write("\nPerforming Cartesian Mode Visualization on Top  " + number_of_modes_viz + "  cPCA modes.\n");
+					log_writer.write("\nPerforming Cartesian Mode Visualization on Top  " + number_of_modes_viz + "  individual cPCA modes.\n");
 					log_writer.write("MODE AMPLITUDE = " + nf.format(mode_amplitude) + "\n");
 					log_writer.flush();
 
@@ -443,7 +650,24 @@ public class VIZ_Driver
 			System.gc();
 		}
 
-	public static void main(String[] args)
+	private static void write_Essential_VIZ_Log()
+		{
+			try
+				{
+					log_writer.write("\nPerforming Cartesian Essential Mode Visualization, combining the top  " + number_of_modes_viz + "  cPCA modes.\n");
+					log_writer.flush();
+
+				} catch (IOException e)
+				{
+					System.err.println("Could not write the VIZ_LOG file: " + out_dir + "VIZ_LOG.txt");
+					System.err.println("Program terminating.\n");
+					e.printStackTrace();
+					System.exit(0);
+				}
+			System.gc();
+		}
+
+	public static void main(String[] args) throws IOException
 		{
 
 			rm = RoundingMode.HALF_UP;
@@ -504,13 +728,21 @@ public class VIZ_Driver
 					initialize_Job_Log();
 					read_data_files();
 
-					System.out.println("Performing Cartesian Mode Visualizations... ");
+					if (do_individual)
+						{
+							System.out.println("Performing Cartesian Mode Visualizations... ");
+							startTime = System.nanoTime();
+							get_Mode_Visualizations();
+							write_VIZ_Log();
+							endTime = System.nanoTime();
+						}
+
+					System.out.println("Performing Essential Cartesian Mode Visualization... ");
 					startTime = System.nanoTime();
-
-					get_Mode_Visualizations();
-					write_VIZ_Log();
-
+					get_Essential_Visualization();
+					write_Essential_VIZ_Log();
 					endTime = System.nanoTime();
+
 					totalTime = endTime - startTime;
 
 					System.out.println("Done. (" + nf.format(totalTime / 1000000000.0) + " seconds)");
