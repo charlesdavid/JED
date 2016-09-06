@@ -54,7 +54,7 @@ public class JED_Get_Cartesian_DVPs
 	 * @param des
 	 *            The job description
 	 * @param T
-	 *            The type of PCA: COV, CORR, or PCORR (Q, R, PC)
+	 *            The type of PCA: COV, CORR, PCORR (Q, R, P)
 	 */
 	JED_Get_Cartesian_DVPs(Matrix data, Matrix evects, List<Double> evals, int ref, String dir, String des, String T)
 		{

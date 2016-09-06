@@ -650,19 +650,19 @@ public class JED_Driver
 
 	private static void get_dpPCA_SSA()
 		{
-			JED_Get_Subspace_Analysis jssa1 = new JED_Get_Subspace_Analysis(directory, description, "dpPCA", top_cartesian_evectors_COV, top_cartesian_evectors_CORR, "COV_vs_CORR");
+			JED_Get_Subspace_Analysis jssa1 = new JED_Get_Subspace_Analysis(directory, description, "dpPCA", top_distance_evectors_COV, top_distance_evectors_CORR, "COV_vs_CORR");
 				{
 					jssa1.get_SSA_JED();
 					jssa1.get_FSSA_Iterated_JED();
 					System.gc();
 				}
-			JED_Get_Subspace_Analysis jssa2 = new JED_Get_Subspace_Analysis(directory, description, "dpPCA", top_cartesian_evectors_COV, top_cartesian_evectors_PCORR, "COV_vs_PCORR");
+			JED_Get_Subspace_Analysis jssa2 = new JED_Get_Subspace_Analysis(directory, description, "dpPCA", top_distance_evectors_COV, top_distance_evectors_PCORR, "COV_vs_PCORR");
 				{
 					jssa2.get_SSA_JED();
 					jssa2.get_FSSA_Iterated_JED();
 					System.gc();
 				}
-			JED_Get_Subspace_Analysis jssa3 = new JED_Get_Subspace_Analysis(directory, description, "dpPCA", top_cartesian_evectors_CORR, top_cartesian_evectors_PCORR, "CORR_vs_PCORR");
+			JED_Get_Subspace_Analysis jssa3 = new JED_Get_Subspace_Analysis(directory, description, "dpPCA", top_distance_evectors_CORR, top_distance_evectors_PCORR, "CORR_vs_PCORR");
 				{
 					jssa3.get_SSA_JED();
 					jssa3.get_FSSA_Iterated_JED();

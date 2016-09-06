@@ -36,14 +36,14 @@ public class JED_Do_Dist_Pairs
 
 	int number_of_Chains, number_of_pairs, reference_column, number_of_modes_dist_pairs;
 	String directory, out_dir, description, pdb_ref_file, rl_dist_pairs, path, line;
-	double trace_dist_COV, trace_dist_CORR, trace_dist_P_CORR, cond_cov, cond_corr, cond_pcorr, det_cov, det_corr, det_pcorr, rank_cov, rank_corr, rank_pcorr, z_cutoff;
+	double trace_dist_COV, trace_dist_CORR, trace_dist_PCORR, cond_cov, cond_corr, cond_pcorr, det_cov, det_corr, det_pcorr, rank_cov, rank_corr, rank_pcorr, z_cutoff;
 	List<Integer> residues_read, residue_list_dist1, residue_list_dist_orig1, residue_list_dist2, residue_list_dist_orig2;
 	List<String> lines, chain_idents1, chain_idents2, chainIDs;
-	List<Double> top_distance_eigenvalues_COV, top_distance_eigenvalues_CORR, top_distance_eigenvalues_P_CORR;
+	List<Double> top_distance_eigenvalues_COV, top_distance_eigenvalues_CORR, top_distance_eigenvalues_PCORR;
 	int[] res_list_dist1, res_list_dist_orig1, res_list_dist2, res_list_dist_orig2;
 	double[] residue_distance_means, residue_distance_std_devs, dist_pca_mode_COV_min, dist_pca_mode_COV_max, dist_pca_mode_CORR_min, dist_pca_mode_CORR_max;
 	Matrix distance_matrix, distance_matrix_cond, original_PDB_coordinates, subset_PDB_coordinates_dist, transformed_subset_PDB_coordinates_dist, cov_dist, corr_dist, top_distance_evectors_COV,
-			top_distance_evectors_CORR, top_distance_evectors_P_CORR, normed_projections_dist_COV, projections_dist_COV, projections_dist_CORR, normed_projections_dist_CORR,
+			top_distance_evectors_CORR, top_distance_evectors_PCORR, normed_projections_dist_COV, projections_dist_COV, projections_dist_CORR, normed_projections_dist_CORR,
 			weighted_normed_projections_dist_COV, weighted_normed_projections_dist_CORR, Z_scores, counts;
 	StringTokenizer sToken;
 	NumberFormat nf;
@@ -169,9 +169,9 @@ public class JED_Do_Dist_Pairs
 					top_distance_eigenvalues_CORR = dp_pca.getTop_eigenvalues_CORR();
 
 					// PARTIAL CORRELATION METHOD
-					trace_dist_P_CORR = dp_pca.getTrace_PCORR();
-					top_distance_evectors_P_CORR = dp_pca.getTop_evectors_PCORR();
-					top_distance_eigenvalues_P_CORR = dp_pca.getTop_eigenvalues_PCORR();
+					trace_dist_PCORR = dp_pca.getTrace_PCORR();
+					top_distance_evectors_PCORR = dp_pca.getTop_evectors_PCORR();
+					top_distance_eigenvalues_PCORR = dp_pca.getTop_eigenvalues_PCORR();
 				}
 		}
 
@@ -323,7 +323,7 @@ public class JED_Do_Dist_Pairs
 			z_cutoff = z;
 		}
 
-	/* ************************************* SETTERS *************************************************************************** */
+	/* ************************************* GETTERS *************************************************************************** */
 
 	/**
 	 * @return the number_of_Chains
@@ -430,11 +430,11 @@ public class JED_Do_Dist_Pairs
 		}
 
 	/**
-	 * @return the trace_dist_P_CORR
+	 * @return the trace_dist_PCORR
 	 */
 	public double getTrace_dist_PCORR()
 		{
-			return trace_dist_P_CORR;
+			return trace_dist_PCORR;
 		}
 
 	/**
@@ -606,11 +606,11 @@ public class JED_Do_Dist_Pairs
 		}
 
 	/**
-	 * @return the top_distance_eigenvalues_P_CORR
+	 * @return the top_distance_eigenvalues_PCORR
 	 */
-	public List<Double> getTop_distance_eigenvalues_P_CORR()
+	public List<Double> getTop_distance_eigenvalues_PCORR()
 		{
-			return top_distance_eigenvalues_P_CORR;
+			return top_distance_eigenvalues_PCORR;
 		}
 
 	/**
@@ -766,11 +766,11 @@ public class JED_Do_Dist_Pairs
 		}
 
 	/**
-	 * @return the top_distance_evectors_P_CORR
+	 * @return the top_distance_evectors_PCORR
 	 */
 	public Matrix getTop_distance_evectors_PCORR()
 		{
-			return top_distance_evectors_P_CORR;
+			return top_distance_evectors_PCORR;
 		}
 
 	/**

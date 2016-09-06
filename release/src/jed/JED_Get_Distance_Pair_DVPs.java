@@ -27,10 +27,10 @@ import Jama.Matrix;
 public class JED_Get_Distance_Pair_DVPs
 {
 
-	String directory, out_dir, description, type, file_name_head, path, Q = "COV", R = "CORR", PC = "PCORR";
+	String directory, out_dir, description, type, file_name_head, path, Q = "COV", R = "CORR", P = "PCORR";
 	int number_of_modes, reference_column, number_of_conformations, number_of_pairs, ROWS, COLS;
 	Matrix input_coords, delta_vector_series, top_evectors, projections, normed_projections, weighted_projections, weighted_normed_projections;
-	Projector P;
+	Projector proj;
 	List<Double> top_eigenvals;
 	boolean exist, success;
 	KernelDensityEstimate2d KDE;
@@ -79,7 +79,7 @@ public class JED_Get_Distance_Pair_DVPs
 					exist = new File(out_dir).exists();
 					if (!exist) success = (new File(out_dir)).mkdirs();
 				}
-			if (type.equals(PC))
+			if (type.equals(P))
 				{
 					out_dir = directory + "JED_RESULTS_" + description + "/dpPCA/PCORR/";
 					exist = new File(out_dir).exists();

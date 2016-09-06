@@ -31,24 +31,24 @@ import Jama.Matrix;
 public class JED_Do_Cartesian
 {
 
-	public String directory, out_dir, description, pdb_ref_file, rl_SS, Q = "COV", R = "CORR", PC = "P_CORR";
+	public String directory, out_dir, description, pdb_ref_file, rl_SS, Q = "COV", R = "CORR", P = "PCORR";
 	public int number_of_Chains, number_of_residues, reference_column, number_of_modes_SS;
-	public double z_cutoff, percent, trace_COV, trace_CORR, trace_P_CORR, cond_COV, cond_CORR, cond_P_CORR, det_COV, det_CORR, det_P_CORR, rank_COV, rank_CORR, rank_P_CORR;
+	public double z_cutoff, percent, trace_COV, trace_CORR, trace_PCORR, cond_COV, cond_CORR, cond_PCORR, det_COV, det_CORR, det_PCORR, rank_COV, rank_CORR, rank_PCORR;
 	public List<Integer> residue_list, residue_list_original, residues_read;
 	public StringTokenizer sToken;
 	public List<String> chain_idents, chain_idents_read, residue_ID_pairs_read;
-	public List<Double> transformed_conformation_rmsds, transformed_residue_rmsd_list, top_cartesian_eigenvalues_COV, top_cartesian_eigenvalues_CORR, top_cartesian_eigenvalues_P_CORR, eigenvalues_COV,
-			eigenvalues_CORR, eigenvalues_P_CORR;
+	public List<Double> transformed_conformation_rmsds, transformed_residue_rmsd_list, top_cartesian_eigenvalues_COV, top_cartesian_eigenvalues_CORR, top_cartesian_eigenvalues_PCORR, eigenvalues_COV,
+			eigenvalues_CORR, eigenvalues_PCORR;
 	public int[] res_list;
-	public double[] pca_mode_max_COV, pca_mode_min_COV, pca_mode_max_CORR, pca_mode_min_CORR, pca_mode_max_P_CORR, pca_mode_min_P_CORR;
+	public double[] pca_mode_max_COV, pca_mode_min_COV, pca_mode_max_CORR, pca_mode_min_CORR, pca_mode_max_PCORR, pca_mode_min_PCORR;
 	public Matrix original_PDB_coordinates, subset_PDB_coordinates, transformed_PDB_coordinates, cov, top_cartesian_evectors_COV, square_pca_modes_COV, weighted_square_pca_modes_COV,
 			weighted_pca_modes_COV, normed_projections_COV, projections_COV, corr, top_cartesian_evectors_CORR, square_pca_modes_CORR, weighted_square_pca_modes_CORR, weighted_pca_modes_CORR,
-			pca_modes_COV, pca_modes_CORR, normed_projections_CORR, projections_CORR, top_cartesian_evectors_P_CORR, square_pca_modes_P_CORR, weighted_square_pca_modes_P_CORR,
-			weighted_pca_modes_P_CORR, pca_modes_P_CORR, normed_projections_P_CORR, projections_P_CORR, conf_z_scores, var_z_scores;
+			pca_modes_COV, pca_modes_CORR, normed_projections_CORR, projections_CORR, top_cartesian_evectors_PCORR, square_pca_modes_PCORR, weighted_square_pca_modes_PCORR,
+			weighted_pca_modes_PCORR, pca_modes_PCORR, normed_projections_PCORR, projections_PCORR, conf_z_scores, var_z_scores;
 	public Vector<Atom> atoms;
 	public Matrix trimmmed_PDB_coordinates_COLS, adjusted_PDB_coordinates_rows;
 
-	/* ******************************************** CONSTRUCTORS ********************************************************* */
+	/* ******************************************************************* CONSTRUCTORS *************************************************************************************************** */
 
 	/**
 	 * Initiates the Cartesian Subset Analysis:
@@ -244,16 +244,16 @@ public class JED_Do_Cartesian
 					pca_mode_min_CORR = c_pca.get_pca_mode_CORR_min();
 					pca_mode_max_CORR = c_pca.get_pca_mode_CORR_max();
 					// PARTIAL CORRELATION METHOD
-					trace_P_CORR = c_pca.get_trace_PCORR();
-					eigenvalues_P_CORR = c_pca.getEigenvalues_PCORR();
-					top_cartesian_evectors_P_CORR = c_pca.getTop_evectors_PCORR();
-					top_cartesian_eigenvalues_P_CORR = c_pca.getEigenvalues_PCORR();
-					pca_modes_P_CORR = c_pca.getPca_modes_PCORR();
-					square_pca_modes_P_CORR = c_pca.getSquare_pca_modes_PCORR();
-					weighted_square_pca_modes_P_CORR = c_pca.getWeighted_square_pca_modes_PCORR();
-					weighted_pca_modes_P_CORR = c_pca.getWeighted_pca_modes_PCORR();
-					pca_mode_min_P_CORR = c_pca.get_pca_mode_PCORR_min();
-					pca_mode_max_P_CORR = c_pca.get_pca_mode_PCORR_max();
+					trace_PCORR = c_pca.get_trace_PCORR();
+					eigenvalues_PCORR = c_pca.getEigenvalues_PCORR();
+					top_cartesian_evectors_PCORR = c_pca.getTop_evectors_PCORR();
+					top_cartesian_eigenvalues_PCORR = c_pca.getEigenvalues_PCORR();
+					pca_modes_PCORR = c_pca.getPca_modes_PCORR();
+					square_pca_modes_PCORR = c_pca.getSquare_pca_modes_PCORR();
+					weighted_square_pca_modes_PCORR = c_pca.getWeighted_square_pca_modes_PCORR();
+					weighted_pca_modes_PCORR = c_pca.getWeighted_pca_modes_PCORR();
+					pca_mode_min_PCORR = c_pca.get_pca_mode_PCORR_min();
+					pca_mode_max_PCORR = c_pca.get_pca_mode_PCORR_max();
 				}
 		}
 
@@ -267,7 +267,7 @@ public class JED_Do_Cartesian
 				{
 					pcs_corr.get_Cartesian_DV_Series();
 				}
-			JED_Get_Cartesian_DVPs pcs_pcorr = new JED_Get_Cartesian_DVPs(transformed_PDB_coordinates, top_cartesian_evectors_P_CORR, eigenvalues_P_CORR, reference_column, directory, description, PC);
+			JED_Get_Cartesian_DVPs pcs_pcorr = new JED_Get_Cartesian_DVPs(transformed_PDB_coordinates, top_cartesian_evectors_PCORR, eigenvalues_PCORR, reference_column, directory, description, P);
 				{
 					pcs_pcorr.get_Cartesian_DV_Series();
 				}
@@ -338,7 +338,7 @@ public class JED_Do_Cartesian
 
 	public double get_Trace_PCORR()
 		{
-			return trace_P_CORR;
+			return trace_PCORR;
 		}
 
 	public double get_Cond_COV()
@@ -351,9 +351,9 @@ public class JED_Do_Cartesian
 			return cond_CORR;
 		}
 
-	public double get_Cond_P_CORR()
+	public double get_Cond_PCORR()
 		{
-			return cond_P_CORR;
+			return cond_PCORR;
 		}
 
 	public double get_Det_COV()
@@ -366,9 +366,9 @@ public class JED_Do_Cartesian
 			return det_CORR;
 		}
 
-	public double get_Det_P_CORR()
+	public double get_Det_PCORR()
 		{
-			return det_P_CORR;
+			return det_PCORR;
 		}
 
 	public double get_Rank_COV()
@@ -381,9 +381,9 @@ public class JED_Do_Cartesian
 			return rank_CORR;
 		}
 
-	public double get_Rank_P_CORR()
+	public double get_Rank_PCORR()
 		{
-			return rank_P_CORR;
+			return rank_PCORR;
 		}
 
 	public List<Double> getTop_cartesian_eigenvalues_COV()
@@ -571,11 +571,11 @@ public class JED_Do_Cartesian
 		}
 
 	/**
-	 * @return the trace_P_CORR
+	 * @return the trace_PCORR
 	 */
-	public double getTrace_P_CORR()
+	public double getTrace_PCORR()
 		{
-			return trace_P_CORR;
+			return trace_PCORR;
 		}
 
 	/**
@@ -595,11 +595,11 @@ public class JED_Do_Cartesian
 		}
 
 	/**
-	 * @return the det_P_CORR
+	 * @return the det_PCORR
 	 */
-	public double getDet_P_CORR()
+	public double getDet_PCORR()
 		{
-			return det_P_CORR;
+			return det_PCORR;
 		}
 
 	/**
@@ -619,19 +619,19 @@ public class JED_Do_Cartesian
 		}
 
 	/**
-	 * @return the rank_P_CORR
+	 * @return the rank_PCORR
 	 */
-	public double getRank_P_CORR()
+	public double getRank_PCORR()
 		{
-			return rank_P_CORR;
+			return rank_PCORR;
 		}
 
 	/**
-	 * @return the top_cartesian_eigenvalues_P_CORR
+	 * @return the top_cartesian_eigenvalues_PCORR
 	 */
 	public List<Double> getTop_cartesian_eigenvalues_PCORR()
 		{
-			return top_cartesian_eigenvalues_P_CORR;
+			return top_cartesian_eigenvalues_PCORR;
 		}
 
 	/**
@@ -651,43 +651,43 @@ public class JED_Do_Cartesian
 		}
 
 	/**
-	 * @return the eigenvalues_P_CORR
+	 * @return the eigenvalues_PCORR
 	 */
-	public List<Double> getEigenvalues_P_CORR()
+	public List<Double> getEigenvalues_PCORR()
 		{
-			return eigenvalues_P_CORR;
+			return eigenvalues_PCORR;
 		}
 
 	/**
-	 * @return the top_cartesian_evectors_P_CORR
+	 * @return the top_cartesian_evectors_PCORR
 	 */
 	public Matrix getTop_cartesian_evectors_PCORR()
 		{
-			return top_cartesian_evectors_P_CORR;
+			return top_cartesian_evectors_PCORR;
 		}
 
 	/**
-	 * @return the pca_mode_max_P_CORR
+	 * @return the pca_mode_max_PCORR
 	 */
 	public double[] getPca_mode_max_PCORR()
 		{
-			return pca_mode_max_P_CORR;
+			return pca_mode_max_PCORR;
 		}
 
 	/**
-	 * @return the pca_mode_min_P_CORR
+	 * @return the pca_mode_min_PCORR
 	 */
 	public double[] getPca_mode_min_PCORR()
 		{
-			return pca_mode_min_P_CORR;
+			return pca_mode_min_PCORR;
 		}
 
 	/**
-	 * @return the square_pca_modes_P_CORR
+	 * @return the square_pca_modes_PCORR
 	 */
 	public Matrix getSquare_pca_modes_PCORR()
 		{
-			return square_pca_modes_P_CORR;
+			return square_pca_modes_PCORR;
 		}
 
 	/**
