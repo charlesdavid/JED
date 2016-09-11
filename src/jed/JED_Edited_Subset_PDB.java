@@ -6,21 +6,15 @@ import java.util.List;
 import java.util.Vector;
 
 /**
- * JED class JED_Edited_Subset_PDB: Writes a subset of residues to a PDB file and replaces B-Factors with residue RMSF.
- * Copyright (C) 2012 Dr. Charles David
+ * JED class JED_Edited_Subset_PDB: Writes a subset of residues to a PDB file and replaces B-Factors with residue RMSF. Copyright (C) 2012 Dr. Charles David
  * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either
+ * version 3 of the License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * PURPOSE. See the GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/license
+ * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/license
  * 
  * @author Dr. Charles David
  * 
@@ -54,7 +48,7 @@ public class JED_Edited_Subset_PDB
 			directory = dir;
 			pdb_data_file = ref_file;
 			residue_list = res_list;
-			atoms = new Vector<Atom>();
+			atoms = new Vector<>();
 			number_of_residues = residue_list.size();
 		}
 
@@ -78,13 +72,12 @@ public class JED_Edited_Subset_PDB
 			pdb_data_file = ref_file;
 			residue_list = res_list;
 			chainID_list = chain_ids;
-			atoms = new Vector<Atom>();
+			atoms = new Vector<>();
 			number_of_residues = residue_list.size();
 		}
 
 	/**
-	 * Constructor for getting editing a subset of residues from a Single Chain PDB file:
-	 * The B-Factors are replaced with the residue RMSFs
+	 * Constructor for getting editing a subset of residues from a Single Chain PDB file: The B-Factors are replaced with the residue RMSFs
 	 * 
 	 * @param dir
 	 *            The working directory
@@ -102,13 +95,12 @@ public class JED_Edited_Subset_PDB
 			residue_rmsd_list = rmsds;
 			pdb_data_file = ref_file;
 			residue_list = res;
-			atoms = new Vector<Atom>();
+			atoms = new Vector<>();
 			number_of_residues = residue_rmsd_list.size();
 		}
 
 	/**
-	 * Constructor for getting editing a subset of residues from a Single Chain PDB file:
-	 * The B-Factors are replaced with the residue RMSFs
+	 * Constructor for editing a subset of residues from a Single Chain PDB file: The B-Factors are replaced with the residue RMSFs
 	 * 
 	 * @param dir
 	 *            The working directory
@@ -129,7 +121,7 @@ public class JED_Edited_Subset_PDB
 			pdb_data_file = ref_file;
 			chainID_list = chain_ids;
 			residue_list = res;
-			atoms = new Vector<Atom>();
+			atoms = new Vector<>();
 			number_of_residues = residue_rmsd_list.size();
 		}
 
@@ -191,7 +183,7 @@ public class JED_Edited_Subset_PDB
 	private void edit_B_Factors_with_RMSDs()
 		{
 
-			List<Double> sorted_res_rmsds = new ArrayList<Double>();
+			List<Double> sorted_res_rmsds = new ArrayList<>();
 			sorted_res_rmsds.addAll(residue_rmsd_list);
 			Collections.sort(sorted_res_rmsds, Collections.reverseOrder());
 			double max_rmsd = sorted_res_rmsds.get(0);
@@ -203,19 +195,19 @@ public class JED_Edited_Subset_PDB
 			double y_min = (slope * log_RR_min);
 			int d = 0;
 			for (Atom a : atoms)
+			{
+				if (a.symbol.equals(CA))
 				{
-					if (a.symbol.equals(CA))
-						{
-							double bff = (residue_rmsd_list.get(d));
-							double log_bff = Math.log10(bff);
-							double bf = ((slope * log_bff) - y_min);
-							a.b_factor = bf;
-							d++;
-						} else
-						{
-							a.b_factor = 0;
-						}
+					double bff = (residue_rmsd_list.get(d));
+					double log_bff = Math.log10(bff);
+					double bf = ((slope * log_bff) - y_min);
+					a.b_factor = bf;
+					d++;
+				} else
+				{
+					a.b_factor = 0;
 				}
+			}
 		}
 
 	/* ************************************** SETTERS ******************************************************************************** */

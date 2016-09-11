@@ -4,23 +4,16 @@ import Jama.EigenvalueDecomposition;
 import Jama.Matrix;
 
 /**
- * JED class PCA: Constructs the COV(Q), CORR(R), and PCORR(P) matrices.
- * Provides a hook for the Jama eigenvalue decomposition.
- * Note: The assumption is that ROWS are variables and COLS are observations
- * Copyright (C) 2012 Dr. Charles David
+ * JED class PCA: Constructs the COV(Q), CORR(R), and PCORR(P) matrices. Provides a hook for the Jama eigenvalue decomposition. Note: The assumption is that ROWS are variables and
+ * COLS are observations Copyright (C) 2012 Dr. Charles David
  * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either
+ * version 3 of the License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * PURPOSE. See the GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  * 
  * @author Dr. Charles David
  */
@@ -33,8 +26,7 @@ public class PCA
 	/* ****************************** CONSTRUCTOR ********************************************************************************* */
 
 	/**
-	 * Constructor to perform PCA on data:
-	 * Note: The data matrix takes ROWS as variables and COLS as instances.
+	 * Constructor to perform PCA on data: Note: The data matrix takes ROWS as variables and COLS as instances.
 	 * 
 	 * @param data
 	 *            The data matrix A
@@ -50,8 +42,7 @@ public class PCA
 	/* ****************************** METHODS ********************************************************************************* */
 
 	/**
-	 * Method to calculate the covariance matrix: AA(T)
-	 * Note: The data are ROW CENTERED before the calculation.
+	 * Method to calculate the covariance matrix: AA(T) Note: The data are ROW CENTERED before the calculation.
 	 * 
 	 * @return Returns the Covariance Matrix, Q
 	 */
@@ -75,8 +66,7 @@ public class PCA
 		}
 
 	/**
-	 * Method to calculate the covariance matrix (without matrix multiplication):
-	 * Note: The data are ROW CENTERED before the calculation.
+	 * Method to calculate the covariance matrix (without matrix multiplication): Note: The data are ROW CENTERED before the calculation.
 	 * 
 	 * @return Returns the Covariance Matrix, Q
 	 */
@@ -90,31 +80,30 @@ public class PCA
 			Matrix Q = new Matrix(ROWS, ROWS);
 
 			for (int i = 0; i < ROWS; i++)
+			{
+				double s = data_sigmas.get(i, 0);
+				double var = (s * s);
+				Q.set(i, i, var);
+				double mean_X = data_means.get(i, 0);
+				Matrix var_X = data_matrix.getMatrix(i, i, 0, COLS - 1);
+				for (int j = i + 1; j < ROWS; j++)
 				{
-					double s = data_sigmas.get(i, 0);
-					double var = (s * s);
-					Q.set(i, i, var);
-					double mean_X = data_means.get(i, 0);
-					Matrix var_X = data_matrix.getMatrix(i, i, 0, COLS - 1);
-					for (int j = i + 1; j < ROWS; j++)
-						{
-							Matrix var_Y = data_matrix.getMatrix(j, j, 0, COLS - 1);
-							double[] var_XY = (var_X.arrayTimes(var_Y)).getRowPackedCopy();
-							double mean_Y = data_means.get(j, 0);
-							double mean_XY = Descriptive_Stats.get_mean(var_XY);
-							double cov = (mean_XY - (mean_X * mean_Y));
-							Q.set(i, j, cov);
-							Q.set(j, i, cov);
-						}
+					Matrix var_Y = data_matrix.getMatrix(j, j, 0, COLS - 1);
+					double[] var_XY = (var_X.arrayTimes(var_Y)).getRowPackedCopy();
+					double mean_Y = data_means.get(j, 0);
+					double mean_XY = Descriptive_Stats.get_mean(var_XY);
+					double cov = (mean_XY - (mean_X * mean_Y));
+					Q.set(i, j, cov);
+					Q.set(j, i, cov);
 				}
+			}
 			data_matrix = null;
 			System.gc();
 			return Q;
 		}
 
 	/**
-	 * Method to calculate the covariance matrix: AA(T)
-	 * Note: The data are NOT CENTERED before the calculation.
+	 * Method to calculate the covariance matrix: AA(T) Note: The data are NOT CENTERED before the calculation.
 	 * 
 	 * @return Returns the Covariance Matrix, Q
 	 */
@@ -139,22 +128,21 @@ public class PCA
 			int num_Vars = Cov_Matrix.getColumnDimension();
 			Matrix R = new Matrix(num_Vars, num_Vars);
 			for (int i = 0; i < num_Vars; i++)
+			{
+				double sigma = Math.sqrt(Cov_Matrix.get(i, i));
+				R.set(i, i, 1d);
+				for (int j = 0; j < i; j++)
 				{
-					double sigma = Math.sqrt(Cov_Matrix.get(i, i));
-					R.set(i, i, 1d);
-					for (int j = 0; j < i; j++)
-						{
-							double element = Cov_Matrix.get(i, j) / (sigma * Math.sqrt(Cov_Matrix.get(j, j)));
-							R.set(j, i, element);
-							R.set(i, j, element);
-						}
+					double element = Cov_Matrix.get(i, j) / (sigma * Math.sqrt(Cov_Matrix.get(j, j)));
+					R.set(j, i, element);
+					R.set(i, j, element);
 				}
+			}
 			return R;
 		}
 
 	/**
-	 * Method to calculate the correlation matrix from the data.
-	 * Note: The data are ROW CENTERED before the calculation.
+	 * Method to calculate the correlation matrix from the data. Note: The data are ROW CENTERED before the calculation.
 	 * 
 	 * @return Returns the Correlation Matrix, R
 	 */
@@ -166,8 +154,7 @@ public class PCA
 		}
 
 	/**
-	 * Method to calculate the correlation matrix from the data.
-	 * Note: The data are NOT CENTERED before the calculation.
+	 * Method to calculate the correlation matrix from the data. Note: The data are NOT CENTERED before the calculation.
 	 * 
 	 * @return Returns the Correlation Matrix, R
 	 */
@@ -188,26 +175,24 @@ public class PCA
 			int num_Vars = precision.getColumnDimension();
 			Matrix P_CORR = new Matrix(num_Vars, num_Vars);
 			for (int i = 0; i < num_Vars; i++)
+			{
+				double x = precision.get(i, i);
+				P_CORR.set(i, i, -1d);
+				for (int j = 0; j < i; j++)
 				{
-					double x = precision.get(i, i);
-					P_CORR.set(i, i, -1d);
-					for (int j = 0; j < i; j++)
-						{
-							double y = precision.get(j, j);
-							double r = precision.get(i, j);
-							double p = (-r / (Math.sqrt(x * y)));
-							P_CORR.set(j, i, p);
-							P_CORR.set(i, j, p);
-						}
+					double y = precision.get(j, j);
+					double r = precision.get(i, j);
+					double p = (-r / (Math.sqrt(x * y)));
+					P_CORR.set(j, i, p);
+					P_CORR.set(i, j, p);
 				}
+			}
 
 			return P_CORR;
 		}
 
 	/**
-	 * Method to calculate the eigenvalue decomposition of a matrix.
-	 * Note: The matrix argument should be a positive-definite matrix for real eigenvalues.
-	 * Based in the JAMA library
+	 * Method to calculate the eigenvalue decomposition of a matrix. Note: The matrix argument should be a positive-definite matrix for real eigenvalues. Based in the JAMA library
 	 * 
 	 * @param q
 	 *            The matrix to factor
@@ -219,7 +204,6 @@ public class PCA
 			EigenvalueDecomposition evd = new EigenvalueDecomposition(q);
 
 			return evd;
-
 		}
 
 	/**

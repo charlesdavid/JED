@@ -29,11 +29,11 @@ public class JED_Get_Distances_for_Residue_Pairs
 
 		String directory, description, out_dir;
 		int ROWS, ROWS_dp, COLS, number_of_residues, number_of_residues_pairs;
-		Matrix X_vectors, distances;
+		Matrix X_vectors, ref_distances, distances;
 		int[] residue_list1, residue_list2;
 		boolean exist;
 
-		/* ***************************************** CONSTRUCTORS ********************************************************************* */
+		/* ***************************************** CONSTRUCTOR ********************************************************************* */
 
 		/**
 		 * Constructor to get the distances for the specified residue pairs
@@ -74,11 +74,48 @@ public class JED_Get_Distances_for_Residue_Pairs
 		/* ******************************************* METHODS ********************************************************************* */
 
 		/**
+		 * Calculates the distances matrix for the specified residue pairs in the reference structure and writes it to file
+		 * 
+		 * @return The reference residue pair distances matrix
+		 */
+		public Matrix Get_Ref_Distances()
+			{
+
+				ref_distances = new Matrix(ROWS_dp, 1);
+
+				for (int i = 0; i < number_of_residues_pairs; i++)
+					{
+						int residue1 = residue_list1[i]; // Because residue lists start with 1 while Java arrays start with 0
+						int residue2 = residue_list2[i];
+
+						double x = X_vectors.get(residue1, 0);
+						double y = X_vectors.get(residue1 + number_of_residues, 0);
+						double z = X_vectors.get(residue1 + 2 * number_of_residues, 0);
+
+						double xr = X_vectors.get(residue2, 0);
+						double yr = X_vectors.get(residue2 + number_of_residues, 0);
+						double zr = X_vectors.get(residue2 + 2 * number_of_residues, 0);
+
+						double xxr = Math.pow((x - xr), 2);
+						double yyr = Math.pow((y - yr), 2);
+						double zzr = Math.pow((z - zr), 2);
+
+						double sum_xyz = xxr + yyr + zzr;
+						double d = Math.sqrt(sum_xyz);
+						ref_distances.set(i, 0, d);
+					}
+
+				String path = out_dir + "ss_" + number_of_residues_pairs + "_Reference_Residue_Pairs_Distances.txt";
+				Matrix_IO.write_Matrix(ref_distances.transpose(), path, 9, 3);
+				return ref_distances;
+			}
+
+		/**
 		 * Calculates the distances matrix for all the specified residue pairs and writes it to file
 		 * 
 		 * @return The residue pair distances matrix
 		 */
-		public Matrix Get_Distance_Pairs()
+		public Matrix get_Distances()
 			{
 
 				distances = new Matrix(ROWS_dp, COLS);

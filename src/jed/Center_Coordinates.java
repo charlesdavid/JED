@@ -48,7 +48,7 @@ public class Center_Coordinates
 	/**
 	 * Returns the centered coordinates.
 	 * 
-	 * @return
+	 * @return centered_coords
 	 */
 	public Matrix get_centered_coordinates()
 		{
@@ -113,5 +113,4 @@ public class Center_Coordinates
 
 			return z_centroid;
 		}
-
 }
