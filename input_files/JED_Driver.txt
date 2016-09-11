@@ -5,7 +5,7 @@ TEST_NEW			MVb_A_B_ATP.pdb
 1     1     1     3.0
 residues.txt
 residue_pairs.txt
-original_PDB_Coordinates.txt	0
+original_PDB_Coordinates.txt
 
 
 
@@ -18,7 +18,7 @@ TEST_NEW			1A6N.pdb
 2     2     2     1.5
 residues.txt
 residue_pairs.txt
-original_PDB_Coordinates.txt	0
+original_PDB_Coordinates.txt
 
 
 
