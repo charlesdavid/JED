@@ -37,7 +37,7 @@ public class JED_Do_Cartesian
 				top_cartesian_eigenvalues_PCORR, eigenvalues_COV, eigenvalues_CORR, eigenvalues_PCORR;
 		public int[] res_list;
 		public double[] pca_mode_max_COV, pca_mode_min_COV, pca_mode_max_CORR, pca_mode_min_CORR, pca_mode_max_PCORR, pca_mode_min_PCORR;
-		public Matrix original_reference_coordinates, transformed_reference_coordinates, original_PDB_coordinates, subset_PDB_coordinates,
+		public Matrix original_reference_PDB_coordinates, transformed_reference_coordinates, original_PDB_coordinates, subset_PDB_coordinates,
 				subset_REF_PDB_coordinates, transformed_PDB_coordinates, cov, top_cartesian_evectors_COV, square_pca_modes_COV, weighted_square_pca_modes_COV,
 				weighted_pca_modes_COV, normed_projections_COV, projections_COV, corr, top_cartesian_evectors_CORR, square_pca_modes_CORR,
 				weighted_square_pca_modes_CORR, weighted_pca_modes_CORR, pca_modes_COV, pca_modes_CORR, normed_projections_CORR, projections_CORR,
@@ -82,7 +82,7 @@ public class JED_Do_Cartesian
 				this.rl_SS = rl_SS;
 				this.number_of_modes_SS = number_of_modes_SS;
 				this.original_PDB_coordinates = original_PDB_coordinates;
-				this.original_reference_coordinates = Ref_PDB_coords;
+				this.original_reference_PDB_coordinates = Ref_PDB_coords;
 			}
 
 		/* ************************************** DRIVER METHODS ******************************************************* */
@@ -168,7 +168,7 @@ public class JED_Do_Cartesian
 						ss.set_Output_Directory(out_dir);
 						subset_PDB_coordinates = ss.get_Subset_Coords();
 					}
-				JED_Get_Subset ref_ss = new JED_Get_Subset(directory, description, original_reference_coordinates, res_list);
+				JED_Get_Subset ref_ss = new JED_Get_Subset(directory, description, original_reference_PDB_coordinates, res_list);
 					{
 						ref_ss.set_Output_Directory(out_dir);
 						subset_REF_PDB_coordinates = ref_ss.get_Subset_Coords();
@@ -183,7 +183,7 @@ public class JED_Do_Cartesian
 						tf_coords.set_Output_Directory(out_dir);
 						tf_coords.set_percent_cutoff(percent);
 						tf_coords.set_z_cutoff(z_cutoff);
-						original_reference_coordinates = tf_coords.get_Original_reference_coordinates();
+						original_reference_PDB_coordinates = tf_coords.get_Original_reference_coordinates();
 						transformed_reference_coordinates = tf_coords.get_Transformed_reference_coordinates();
 						transformed_PDB_coordinates = tf_coords.get_SS_Transformed_coords();
 						transformed_conformation_rmsds = tf_coords.get_SS_Conformation_RMSDs();

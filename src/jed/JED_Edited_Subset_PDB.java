@@ -48,7 +48,7 @@ public class JED_Edited_Subset_PDB
 			directory = dir;
 			pdb_data_file = ref_file;
 			residue_list = res_list;
-			atoms = new Vector<>();
+			atoms = new Vector<Atom>();
 			number_of_residues = residue_list.size();
 		}
 
@@ -72,7 +72,7 @@ public class JED_Edited_Subset_PDB
 			pdb_data_file = ref_file;
 			residue_list = res_list;
 			chainID_list = chain_ids;
-			atoms = new Vector<>();
+			atoms = new Vector<Atom>();
 			number_of_residues = residue_list.size();
 		}
 
@@ -95,7 +95,7 @@ public class JED_Edited_Subset_PDB
 			residue_rmsd_list = rmsds;
 			pdb_data_file = ref_file;
 			residue_list = res;
-			atoms = new Vector<>();
+			atoms = new Vector<Atom>();
 			number_of_residues = residue_rmsd_list.size();
 		}
 
@@ -121,7 +121,7 @@ public class JED_Edited_Subset_PDB
 			pdb_data_file = ref_file;
 			chainID_list = chain_ids;
 			residue_list = res;
-			atoms = new Vector<>();
+			atoms = new Vector<Atom>();
 			number_of_residues = residue_rmsd_list.size();
 		}
 

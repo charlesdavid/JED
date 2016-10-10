@@ -460,7 +460,7 @@ public class JED_Driver
 			{
 				try
 					{
-						log_writer.write("\nReading the Reference PDB file.\n");
+						log_writer.write("\nReading the Reference PDB file: " + pdb_ref_file + "\n");
 						log_writer.write("\nReading alpha carbon coordinates from the reference PDB file." + "\n");
 						log_writer.write("The number of residues found in the Reference PDB file = " + (ROWS / 3) + "\n");
 						log_writer.write("Reference coordinates matrix created: 'original_Reference_PDB_Coordinates'" + "\n");
