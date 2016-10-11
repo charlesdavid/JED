@@ -111,11 +111,11 @@ public class PCA
 		{
 			int m = Q.getRowDimension() / 3;
 			int nx1 = 0;
-			// int nx2 = m;
-			int ny1 = m + 1;
-			// int ny2 = 2*m;
-			int nz1 = 0;
-			// int nz2 = 3*m;
+			// int nx2 = m-1;
+			int ny1 = m;
+			// int ny2 = 2*m-1;
+			int nz1 = 2 * m;
+			// int nz2 = 3*m-1;
 
 			Matrix rCOV = new Matrix(m, m);
 
