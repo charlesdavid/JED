@@ -14,21 +14,15 @@ import Jama.EigenvalueDecomposition;
 import Jama.Matrix;
 
 /**
- * JED class JED_Get_Distance_Pair_PCA: Gets the COV and CORR PCA for the
- * Residue Distance Pairs subset. Copyright (C) 2012 Dr. Charles David
+ * JED class JED_Get_Distance_Pair_PCA: Gets the COV and CORR PCA for the Residue Distance Pairs subset. Copyright (C) 2012 Dr. Charles David
  *
- * This program is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either
+ * version 3 of the License, or (at your option) any later version.
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * PURPOSE. See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <http://www.gnu.org/license>
+ * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/license>
  *
  * @author Dr. Charles David
  */
@@ -50,9 +44,7 @@ public class JED_Get_Distance_Pair_PCA
 	boolean success, exist;
 
 	/*
-	 * ********************************** CONSTRUCTOR
-	 * *************************************************************************
-	 * **************
+	 * ********************************** CONSTRUCTOR * *************************************************************************
 	 */
 
 	/**
@@ -105,9 +97,7 @@ public class JED_Get_Distance_Pair_PCA
 		}
 
 	/*
-	 * *********************************** DRIVER METHODS
-	 * *************************************************************************
-	 * **********
+	 * *********************************** DRIVER METHODS **********************************************************************************
 	 */
 
 	/**
@@ -223,9 +213,7 @@ public class JED_Get_Distance_Pair_PCA
 		}
 
 	/*
-	 * ************************************* COV METHODS
-	 * *************************************************************************
-	 * ************
+	 * ************************************* COV METHODS ************************************************************************* ************
 	 */
 
 	/**
@@ -305,8 +293,7 @@ public class JED_Get_Distance_Pair_PCA
 		}
 
 	/**
-	 * Computes the Distance-Pair PCA modes from the COV analysis and writes
-	 * them to files: PCA, weighted-PCA, squared, weighted-squared
+	 * Computes the Distance-Pair PCA modes from the COV analysis and writes them to files: PCA, weighted-PCA, squared, weighted-squared
 	 */
 	private void construct_PCA_Modes_COV()
 		{
@@ -359,9 +346,7 @@ public class JED_Get_Distance_Pair_PCA
 		}
 
 	/*
-	 * ************************************** CORR METHODS
-	 * *************************************************************************
-	 * **********
+	 * ************************************** CORR METHODS ************************************************************************* **********
 	 */
 
 	/**
@@ -442,8 +427,7 @@ public class JED_Get_Distance_Pair_PCA
 		}
 
 	/**
-	 * Computes the Distance-Pair PCA modes from the CORR analysis and writes
-	 * them to files: PCA, weighted-PCA, squared, weighted-squared
+	 * Computes the Distance-Pair PCA modes from the CORR analysis and writes them to files: PCA, weighted-PCA, squared, weighted-squared
 	 */
 	private void construct_PCA_Modes_CORR()
 		{
@@ -496,8 +480,7 @@ public class JED_Get_Distance_Pair_PCA
 		}
 
 	/*
-	 * *********************************** PCORR METHODS
-	 * ********************************************************************
+	 * *********************************** PCORR METHODS ********************************************************************
 	 */
 
 	/**
@@ -572,8 +555,7 @@ public class JED_Get_Distance_Pair_PCA
 		}
 
 	/**
-	 * Computes the Distance-Pair PCA modes from the PCORR analysis and writes
-	 * them to files: PCA, weighted-PCA, squared, weighted-squared
+	 * Computes the Distance-Pair PCA modes from the PCORR analysis and writes them to files: PCA, weighted-PCA, squared, weighted-squared
 	 */
 	private void construct_PCA_Modes_PCORR()
 		{
@@ -624,9 +606,7 @@ public class JED_Get_Distance_Pair_PCA
 			Matrix_IO.write_Matrix(SS_weighted_pca_square_modes, path, 12, 6);
 		}
 	/*
-	 * ************************************** GETTERS
-	 * *************************************************************************
-	 * ****************
+	 * ************************************** GETTERS ************************************************************************* ****************
 	 */
 
 	/**

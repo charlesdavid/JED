@@ -29,7 +29,6 @@ public class JED_Get_Transformed_Coordinates
 	static int ROWS, COLS, number_of_residues;
 	static List<Double> original_conformation_rmsds, transformed_conformation_rmsds, transformed_residue_rmsd_list, Z_Scores;
 	static List<Integer> conformation_outliers;
-	// static double[] var_means;
 	static Matrix subset_REF_PDB_coordinates, transformed_subset_REF_PDB_coordinates, subset_PDB_coordinates, transformed_subset_PDB_coordinates, trimmed_PDB_coordinates_cols,
 			adjusted_PDB_coordinates_rows, var_Z_scores, conf_Z_scores;
 	static NumberFormat nf;
@@ -44,8 +43,8 @@ public class JED_Get_Transformed_Coordinates
 	 * 
 	 * @param data
 	 *            The original PDB coordinates
-	 * @param ref_pdb
-	 *            The reference PDB structure to use for the transformation
+	 * @param ref_coords
+	 *            The reference coordinates to use for the transformation
 	 * @param dir
 	 *            The working directory
 	 * @param des
@@ -135,9 +134,7 @@ public class JED_Get_Transformed_Coordinates
 			}
 			String path = out_dir + "ss_" + number_of_residues + "_transformed_PDB_coordinates.txt";
 			Matrix_IO.write_Matrix(transformed_subset_PDB_coordinates, path, 9, 3);
-			path = out_dir + "ss_" + number_of_residues + "_original_PDB_Reference_coordinates.txt";
-			Matrix_IO.write_Matrix(subset_REF_PDB_coordinates, path, 9, 3);
-			path = out_dir + "ss_" + number_of_residues + "_transformed_PDB_Reference_coordinates.txt";
+			path = out_dir + "ss_" + number_of_residues + "_transformed_reference_PDB_coordinates.txt";
 			Matrix_IO.write_Matrix(transformed_subset_REF_PDB_coordinates, path, 9, 3);
 
 			return transformed_subset_PDB_coordinates;

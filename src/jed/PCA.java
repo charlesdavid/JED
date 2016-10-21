@@ -103,11 +103,11 @@ public class PCA
 		}
 
 	/**
-	 * Method to calculate the reduced covariance matrix. Input is a 3Nx3N covariance matrix. Output is a NxN reduced covariance matrix
+	 * Method to calculate the reduced C-matrix (covariance or correlation). Input is a 3Nx3N covariance matrix. Output is a NxN reduced C-matrix
 	 * 
 	 * @return Returns the Reduced Covariance Matrix, rCOV
 	 */
-	Matrix get_reduced_C_matrix(Matrix Q)
+	static Matrix get_reduced_C_matrix(Matrix Q)
 		{
 			int m = Q.getRowDimension() / 3;
 			int nx1 = 0;
@@ -137,6 +137,43 @@ public class PCA
 			Q = null;
 			System.gc();
 			return rCOV;
+		}
+
+	/**
+	 * Method to calculate the reduced Dynamical matrix (inverse covariance or inverse correlation). Input is a 3Nx3N covariance matrix. Output is a NxN reduced Dynamical matrix
+	 * 
+	 * @return Returns the Reduced Covariance Matrix, rCOV
+	 */
+	static Matrix get_reduced_DYN_matrix(Matrix DYN)
+		{
+			int m = DYN.getRowDimension() / 3;
+			int nx1 = 0;
+			// int nx2 = m-1;
+			int ny1 = m;
+			// int ny2 = 2*m-1;
+			int nz1 = 2 * m;
+			// int nz2 = 3*m-1;
+
+			Matrix rDYN = new Matrix(m, m);
+
+			for (int i = 0; i < m; i++)
+			{
+				int a1 = nx1 + i;
+				int a2 = ny1 + i;
+				int a3 = nz1 + i;
+
+				for (int j = 0; j < m; j++)
+				{
+					int b1 = nx1 + j;
+					int b2 = ny1 + j;
+					int b3 = nz1 + j;
+					double dyn = -(DYN.get(a1, b1) - DYN.get(a2, b2) - DYN.get(a3, b3));
+					rDYN.set(i, j, dyn);
+				}
+			}
+			DYN = null;
+			System.gc();
+			return rDYN;
 		}
 
 	/**

@@ -34,9 +34,9 @@ public class JED_Get_Cartesian_PCA
 	public double trace_COV, trace_CORR, trace_PCORR, cond_COV, cond_CORR, cond_PCORR, rank_COV, rank_CORR, rank_PCORR, det_COV, det_CORR, det_PCORR;
 	public List<Double> eigenvalues_COV, top_eigenvalues_COV, eigenvalues_CORR, top_eigenvalues_CORR, eigenvalues_PCORR, top_eigenvalues_PCORR;
 	public double[] pca_mode_COV_min, pca_mode_COV_max, pca_mode_CORR_min, pca_mode_CORR_max, pca_mode_PCORR_min, pca_mode_PCORR_max;
-	static Matrix input_data, centered_input_data, cov, corr, pcorr, inv_cov, inv_corr, rcov, rcorr, rpcorr, top_evectors_COV, square_pca_modes_COV, weighted_square_pca_modes_COV,
-			weighted_pca_modes_COV, top_evectors_CORR, square_pca_modes_CORR, weighted_square_pca_modes_CORR, weighted_pca_modes_CORR, pca_modes_COV, pca_modes_CORR,
-			top_evectors_PCORR, square_pca_modes_PCORR, weighted_square_pca_modes_PCORR, weighted_pca_modes_PCORR, pca_modes_PCORR;
+	static Matrix input_data, centered_input_data, cov, corr, pcorr, inv_cov, inv_corr, rcov, rcorr, rpcorr, r_inv_cov, r_inv_corr, top_evectors_COV, square_pca_modes_COV,
+			weighted_square_pca_modes_COV, weighted_pca_modes_COV, top_evectors_CORR, square_pca_modes_CORR, weighted_square_pca_modes_CORR, weighted_pca_modes_CORR, pca_modes_COV,
+			pca_modes_CORR, top_evectors_PCORR, square_pca_modes_PCORR, weighted_square_pca_modes_PCORR, weighted_pca_modes_PCORR, pca_modes_PCORR;
 	public EigenvalueDecomposition evd;
 	public NumberFormat nf;
 	public RoundingMode rm;
@@ -113,7 +113,7 @@ public class JED_Get_Cartesian_PCA
 	private void Do_Cov_PCA()
 		{
 			cov = pca.get_covariance_matrix_elegant();
-			rcov = pca.get_reduced_C_matrix(cov);
+			rcov = PCA.get_reduced_C_matrix(cov);
 			trace_COV = cov.trace();
 			cond_COV = cov.cond();
 			det_COV = cov.det();
@@ -148,11 +148,8 @@ public class JED_Get_Cartesian_PCA
 		{
 
 			corr = pca.get_R_from_Q(cov);
-			rcorr = pca.get_reduced_C_matrix(corr);
+			rcorr = PCA.get_reduced_C_matrix(corr);
 			trace_CORR = corr.trace();
-			// cond_CORR = corr.cond();
-			// det_CORR = corr.det();
-			// rank_CORR = corr.rank();
 
 			cov = null;
 			System.gc();
@@ -178,12 +175,9 @@ public class JED_Get_Cartesian_PCA
 		{
 
 			pcorr = PCA.get_partial_correlation_matrix(inv_cov);
-			rpcorr = pca.get_reduced_C_matrix(pcorr);
+			rpcorr = PCA.get_reduced_DYN_matrix(pcorr);
 
 			trace_PCORR = pcorr.trace();
-			// cond_PCORR = pcorr.cond();
-			// det_PCORR = pcorr.det();
-			// rank_PCORR = pcorr.rank();
 
 			file_name_head = out_dir_PCORR + "ss_" + number_of_residues;
 
@@ -248,8 +242,10 @@ public class JED_Get_Cartesian_PCA
 
 			Matrix ss_evectors = evd.getV();
 			Matrix D = evd.getD();
-			// precision_cov = ss_evectors.times(D.inverse()).times(ss_evectors.transpose());
+
 			inv_cov = ss_evectors.times(D.inverse()).times(ss_evectors.inverse());
+			r_inv_cov = PCA.get_reduced_DYN_matrix(inv_cov);
+
 			top_evectors_COV = ss_evectors.getMatrix(0, ROWS - 1, ROWS - number_of_modes, ROWS - 1);
 			Matrix modes_reversed = new Matrix(ROWS, COLS);
 			for (int r = 0; r < COLS; r++)
@@ -261,8 +257,13 @@ public class JED_Get_Cartesian_PCA
 
 			path = file_name_head + "_top_" + number_of_modes + "_eigenvectors_COV.txt";
 			Matrix_IO.write_Matrix(top_evectors_COV, path, 12, 6);
+
 			path = file_name_head + "_inverse_covariance_matrix.txt";
 			Matrix_IO.write_Matrix(inv_cov, path, 15, 3);
+
+			path = file_name_head + "_reduced_inverse_covariance_matrix.txt";
+			Matrix_IO.write_Matrix(inv_cov, path, 15, 3);
+
 			ss_evectors = null;
 			D = null;
 			System.gc();
@@ -363,8 +364,10 @@ public class JED_Get_Cartesian_PCA
 
 			Matrix ss_evectors = evd.getV();
 			Matrix D = evd.getD();
-			// precision_corr = ss_evectors.times(D.inverse()).times(ss_evectors.transpose());
+
 			inv_corr = ss_evectors.times(D.inverse()).times(ss_evectors.inverse());
+			r_inv_corr = PCA.get_reduced_DYN_matrix(inv_corr);
+
 			top_evectors_CORR = ss_evectors.getMatrix(0, ROWS - 1, ROWS - number_of_modes, ROWS - 1);
 			Matrix modes_reversed = new Matrix(ROWS, COLS);
 			for (int r = 0; r < COLS; r++)
@@ -373,10 +376,16 @@ public class JED_Get_Cartesian_PCA
 				modes_reversed.setMatrix(0, ROWS - 1, r, r, col);
 			}
 			top_evectors_CORR = modes_reversed;
+
 			path = file_name_head + "_top_" + number_of_modes + "_eigenvectors_CORR.txt";
 			Matrix_IO.write_Matrix(top_evectors_CORR, path, 12, 6);
+
 			path = file_name_head + "_inverse_correlation_matrix.txt";
 			Matrix_IO.write_Matrix(inv_corr, path, 15, 3);
+
+			path = file_name_head + "_reduced_inverse_correlation_matrix.txt";
+			Matrix_IO.write_Matrix(r_inv_corr, path, 15, 3);
+
 			ss_evectors = null;
 			D = null;
 			System.gc();
