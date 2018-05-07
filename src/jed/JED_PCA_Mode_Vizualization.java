@@ -104,7 +104,7 @@ public class JED_PCA_Mode_Vizualization
 		}
 
 	/**
-	 * Method that generates the PDB files and the Pymol (TM) scripts for the mode visualization
+	 * Method that generates the PDB files and the PyMOL (TM) scripts for the mode visualization
 	 */
 	void get_Mode_Visualizations_SS()
 		{
@@ -231,8 +231,10 @@ public class JED_PCA_Mode_Vizualization
 			final double eigenvalue_max = eigenvalues.get(0); // the largest eigenvalue sets the wave number for the first mode
 			int frame_index = 0;
 			String f_index = "";
-			int number_of_frames = 100; // hard code for 100 frames
-			int number_of_cycles = 5; // hard code for 5 cycles of the fundamental mode
+			int number_of_frames = 20; // hard code for 20 frames
+			int number_of_cycles = 2; // hard code for 2 cycles of the fundamental mode
+			int num_of_essential_modes = 5; // hard code for using only the top 5 modes
+			if (number_of_modes_viz < num_of_essential_modes) num_of_essential_modes = number_of_modes_viz;
 			for (int t = 0; t < number_of_frames; t++) // loop for perturbing the eigenvector components sinusoidally over number of frames: FRAME LOOP
 				{
 					f_index = String.format("%03d", frame_index + 1);
@@ -240,7 +242,7 @@ public class JED_PCA_Mode_Vizualization
 					double omega = 0;
 					double weight = 0;
 
-					for (int mode = 0; mode < number_of_modes_viz; mode++) // iterates over the modes: MODE LOOP
+					for (int mode = 0; mode < num_of_essential_modes; mode++) // iterates over the modes: MODE LOOP
 						{
 							Matrix evector = top_evectors.getMatrix(0, ROWS_Evectors - 1, mode, mode);
 							double eval = eigenvalues.get(mode);
@@ -276,7 +278,7 @@ public class JED_PCA_Mode_Vizualization
 											double bff = (w_sum_normed.get(index, 0));
 											if (bff < MODE_MIN) bff = MODE_MIN;
 											if (bff > MODE_MAX) bff = MODE_MAX;
-											double BFF = bff / MODE_MIN;
+											double BFF = (bff / MODE_MIN);
 											double log_bff = Math.log10(BFF);
 											double bf = (slope * log_bff);
 											a.setB_factor(bf);
@@ -331,7 +333,7 @@ public class JED_PCA_Mode_Vizualization
 
 				} catch (IOException io)
 				{
-					System.err.println("IOException thrown. Could not write the Pymol script file: " + file_name_head + "_Mode_" + (mode_number + 1) + "_" + type + ".pml");
+					System.err.println("IOException thrown. Could not write the PyMOL (TM) script file: " + file_name_head + "_Mode_" + (mode_number + 1) + "_" + type + ".pml");
 					io.getMessage();
 					io.getStackTrace();
 				}
@@ -364,7 +366,7 @@ public class JED_PCA_Mode_Vizualization
 
 				} catch (IOException io)
 				{
-					System.err.println("IOException thrown. Could not write the Pymol script file: " + filename);
+					System.err.println("IOException thrown. Could not write the PyMOL(TM) script file: " + filename);
 					io.getMessage();
 					io.getStackTrace();
 				}

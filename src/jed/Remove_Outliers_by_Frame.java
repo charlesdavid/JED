@@ -7,25 +7,17 @@ import java.util.List;
 import Jama.Matrix;
 
 /**
- * JED class Remove_Outliers_by_Frame: Class for removing outliers based on conformation RMSD of frames prior to PCA.
- * Note: The expected input is 2 matrices of eigenvectors representing 2 equidimensional subspaces from a vector space.
- * If you are not sure if you are working with orthonormal bases (subsets of an eigenspace), there is a test_Orthogonal method.
- * Orthonormal bases are expected.
- * This means that the number of rows and columns must be the same.
- * Copyright (C) 2012 Dr. Charles David
+ * JED class Remove_Outliers_by_Frame: Class for removing outliers based on conformation RMSD of frames prior to PCA. Note: The expected input is 2 matrices of eigenvectors
+ * representing 2 equidimensional subspaces from a vector space. If you are not sure if you are working with orthonormal bases (subsets of an eigenspace), there is a
+ * test_Orthogonal method. Orthonormal bases are expected. This means that the number of rows and columns must be the same. Copyright (C) 2012 Dr. Charles David
  * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either
+ * version 3 of the License, or (at your option) any later version.
  * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ * PURPOSE. See the GNU General Public License for more details.
  * 
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
  * 
  * @author Dr. Charles David
  * 
@@ -72,10 +64,10 @@ public class Remove_Outliers_by_Frame
 			double[] crmsds = new double[length];
 			int i = 0;
 			for (double d : conformation_rmsds)
-				{
-					crmsds[i] = d;
-					i++;
-				}
+			{
+				crmsds[i] = d;
+				i++;
+			}
 			double mean = Descriptive_Stats.get_standard_deviation(crmsds);
 			double ss = Descriptive_Stats.get_sum_of_squared_deviations(crmsds, mean);
 			double std_dev = Descriptive_Stats.get_standard_deviation(crmsds, mean, ss);
@@ -86,35 +78,38 @@ public class Remove_Outliers_by_Frame
 			cols_trimmed = COLS - (trim);
 			coordinates_trimmed_by_frame = new Matrix(ROWS, cols_trimmed);
 
-			removed_conformations = new ArrayList<Integer>();
+			removed_conformations = new ArrayList<>();
 
-			List<Double> sorted_data = new ArrayList<Double>();
+			List<Double> sorted_data = new ArrayList<>();
 			sorted_data.addAll(conformation_rmsds);
 			Collections.sort(sorted_data, Collections.reverseOrder());
 
 			// remove the high rmsds
 			for (int j = 0; j < trim; j++)
-				{
-					double rv = sorted_data.get(0);
-					int conf_num = conformation_rmsds.indexOf(rv);
-					removed_conformations.add(conf_num);
-					sorted_data.remove(0);
-				}
+			{
+				double rv = sorted_data.get(0);
+				int conf_num = conformation_rmsds.indexOf(rv);
+				removed_conformations.add(conf_num);
+				sorted_data.remove(0);
+			}
 			// Sort the list of removed conformations
 			Collections.sort(removed_conformations);
 
 			// create the trimmed matrix
 			for (int j = 0; j < cols_trimmed; j++)
-				{
-					double value = sorted_data.get(j);
-					int index = conformation_rmsds.indexOf(value);
-					Matrix col = coordinates.getMatrix(0, ROWS - 1, index, index);
-					coordinates_trimmed_by_frame.setMatrix(0, ROWS - 1, j, j, col);
-				}
+			{
+				double value = sorted_data.get(j);
+				int index = conformation_rmsds.indexOf(value);
+				Matrix col = coordinates.getMatrix(0, ROWS - 1, index, index);
+				coordinates_trimmed_by_frame.setMatrix(0, ROWS - 1, j, j, col);
+			}
 		}
 
 	/* **************************************** SETTERS *************************************************************************** */
 
+	/**
+	 * Method to set the percentage of frames to remove.
+	 */
 	public void set_percent(double cut_percent)
 		{
 			this.percent = cut_percent;

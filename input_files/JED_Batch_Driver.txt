@@ -19,13 +19,13 @@ Pre-Process_Batch2		1A6N.pdb
 1     1
 *****************************************************************************************
 C:\\Users\\Charles\\workspace\\JED_2.0\\JED_Test\\Multi\\PDBs\\
-Pre-Process_Job1		MVb_A_B_ATP.pdb		0
+Pre-Process_Job1		MVb_A_B_ATP.pdb
 *****************************************************************************************
 C:\\Users\\Charles\\workspace\\JED_2.0\\JED_Test\\Multi\\PDBs\\
-Pre-Process_Job2		MVb_A_B_ATP.pdb		0
+Pre-Process_Job2		MVb_A_B_ATP.pdb
 *****************************************************************************************
 C:\\Users\\Charles\\workspace\\JED_2.0\\JED_Test\\Multi\\PDBs\\
-Pre-Process_Job3		MVb_A_B_ATP.pdb		0
+Pre-Process_Job3		MVb_A_B_ATP.pdb
 *****************************************************************************************
 
 
@@ -41,19 +41,19 @@ C:\\Users\\Charles\\workspace\\JED_2.0\\JED_Test\\Multi\\
 Job1		MVb_A_B_ATP.pdb
 residues.txt
 residue_pairs.txt
-original_PDB_coordinates.txt		0
+original_PDB_coordinates.txt
 *****************************************************************************************
 C:\\Users\\Charles\\workspace\\JED_2.0\\JED_Test\\Multi\\
 Job2		MVb_A_B_ATP.pdb
 residues.txt
 residue_pairs.txt
-original_PDB_coordinates.txt		0
+original_PDB_coordinates.txt
 *****************************************************************************************
 C:\\Users\\Charles\\workspace\\JED_2.0\\JED_Test\\Multi\\
 Job3		MVb_A_B_ATP.pdb
 residues.txt
 residue_pairs.txt
-original_PDB_coordinates.txt		0
+original_PDB_coordinates.txt
 *****************************************************************************************
 
 
@@ -72,19 +72,19 @@ C:\\Users\\Charles\\workspace\\JED_2.0\\JED_Test\\Single\\
 cPCA_dpPCA_Viz_Job1			1A6N.pdb
 residues.txt
 residue_pairs.txt
-original_PDB_coordinates.txt		0
+original_PDB_coordinates.txt
 *****************************************************************************************
 C:\\Users\\Charles\\workspace\\JED_2.0\\JED_Test\\Single\\
 cPCA_dpPCA_Viz_Job2			1A6N.pdb
 residues.txt
 residue_pairs.txt
-original_PDB_coordinates.txt		0
+original_PDB_coordinates.txt
 *****************************************************************************************
 C:\\Users\\Charles\\workspace\\JED_2.0\\JED_Test\\Single\\
 cPCA_dpPCA_Viz_Job3			1A6N.pdb
 residues.txt
 residue_pairs.txt
-original_PDB_coordinates.txt		0
+original_PDB_coordinates.txt
 *****************************************************************************************
 
 
