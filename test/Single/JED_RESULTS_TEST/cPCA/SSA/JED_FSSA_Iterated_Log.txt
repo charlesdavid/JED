@@ -1,0 +1,22 @@
+Output Directory: C:\\Users\\Charles\\workspace\\JED_1.0\\JED_Test\\Single\\JED_RESULTS_TEST/cPCA/SSA/
+Principle Angle Spectra file written to: Iterated_PAs.txt
+RMSIPs file written to: Iterated_RMSIPs.txt
+
+
+RMSIPs:
+Dim   1           0.897       
+Dim   2           0.643       
+Dim   3           0.743       
+Dim   4           0.914       
+Dim   5           0.904       
+
+The PA spectra for the range of subspaces are:
+
+   19    0    0    0    0
+   18   80    0    0    0
+   16   19   75    0    0
+   12   17   19   20    0
+   12   15   17   18   27
+
+
+Analysis completed: 2014-03-10 22:18:33

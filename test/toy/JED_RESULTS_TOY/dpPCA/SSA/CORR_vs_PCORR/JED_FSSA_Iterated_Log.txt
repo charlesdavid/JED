@@ -1,0 +1,32 @@
+Output Directory: H:\\workspace\\JED_1.0\\JED_Test\\toy\\JED_RESULTS_TOY/dpPCA/SSA/CORR_vs_PCORR/
+Principle Angle Spectra file written to: Iterated_PAs.txt
+RMSIPs file written to: Iterated_RMSIPs.txt
+
+
+RMSIPs:
+Dim   1           0.946       
+Dim   2           0.895       
+Dim   3           0.972       
+Dim   4           0.869       
+Dim   5           0.984       
+Dim   6           0.973       
+Dim   7           0.994       
+Dim   8           0.997       
+Dim   9           0.998       
+Dim   10          1.000       
+
+The PA spectra for the range of subspaces are:
+
+   19    0    0    0    0    0    0    0    0    0
+   10   37    0    0    0    0    0    0    0    0
+    7   13   18    0    0    0    0    0    0    0
+    3    7   10   75    0    0    0    0    0    0
+    1    3    7    9   20    0    0    0    0    0
+    0    0    3    6    7   33    0    0    0    0
+    0    0    0    0    7    7   14    0    0    0
+    0    0    0    0    0    0    7   10    0    0
+    0    0    0    0    0    0    0    0   12    0
+    0    0    0    0    0    0    0    0    0    0
+
+
+Analysis completed: 2016-10-10 12:57:18

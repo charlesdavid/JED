@@ -1,0 +1,5 @@
+The number of matrices that were combined is: 3
+The output directory is: C:\\Users\\Charles\\workspace\\JED_1.0\\JED_Test\\Single\\
+The number of ROWS: 453
+The total number of columns (frames): 6003
+The pooled coordinate matrix was written to: C:\\Users\\Charles\\workspace\\JED_1.0\\JED_Test\\Single\\Pooled_Coordinates_Matrix_3.txt

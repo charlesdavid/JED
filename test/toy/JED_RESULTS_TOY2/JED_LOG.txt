@@ -1,0 +1,31 @@
+JED: Java Essential Dynamics version 1.0
+Job Description: TOY2
+Working directory: H:\\workspace\\JED_1.0\\JED_Test\\toy\\
+Output directory: H:\\workspace\\JED_1.0\\JED_Test\\toy\\JED_RESULTS_TOY2/
+READ PDBs =  true
+MULTI CHAIN PDBs = false
+
+Reading the Reference PDB file: test_toy2.pdb
+
+Reading alpha carbon coordinates from the reference PDB file.
+The number of residues found in the Reference PDB file = 11
+Reference coordinates matrix created: 'original_Reference_PDB_Coordinates'
+The file All_PDB_Residues_JED.txt' contains all residue numbers found in the PDB file, formatted for Single Chain Analysis Input.
+
+Performing Preliminary Processing Run.
+
+Reading alpha carbon coordinates from all PDB files in the Working Directory
+The number of PDB files read = 3
+The number of residues found in the PDB files = 11
+Coordinates Matrix created: 'original_PDB_Coordinates'
+The dimension of the coordinates matrix is: 33  by  3
+The transformed PDB coordinates were obtained by quaternion least-squares alignment to the reference structure.
+PDB reference structure is test_toy2.pdb
+
+Conformation RMSDs and Residue RMSDs (RMSF) were calculated.
+
+PDB file with B-factors replaced by residue RMSDs: ss_11_RMSF_edited.pdb
+
+Variable Z-scores were calculated.
+
+Analysis completed: 2016-10-10 11:49:54

@@ -1,0 +1,82 @@
+JED: Java Essential Dynamics version 1.0
+Job Description: TOY
+Working directory: H:\\workspace\\JED_1.0\\JED_Test\\toy\\
+Output directory: H:\\workspace\\JED_1.0\\JED_Test\\toy\\JED_RESULTS_TOY/
+READ PDBs =  false
+MULTI CHAIN PDBs = false
+
+Reading the Reference PDB file: test_toy1.pdb
+
+Reading alpha carbon coordinates from the reference PDB file.
+The number of residues found in the Reference PDB file = 11
+Reference coordinates matrix created: 'original_Reference_PDB_Coordinates'
+The file All_PDB_Residues_JED.txt' contains all residue numbers found in the PDB file, formatted for Single Chain Analysis Input.
+
+The alpha carbon coordinates were obtained from coordinates matrix file: original_PDB_Coordinates_Rand.txt
+The dimension of the coordinates matrix is = 33 by 33
+Total number of residues in matrix = 11
+Total number of conformations in matrix = 33
+Transformed PDB coordinates obtained by quaternion least-squares alignment to the reference structure.
+PDB reference structure is: test_toy1.pdb
+
+PERFORMING cPCA, Computing Top 10 modes.
+
+Residue list for Cartesian subset:  residues.txt
+Number of residues in Cartesian subset: 11
+No samples were removed from the data
+No coordinate outliers were adjusted.
+Trace of the Covariance Matrix = 5
+Condition Number of the Covariance Matrix = 1,379
+Determinant of the Covariance Matrix = 3.4019965244966323E-49
+Rank of the Covariance Matrix = 33
+Trace of the Correlation Matrix = 33
+Trace of the Partial Correlation Matrix = -33
+PDB file with B-factors replaced by residue RMSDs: ss_11_RMSF_edited.pdb
+The DVPs (PCs) from the 3 different models were calculated using:
+Standard dot product(dp), normed dp, weighted dp (by eigenvalue), and weighted normed dp
+Subspace analysis was done comparing the top vector spaces from the 3 different models.
+Comparators include RMSIP and Principle Angles, for the essential subspace and iterated comparisons from dim 1 to 10
+Additional log files can be found in the /SSA directory tree.
+
+
+PERFORMING dpPCA, Computing Top 10 modes.
+
+Residue Pair list:  residues_dp.txt
+Number of residue pairs: 10
+No coordinate outliers were adjusted.
+Trace of the Covariance Matrix = 1
+Condition Number of the Covariance Matrix = 13
+Determinant of the Covariance Matrix = 0
+Rank of the Covariance Matrix = 10
+Trace of the Correlation Matrix = 10
+Trace of the Partial Correlation Matrix = -10
+
+MEANs and STANDARD DEVIATIONs for the Residue Pair Distances: 
+
+Res1        Res2            Mean            Std_Dev         
+1           2               1.195           0.346           
+1           3               1.138           0.416           
+1           4               1.224           0.313           
+1           5               1.617           0.412           
+1           6               1.586           0.326           
+1           7               1.251           0.419           
+1           8               1.331           0.396           
+1           9               1.468           0.424           
+1           10              1.002           0.348           
+1           11              1.253           0.384           
+
+The DVPs (PCs) from from the 3 different models were calculated using:
+Standard dot product(dp), normed dp, weighted dp (by eigenvalue), and weighted normed dp.
+Subspace analysis was done to compare the top vector spaces from the 3 different models.
+Comparators include RMSIP and Principle Angles, for the essential subspace and iterated comparisons from dim 1 to 10
+Additional log files can be found in the /SSA directory tree.
+
+Performing Cartesian Mode Visualization on Top  3  cPCA modes.
+Sets of 20 structures were generated to animate each selected cPCA mode, for the COV, CORR, and PCORR PCA models.
+A set of 100 structures was generated to animate the essential subspace composed of the top 3 modes, for the COV, CORR, and PCORR PCA models.
+For the individual modes, atoms of each residue were perturbed along the mode eigenvector using a sine function over a full period.
+For the essential motion, atoms of each residue were perturbed along the mode eigenvector using a sine function over 5 full periods for the first mode.
+Pymol(TM) scripts were generated for each individual mode and the combined subspace to play the mode structures as movies.
+MODE AMPLITUDE = 1.500
+
+Analysis completed: 2016-10-10 12:57:23

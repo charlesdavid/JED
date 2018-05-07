@@ -1,0 +1,94 @@
+Top_COV_Eigenvectors:
+Rows: 45
+Cols: 10
+Top_CORR_Eigenvectors:
+Rows: 45
+Cols: 10
+
+Output Directory: C:\\Users\\Charles\\workspace\\JED_1.0\\JED_Test\\Single\\JED_RESULTS_TEST/dPCA/SSA/
+Projections file written to: Projections_dim_10.txt
+Cumulative overlaps 1 --> 2 file written to: CO_1_2_dim_10.txt
+Cumulative overlaps 2 --> 1 file written to: CO_2_1_dim_10.txt
+Principle Angles file written to: PAs_dim_10.txt
+Cosine Products file written to: Cosine_Products_dim_10.txt
+Vectorial sums of angles file written to: Vector_Sums_of_Angles_dim_10.txt
+
+The Inner Products of each vector in subspace 1 with each vector in subspace 2 are:
+
+      0.372      0.422      0.530      0.189      0.201     -0.267     -0.046     -0.423     -0.063     -0.049
+     -0.359      0.019      0.103     -0.222      0.543     -0.235     -0.333      0.234      0.358      0.171
+      0.085      0.058     -0.149      0.105     -0.163      0.441     -0.027     -0.235      0.586     -0.132
+      0.560     -0.069     -0.080     -0.150      0.182      0.000     -0.153      0.293      0.250      0.089
+      0.003      0.042     -0.023      0.002     -0.017      0.079      0.002     -0.061      0.183     -0.058
+      0.004      0.019      0.032      0.007      0.049      0.002     -0.011      0.009      0.049     -0.014
+     -0.038     -0.015     -0.060      0.008     -0.006      0.014     -0.001     -0.015      0.023     -0.001
+      0.021     -0.037     -0.009     -0.032     -0.011     -0.068      0.043      0.014     -0.047     -0.022
+     -0.000      0.043      0.063      0.014      0.038     -0.049     -0.010     -0.021     -0.011      0.006
+     -0.096     -0.074     -0.023     -0.007      0.008     -0.034      0.017     -0.006     -0.122      0.022
+
+
+The cumulative overlaps CO_10 for each vector in subspace 1 with all the vectors in subspace 2 are:
+Vector  1           0.965       
+Vector  2           0.929       
+Vector  3           0.826       
+Vector  4           0.748       
+Vector  5           0.222       
+Vector  6           0.082       
+Vector  7           0.080       
+Vector  8           0.112       
+Vector  9           0.103       
+Vector  10          0.179       
+
+The cumulative overlaps CO_10 for each vector in subspace 2 with all the vectors in subspace 1 are:
+Vector  1           0.774       
+Vector  2           0.444       
+Vector  3           0.574       
+Vector  4           0.346       
+Vector  5           0.632       
+Vector  6           0.579       
+Vector  7           0.374       
+Vector  8           0.616       
+Vector  9           0.769       
+Vector  10          0.248       
+
+The RMSIP score is 0.562
+
+The principle angles (in degrees) are: 
+PA    1           5           
+PA    2           9           
+PA    3           21          
+PA    4           35          
+PA    5           73          
+PA    6           74          
+PA    7           79          
+PA    8           80          
+PA    9           83          
+PA    10          87          
+
+The cosine products (in degrees) are: 
+CP    1           5           
+CP    2           11          
+CP    3           23          
+CP    4           41          
+CP    5           77          
+CP    6           87          
+CP    7           89          
+CP    8           90          
+CP    9           90          
+CP    10          90          
+
+The vectorial sums of angles (in degrees) are: 
+VS    1           5           
+VS    2           11          
+VS    3           24          
+VS    4           42          
+VS    5           84          
+VS    6           113         
+VS    7           137         
+VS    8           159         
+VS    9           179         
+VS    10          199         
+
+Maximum possible angle between two subspaces of this dimension is 285 degrees
+
+Analysis completed: 2014-03-10 22:18:34

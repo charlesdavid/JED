@@ -1,0 +1,26 @@
+JED: Java Essential Dynamics version 1.0
+Job Description: TEST
+Working directory: C:\\Users\\Charles\\workspace\\JED_1.0\\JED_Test\\Multi\\PDBs\\
+Output directory: C:\\Users\\Charles\\workspace\\JED_1.0\\JED_Test\\Multi\\PDBs\\JED_RESULTS_TEST/
+READ PDBs =  true
+MULTI CHAIN PDBs = true
+
+Reading alpha carbon coordinates from all PDB files in the Working Directory
+The number of PDB files read = 101
+The number of residues found in the PDB files = 946
+Coordinates Matrix created: 'original_PDB_Coordinates'
+The dimension of the coordinates matrix is: 2838  by  101
+The transformed PDB coordinates were obtained by quaternion least-squares alignment to the reference structure.
+PDB reference structure is MVb_A_B_ATP.pdb
+The column in the Coordinates Matrix that corresponds to the entered reference structure is:
+	REFERENCE COLUMN =  0
+
+The file 'All_PDB_Residues_Multi_JED.txt' contains all chainID-residue number pairs found in the PDB file, formatted for Multi Chain Analysis Input.
+
+Performing Preliminary Processing Run (NO-PCA).
+
+Conformation RMSDs and Residue RMSDs (RMSF) were calculated.
+
+PDB file with B-factors replaced by residue RMSDs: ss_946_RMSF_edited.pdb
+
+Analysis completed: 2014-01-20 01:28:35

@@ -1,0 +1,31 @@
+0.00
+2.00
+0      1
+20     3     4     1     1.0
+C:\\Users\\Charles\\workspace\\JED_1.0\\JED_Test\\Multi\\
+TEST_err			MVb_A_B_ATP.pdb
+residues.txt
+residues_dist.txt
+residue_pairs.txt
+original_PDB_Coordinates.txt	0
+
+
+
+
+
+
+
+
+
+
+0.00
+0.00
+1    1
+0    0     0     0
+C:\\Users\\Charles\\workspace\\JED_1.0\\JED_Test\\Multi\\PDBs\\
+TEST		MVb_A_B_ATP.pdb
+
+
+
+
+
