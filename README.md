@@ -1,6 +1,7 @@
 # JED
 
-## This repo is for the developers of JED to collaborate and users of JED to submit feedback
+## This repo is for the developers of JED to collaborate...
+## and for users of JED to submit feedback
 
 ### Please report bugs by submitting a new issue tagged with BUG
 
