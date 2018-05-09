@@ -11,4 +11,7 @@
 
 Charles David: cdavid@carolina.rr.com
 
-
+Last Update: May 2018
+* New JavaDocs
+* New Jars
+* Minor code fixes
