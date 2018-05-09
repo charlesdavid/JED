@@ -1,6 +1,6 @@
 0      1     //MULTI CHAIN PDBs
 C:\\Users\\Charles\\workspace\\JED_2.0\\JED_Test\\Multi\\
-TEST_NEW			MVb_A_B_ATP.pdb
+TEST_MULTI			MVb_A_B_ATP.pdb
 0.00     0.00
 1     1     1     3.0
 residues.txt
@@ -13,7 +13,7 @@ original_PDB_Coordinates.txt
 
 0      0     //SINGLE CHAIN PDBs
 C:\\Users\\Charles\\workspace\\JED_2.0\\JED_Test\\Single\\
-TEST_NEW			1A6N.pdb
+TEST_SINGLE			1A6N.pdb
 0.00    1.60
 2     2     2     1.5
 residues.txt
@@ -28,7 +28,7 @@ original_PDB_Coordinates.txt
 
 1      0	//SINGLE CHAIN PDBs PRE-PROCESSING JOB
 C:\\Users\\Charles\\workspace\\JED_2.0\\JED_Test\\Single\\PDBs\\
-TEST_NEW 			1A6N.pdb	
+TEST_PRE-PROCESSING_SINGLE 			1A6N.pdb	
 
 
 
@@ -38,7 +38,7 @@ TEST_NEW 			1A6N.pdb
 
 1    1     //MULTI CHAIN PDBs PRE-PROCESSING JOB
 C:\\Users\\Charles\\workspace\\JED_2.0\\JED_Test\\Multi\\PDBs\\
-TEST_NEW		MVb_A_B_ATP.pdb
+TEST_PRE-PROCESSING_MULTI		MVb_A_B_ATP.pdb
 
 
 
