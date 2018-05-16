@@ -1,0 +1,84 @@
+JED: Java Essential Dynamics version 1.0
+Job Description: TEST_SINGLE
+Working directory: /workspace/cflcyd/git/JED/test/Single/
+Output directory: /workspace/cflcyd/git/JED/test/Single/JED_RESULTS_TEST_SINGLE/
+READ PDBs =  false
+MULTI CHAIN PDBs = false
+
+Reading the Reference PDB file: 1A6N.pdb
+
+Reading alpha carbon coordinates from the reference PDB file.
+The number of residues found in the Reference PDB file = 151
+Reference coordinates matrix created: 'original_Reference_PDB_Coordinates'
+The file All_PDB_Residues_JED.txt' contains all residue numbers found in the PDB file, formatted for Single Chain Analysis Input.
+
+The alpha carbon coordinates were obtained from coordinates matrix file: original_PDB_Coordinates.txt
+The dimension of the coordinates matrix is = 453 by 2001
+Total number of residues in matrix = 151
+Total number of conformations in matrix = 2001
+Transformed PDB coordinates obtained by quaternion alignment to the reference structure.
+PDB reference structure is: 1A6N.pdb
+
+PERFORMING cPCA, Computing Top 20 modes.
+
+Residue list for Cartesian subset:  residues.txt
+Number of residues in Cartesian subset: 151
+No samples were removed from the data
+The coordinate values with Z-scores beyond |3.0| were set to their mean value.
+
+Trace of the Covariance Matrix = 1.262E2
+Condition Number of the Covariance Matrix = 2.061E6
+Determinant of the Covariance Matrix = 0E0
+Rank of the Covariance Matrix = 453
+Trace of the Correlation Matrix = 453
+Trace of the Partial Correlation Matrix = -453
+PDB file with B-factors replaced by residue RMSDs: ss_151_RMSF_edited.pdb
+The DVPs (PCs) from the 3 different models were calculated using:
+Standard dot product(dp), normed dp, weighted dp (by eigenvalue), and weighted normed dp
+Subspace analysis was done comparing the top vector spaces from the 3 different models.
+Comparators include RMSIP and Principle Angles, for the essential subspace and iterated comparisons from dim 1 to 20
+Additional log files can be found in the /SSA directory tree.
+
+
+PERFORMING dpPCA, Computing Top 10 modes.
+
+Residue Pair list:  residue_pairs.txt
+Number of residue pairs: 10
+The distance values with Z-scores beyond |3.0| were set to their mean value.
+
+Trace of the Covariance Matrix = 1.002E-1
+Condition Number of the Covariance Matrix = 3.331E4
+Determinant of the Covariance Matrix = 3.065E-42
+Rank of the Covariance Matrix = 10
+Trace of the Correlation Matrix = 10
+Trace of the Partial Correlation Matrix = -10
+
+MEANs and STANDARD DEVIATIONs for the Residue Pair Distances: 
+
+Res1        Res2            Mean            Std_Dev         
+1           6               9.321           0.284           
+2           7               6.416           0.140           
+3           8               8.643           0.011           
+4           9               8.761           0.004           
+5           10              8.793           0.003           
+6           11              8.737           0.006           
+7           12              8.360           0.005           
+8           13              8.681           0.004           
+9           14              8.592           0.004           
+10          15              8.818           0.002           
+
+The DVPs (PCs) from from the 3 different models were calculated using:
+Standard dot product(dp), normed dp, weighted dp (by eigenvalue), and weighted normed dp.
+Subspace analysis was done to compare the top vector spaces from the 3 different models.
+Comparators include RMSIP and Principle Angles, for the essential subspace and iterated comparisons from dim 1 to 10
+Additional log files can be found in the /SSA directory tree.
+
+Performing Cartesian Mode Visualization on Top  5  cPCA modes.
+Sets of 20 structures were generated to animate each selected cPCA mode, for the COV, CORR, and PCORR PCA models.
+A set of 20 structures was generated to animate the essential subspace composed of the top 5 modes for the COV, CORR, and PCORR PCA models.
+For the individual modes, atoms of each residue were perturbed along the mode eigenvector using a sine function over one full period.
+For the essential motion, a superposition was created spanning 2 full periods for the first mode.
+Pymol(TM) scripts were generated for each individual mode and the essential subspace, to play the mode structures as movies.
+MODE AMPLITUDE = 3.000
+
+Analysis completed: 2018-05-16 17:10:50

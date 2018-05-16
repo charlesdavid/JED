@@ -1,0 +1,30 @@
+JED: Java Essential Dynamics version 1.0
+Job Description: TEST_PRE-PROCESSING_SINGLE
+Working directory: /workspace/cflcyd/git/JED/test/Single/PDBs/
+Output directory: /workspace/cflcyd/git/JED/test/Single/PDBs/JED_RESULTS_TEST_PRE-PROCESSING_SINGLE/
+READ PDBs =  true
+MULTI CHAIN PDBs = false
+
+Reading the Reference PDB file: 1A6N.pdb
+
+Reading alpha carbon coordinates from the reference PDB file.
+The number of residues found in the Reference PDB file = 151
+Reference coordinates matrix created: 'original_Reference_PDB_Coordinates'
+The file All_PDB_Residues_JED.txt' contains all residue numbers found in the PDB file, formatted for Single Chain Analysis Input.
+
+Performing Preliminary Processing Run.
+
+Reading alpha carbon coordinates from all PDB files in the Working Directory
+The number of PDB files read = 2001
+The number of residues found in the PDB files = 151
+Coordinates Matrix created: 'original_PDB_Coordinates'
+The dimension of the coordinates matrix is: 453  by  2001
+PDB reference structure is 1A6N.pdb
+
+Conformation RMSDs and Residue RMSDs (RMSF) were calculated.
+
+PDB file with B-factors replaced by residue RMSDs: ss_151_RMSF_edited.pdb
+
+Variable Z-scores were calculated.
+
+Analysis completed: 2018-05-16 16:38:44

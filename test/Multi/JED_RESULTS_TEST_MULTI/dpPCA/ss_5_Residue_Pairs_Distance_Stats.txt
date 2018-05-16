@@ -1,0 +1,7 @@
+MEANs and STANDARD DEVIATIONS for the Residue Pair Distances: 
+Res1        Res2            Mean            Std_Dev         
+A225        A294            32.651          0.000           
+A294        A525            41.435          0.000           
+A325        A525            44.517          0.002           
+A525        A795            105.495         0.001           
+A525        B52             80.534          0.000           

@@ -1,0 +1,7 @@
+1    1 
+/workspace/cflcyd/git/JED/test/Multi/PDBs/
+TEST_PRE-PROCESSING_MULTI		MVb_A_B_ATP.pdb
+
+
+
+

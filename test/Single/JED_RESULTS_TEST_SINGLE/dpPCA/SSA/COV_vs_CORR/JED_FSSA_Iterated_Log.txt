@@ -1,0 +1,32 @@
+Output Directory: /workspace/cflcyd/git/JED/test/Single/JED_RESULTS_TEST_SINGLE/dpPCA/SSA/COV_vs_CORR/
+Principle Angle Spectra file written to: Iterated_PAs.txt
+RMSIPs file written to: Iterated_RMSIPs.txt
+
+
+RMSIPs:
+Dim   1           0.135       
+Dim   2           0.458       
+Dim   3           0.655       
+Dim   4           0.698       
+Dim   5           0.693       
+Dim   6           0.744       
+Dim   7           0.849       
+Dim   8           0.929       
+Dim   9           0.943       
+Dim   10          1.000       
+
+The PA spectra for the range of subspaces are:
+
+   82    0    0    0    0    0    0    0    0    0
+   50   87    0    0    0    0    0    0    0    0
+   14   54   88    0    0    0    0    0    0    0
+   13   18   71   89    0    0    0    0    0    0
+    7   16   46   88   90    0    0    0    0    0
+    0    0   11   58   75   90    0    0    0    0
+    0    0    0    0   13   72   90    0    0    0
+    0    0    0    0    0    0   17   89    0    0
+    0    0    0    0    0    0    0    0   89    0
+    0    0    0    0    0    0    0    0    0    0
+
+
+Analysis completed: 2018-05-16 17:09:55

@@ -1,0 +1,8 @@
+0      0 
+/workspace/cflcyd/git/JED/test/Single/
+TEST_SINGLE			1A6N.pdb
+0.00    3.00
+20     10     5     3.0
+residues.txt
+residue_pairs.txt
+original_PDB_Coordinates.txt

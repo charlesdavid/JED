@@ -1,0 +1,4 @@
+1      0	//SINGLE CHAIN PDBs PRE-PROCESSING JOB
+/workspace/cflcyd/git/JED/test/Single/PDBs/
+TEST_PRE-PROCESSING_SINGLE 			1A6N.pdb	
+

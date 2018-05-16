@@ -1,0 +1,64 @@
+Top_COV_Eigenvectors:
+Rows: 5
+Cols: 5
+Top_CORR_Eigenvectors:
+Rows: 5
+Cols: 5
+
+Output Directory: /workspace/cflcyd/git/JED/test/Multi/JED_RESULTS_TEST_MULTI/dpPCA/SSA/CORR_vs_PCORR/
+Projections file written to: Projections_dim_5.txt
+Cumulative overlaps 1 --> 2 file written to: CO_1_2_dim_5.txt
+Cumulative overlaps 2 --> 1 file written to: CO_2_1_dim_5.txt
+Principle Angles file written to: PAs_dim_5.txt
+Cosine Products file written to: Cosine_Products_dim_5.txt
+Vectorial sums of angles file written to: Vector_Sums_of_Angles_dim_5.txt
+
+The Inner Products of each vector in subspace 1 with each vector in subspace 2 are:
+
+     -0.993     -0.088     -0.074      0.009      0.037
+      0.094     -0.993     -0.062      0.022      0.031
+     -0.066     -0.067      0.991     -0.053      0.080
+     -0.002     -0.018     -0.056     -0.998      0.025
+      0.039      0.040     -0.073      0.028      0.995
+
+
+The cumulative overlaps CO_5 for each vector in subspace 1 with all the vectors in subspace 2 are:
+Vector  1           1.000       
+Vector  2           1.000       
+Vector  3           1.000       
+Vector  4           1.000       
+Vector  5           1.000       
+
+The cumulative overlaps CO_5 for each vector in subspace 2 with all the vectors in subspace 1 are:
+Vector  1           1.000       
+Vector  2           1.000       
+Vector  3           1.000       
+Vector  4           1.000       
+Vector  5           1.000       
+
+The RMSIP score is 1.000
+
+The principle angles (in degrees) are: 
+PA    1           0           
+PA    2           0           
+PA    3           0           
+PA    4           0           
+PA    5           0           
+
+The cosine products (in degrees) are: 
+CP    1           0           
+CP    2           0           
+CP    3           0           
+CP    4           0           
+CP    5           0           
+
+The vectorial sums of angles (in degrees) are: 
+VS    1           0           
+VS    2           0           
+VS    3           0           
+VS    4           0           
+VS    5           0           
+
+Maximum possible angle between two subspaces of this dimension is 201 degrees
+
+Analysis completed: 2018-05-16 17:12:59

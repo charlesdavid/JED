@@ -1,0 +1,10 @@
+0      1 
+/workspace/cflcyd/git/JED/test/Multi/
+TEST_MULTI			MVb_A_B_ATP.pdb
+0.00     0.00
+20     5     5     3.0
+residues.txt
+residue_pairs.txt
+original_PDB_Coordinates.txt
+
+
