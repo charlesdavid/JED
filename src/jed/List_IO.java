@@ -63,7 +63,8 @@ public class List_IO
 			try
 				{
 					reader = new BufferedReader(new FileReader(list_in));
-				} catch (FileNotFoundException e)
+				}
+			catch (FileNotFoundException e)
 				{
 					System.err.println("Could not find the file: " + full_path + list_in);
 					e.printStackTrace();
@@ -78,12 +79,14 @@ public class List_IO
 								{
 									data_in.add(line);
 								}
-						} catch (IOException e)
+						}
+					catch (IOException e)
 						{
 							System.err.println("Could not read the file: " + full_path + list_in);
 							e.printStackTrace();
 						}
-				} else if (type.equals("Integer"))
+				}
+			else if (type.equals("Integer"))
 				{
 					try
 						{
@@ -92,16 +95,19 @@ public class List_IO
 								{
 									data_in.add(Integer.parseInt(line));
 								}
-						} catch (NumberFormatException e)
+						}
+					catch (NumberFormatException e)
 						{
 							System.err.println("Expected list of integers: " + full_path + list_in);
 							e.printStackTrace();
-						} catch (IOException e)
+						}
+					catch (IOException e)
 						{
 							System.err.println("Could not read the file: " + full_path + list_in);
 							e.printStackTrace();
 						}
-				} else if (type.equals("Double"))
+				}
+			else if (type.equals("Double"))
 				{
 					try
 						{
@@ -110,23 +116,27 @@ public class List_IO
 								{
 									data_in.add(Double.parseDouble(line));
 								}
-						} catch (NumberFormatException e)
+						}
+					catch (NumberFormatException e)
 						{
 							System.err.println("Expected list of decimals: " + full_path + list_in);
 							e.printStackTrace();
-						} catch (IOException e)
+						}
+					catch (IOException e)
 						{
 							System.err.println("Could not read the file: " + full_path + list_in);
 							e.printStackTrace();
 						}
-				} else try
+				}
+			else try
 				{
 					data_in = new ArrayList<Object>();
 					while ((line = reader.readLine()) != null)
 						{
 							data_in.add(line);
 						}
-				} catch (IOException e)
+				}
+			catch (IOException e)
 				{
 					System.out.println("Could not read the list of objects: " + full_path + list_in);
 					e.printStackTrace();
@@ -137,7 +147,7 @@ public class List_IO
 		}
 
 	/**
-	 * Method to write a list of String-Integer to file (eg, Residue ID pairs)
+	 * Method to write a list of String-Integer to file (For example, Residue ID pairs)
 	 * 
 	 * @param String_Data
 	 * @param Integer_Data
@@ -164,7 +174,8 @@ public class List_IO
 					list_writer.flush();
 					list_writer.close();
 
-				} catch (IOException e)
+				}
+			catch (IOException e)
 				{
 					System.err.println("Could not write the file: " + path);
 					e.printStackTrace();
@@ -195,7 +206,8 @@ public class List_IO
 						}
 					list_writer.flush();
 					list_writer.close();
-				} catch (IOException e)
+				}
+			catch (IOException e)
 				{
 					System.err.println("Could not write the file: " + path);
 					e.printStackTrace();
@@ -234,7 +246,8 @@ public class List_IO
 					list_writer.flush();
 					list_writer.close();
 
-				} catch (IOException e)
+				}
+			catch (IOException e)
 				{
 					System.err.println("Could not write the file: " + path);
 					e.printStackTrace();
@@ -266,7 +279,8 @@ public class List_IO
 					list_writer.flush();
 					list_writer.close();
 
-				} catch (IOException e)
+				}
+			catch (IOException e)
 				{
 					System.err.println("Could not write the file: " + path);
 					e.printStackTrace();

@@ -124,14 +124,14 @@ public class JED_Get_Transformed_Coordinates
 	public Matrix get_SS_Transformed_coords()
 		{
 			for (int z = 0; z < COLS; z++)
-			{
-				Matrix fc = subset_PDB_coordinates.getMatrix(0, ROWS - 1, z, z);
-				tf_coords = new JED_Transform_Coords(transformed_subset_REF_PDB_coordinates, fc);
-				Matrix transformed_col_vector = tf_coords.get_transformed_coords();
-				transformed_subset_PDB_coordinates.setMatrix(0, ROWS - 1, z, z, transformed_col_vector);
-				tf_coords = null;
-				if (z % 10 == 0) System.gc();
-			}
+				{
+					Matrix fc = subset_PDB_coordinates.getMatrix(0, ROWS - 1, z, z);
+					tf_coords = new JED_Transform_Coords(transformed_subset_REF_PDB_coordinates, fc);
+					Matrix transformed_col_vector = tf_coords.get_transformed_coords();
+					transformed_subset_PDB_coordinates.setMatrix(0, ROWS - 1, z, z, transformed_col_vector);
+					tf_coords = null;
+					if (z % 10 == 0) System.gc();
+				}
 			String path = out_dir + "ss_" + number_of_residues + "_transformed_PDB_coordinates.txt";
 			Matrix_IO.write_Matrix(transformed_subset_PDB_coordinates, path, 9, 3);
 			path = out_dir + "ss_" + number_of_residues + "_transformed_reference_PDB_coordinates.txt";
@@ -146,18 +146,18 @@ public class JED_Get_Transformed_Coordinates
 	public List<Double> get_SS_Conformation_RMSDs()
 		{
 			for (int z = 0; z < COLS; z++)
-			{
-				Matrix fc_O = subset_PDB_coordinates.getMatrix(0, ROWS - 1, z, z);
-				Matrix fc_T = transformed_subset_PDB_coordinates.getMatrix(0, ROWS - 1, z, z);
+				{
+					Matrix fc_O = subset_PDB_coordinates.getMatrix(0, ROWS - 1, z, z);
+					Matrix fc_T = transformed_subset_PDB_coordinates.getMatrix(0, ROWS - 1, z, z);
 
-				JED_Get_RMSD gRMSD_O = new JED_Get_RMSD(subset_REF_PDB_coordinates, fc_O);
-				JED_Get_RMSD gRMSD_T = new JED_Get_RMSD(transformed_subset_REF_PDB_coordinates, fc_T);
+					JED_Get_RMSD gRMSD_O = new JED_Get_RMSD(subset_REF_PDB_coordinates, fc_O);
+					JED_Get_RMSD gRMSD_T = new JED_Get_RMSD(transformed_subset_REF_PDB_coordinates, fc_T);
 
-				double rmsd_O = gRMSD_O.get_RMSD();
-				original_conformation_rmsds.add(rmsd_O);
-				double rmsd_T = gRMSD_T.get_RMSD();
-				transformed_conformation_rmsds.add(rmsd_T);
-			}
+					double rmsd_O = gRMSD_O.get_RMSD();
+					original_conformation_rmsds.add(rmsd_O);
+					double rmsd_T = gRMSD_T.get_RMSD();
+					transformed_conformation_rmsds.add(rmsd_T);
+				}
 			String path = out_dir + "ss_" + number_of_residues + "_original_conformation_rmsds.txt";
 			List_IO.write_Double_List(original_conformation_rmsds, path, 3);
 			path = out_dir + "ss_" + number_of_residues + "_transformed_conformation_rmsds.txt";
@@ -172,24 +172,25 @@ public class JED_Get_Transformed_Coordinates
 	public Matrix get_SS_transformed_coordinates_trimmed_COLS()
 		{
 			if (percent_cut > 0)
-			{
-				Remove_Outliers_by_Frame tdc = new Remove_Outliers_by_Frame(transformed_subset_PDB_coordinates, transformed_conformation_rmsds);
-				tdc.set_percent(percent_cut);
-				tdc.remove_Frames();
-				trimmed_PDB_coordinates_cols = tdc.get_Coordinates_Trimmed();
-				double percentage = (int) (percent_cut * 100);
-				String path = out_dir + "ss_" + number_of_residues + "_trimmed_" + percentage + "_percent_PDB_coordinates_COLS.txt";
-				Matrix_IO.write_Matrix(trimmed_PDB_coordinates_cols, path, 9, 3);
-				conformation_outliers = tdc.get_Removed_Conformation_List();
-				path = out_dir + "ss_" + number_of_residues + "_Removed_Conformation_Outliers.txt";
-				List_IO.write_Integer_List(conformation_outliers, path);
-				conf_Z_scores = tdc.get_Conformation_Z_Scores();
-				path = out_dir + "ss_" + number_of_residues + "_Conformation_Z_Scores.txt";
-				Matrix_IO.write_Matrix(conf_Z_scores, path, 6, 1);
-			} else
-			{
-				trimmed_PDB_coordinates_cols = transformed_subset_PDB_coordinates;
-			}
+				{
+					Remove_Outliers_by_Frame tdc = new Remove_Outliers_by_Frame(transformed_subset_PDB_coordinates, transformed_conformation_rmsds);
+					tdc.set_percent(percent_cut);
+					tdc.remove_Frames();
+					trimmed_PDB_coordinates_cols = tdc.get_Coordinates_Trimmed();
+					double percentage = (int) (percent_cut * 100);
+					String path = out_dir + "ss_" + number_of_residues + "_trimmed_" + percentage + "_percent_PDB_coordinates_COLS.txt";
+					Matrix_IO.write_Matrix(trimmed_PDB_coordinates_cols, path, 9, 3);
+					conformation_outliers = tdc.get_Removed_Conformation_List();
+					path = out_dir + "ss_" + number_of_residues + "_Removed_Conformation_Outliers.txt";
+					List_IO.write_Integer_List(conformation_outliers, path);
+					conf_Z_scores = tdc.get_Conformation_Z_Scores();
+					path = out_dir + "ss_" + number_of_residues + "_Conformation_Z_Scores.txt";
+					Matrix_IO.write_Matrix(conf_Z_scores, path, 6, 1);
+				}
+			else
+				{
+					trimmed_PDB_coordinates_cols = transformed_subset_PDB_coordinates;
+				}
 			return trimmed_PDB_coordinates_cols;
 		}
 
@@ -200,20 +201,21 @@ public class JED_Get_Transformed_Coordinates
 		{
 
 			if (z_cut_off > 0)
-			{
-				Adjust_Outliers_by_Z_Score adr = new Adjust_Outliers_by_Z_Score(trimmed_PDB_coordinates_cols);
-				adr.set_Z_threshold(z_cut_off);
-				adr.adjust_row_data();
-				adjusted_PDB_coordinates_rows = adr.get_coorinates_adjusted();
-				String path = out_dir + "ss_" + number_of_residues + "_Z_threshold_" + z_cut_off + "_adjusted_PDB_coordinates_ROWS.txt";
-				Matrix_IO.write_Matrix(adjusted_PDB_coordinates_rows, path, 9, 3);
-				Matrix var_counts = adr.get_counts();
-				path = out_dir + "ss_" + number_of_residues + "_adjustments_per_variable.txt";
-				Matrix_IO.write_Matrix(var_counts, path, 6, 0);
-			} else
-			{
-				adjusted_PDB_coordinates_rows = trimmed_PDB_coordinates_cols;
-			}
+				{
+					Adjust_Outliers_by_Z_Score adr = new Adjust_Outliers_by_Z_Score(trimmed_PDB_coordinates_cols);
+					adr.set_Z_threshold(z_cut_off);
+					adr.adjust_row_data();
+					adjusted_PDB_coordinates_rows = adr.get_coorinates_adjusted();
+					String path = out_dir + "ss_" + number_of_residues + "_Z_threshold_" + z_cut_off + "_adjusted_PDB_coordinates_ROWS.txt";
+					Matrix_IO.write_Matrix(adjusted_PDB_coordinates_rows, path, 9, 3);
+					Matrix var_counts = adr.get_counts();
+					path = out_dir + "ss_" + number_of_residues + "_adjustments_per_variable.txt";
+					Matrix_IO.write_Matrix(var_counts, path, 6, 0);
+				}
+			else
+				{
+					adjusted_PDB_coordinates_rows = trimmed_PDB_coordinates_cols;
+				}
 			return adjusted_PDB_coordinates_rows;
 		}
 
@@ -283,5 +285,4 @@ public class JED_Get_Transformed_Coordinates
 
 			return percent_cut;
 		}
-
 }

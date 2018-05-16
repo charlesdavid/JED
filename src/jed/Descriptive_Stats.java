@@ -35,10 +35,10 @@ public class Descriptive_Stats
 			double s = 0.0;
 
 			for (double x : sample)
-			{
-				n++;
-				s += x;
-			}
+				{
+					n++;
+					s += x;
+				}
 			return mean = (s / n);
 		}
 
@@ -55,10 +55,10 @@ public class Descriptive_Stats
 		{
 			sum_squared_deviations = 0.0;
 			for (double x : sample)
-			{
-				double delta = (x - mean) * (x - mean);
-				sum_squared_deviations += delta;
-			}
+				{
+					double delta = (x - mean) * (x - mean);
+					sum_squared_deviations += delta;
+				}
 			return sum_squared_deviations;
 		}
 
@@ -147,16 +147,18 @@ public class Descriptive_Stats
 			double[] z_scores = new double[sample.length];
 			int i = 0;
 			for (double d : sample)
-			{
-				double z = ((d - mean) / std_dev);
-				z_scores[i] = z;
-				i++;
-			}
+				{
+					double z = ((d - mean) / std_dev);
+					z_scores[i] = z;
+					i++;
+				}
 			return z_scores;
 		}
 
 	/**
-	 * Returns a double array of probabilities given the data, its mean, and its standard deviation. This method assumes a normal distribution parameterized by mean and sigma.
+	 * Returns a double array of probabilities given the data, its mean, and its standard deviation.
+	 * This method assumes a normal distribution parameterized by mean and sigma.
+	 * For non-Gaussian distributions, please use KDE
 	 * 
 	 * @param data
 	 * @param mean
@@ -169,15 +171,15 @@ public class Descriptive_Stats
 			int n = 0;
 			double[] probabilities = new double[data.length];
 			for (double x : data)
-			{
+				{
 
-				double prob = 0;
-				double coeff = (NORM / (sigma));
-				double arg = (-0.50000000) * ((x - mean) / sigma) * ((x - mean) / sigma);
-				prob = coeff * Math.exp(arg);
-				probabilities[n] = prob;
-				n++;
-			}
+					double prob = 0;
+					double coeff = (NORM / (sigma));
+					double arg = (-0.50000000) * ((x - mean) / sigma) * ((x - mean) / sigma);
+					prob = coeff * Math.exp(arg);
+					probabilities[n] = prob;
+					n++;
+				}
 			return probabilities;
 		}
 }
