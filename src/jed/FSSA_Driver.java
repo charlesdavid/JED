@@ -40,11 +40,11 @@ public class FSSA_Driver
 
 	static int number_Of_Input_Lines, line_count, num_of_jobs, job_number, ROWS1, COLS1, ROWS2, COLS2;
 	static double RMSIP;
-	static String line, input_path, directory1, directory2, name1, name2, out_dir, description, batch_description, date = DateUtils.now();
+	static String line, input_path, path1, path2, out_dir, description, batch_description, date = DateUtils.now();
 	static Matrix matrix1, matrix2;
 	static ArrayList<Double> principle_angles_svd, RMSIPs;
 	static ArrayList<String> lines;
-	static File file_1, file_2, Job_log, Batch_log;
+	static File Job_log, Batch_log;
 	static StringTokenizer sToken;
 	static BufferedReader input_reader;
 	static PrintWriter Batch_log_Writer, Job_log_writer;
@@ -108,12 +108,12 @@ public class FSSA_Driver
 			sToken = new StringTokenizer(line);
 			out_dir = sToken.nextToken();
 			System.out.println("\tOutput Directory = " + out_dir);
-			if (!(out_dir.endsWith("/") || out_dir.endsWith("\\")))
-				{
-					System.err.println("Expected the Output Directory to end with / or \\\\, but got: " + line);
-					System.err.println("Terminating program execution.");
-					System.exit(0);
-				}
+			if (!(out_dir.endsWith(File.separator)))
+			{
+				System.err.println("Expected the Output Directory to end with: " + File.separatorChar + ", but got: " + out_dir);
+				System.err.println("Attempting to fix...");
+				out_dir = out_dir + File.separator;
+			}
 			exist = new File(out_dir).exists();
 			if (!exist)
 				{
@@ -163,59 +163,29 @@ public class FSSA_Driver
 			System.out.println("Reading line " + (line_count + 1) + ", the SECOND LINE of job: " + (job_number + 1));
 			line = lines.get(line_count);
 			sToken = new StringTokenizer(line);
-			directory1 = sToken.nextToken();
-			System.out.println("\tDirectory 1 = " + directory1);
-			if (!(directory1.endsWith("/") || directory1.endsWith("\\")))
-				{
-					System.err.println("Expected the working Directory to end with / or \\\\, but got: " + directory1);
-					System.err.println("Terminating program execution.");
-					System.exit(0);
-				}
-			isDir = new File(directory1).isDirectory();
-			if (!isDir)
-				{
-					System.err.println("The entered directory does not exist as a directory: " + directory1);
-					System.err.println("Terminating program execution.");
-					System.exit(0);
-				}
-			name1 = sToken.nextToken();
-			System.out.println("\tFirst Eigenvector File = " + name1);
-			exist = new File(directory1 + name1).exists();
+			path1 = sToken.nextToken();
+			System.out.println("\tEigenvector File 1 = " + path1);
+			exist = new File(path1).exists();
 			if (!exist)
-				{
-					System.err.println("The entered Eigenvector File does not exist: " + directory1 + name1);
-					System.err.println("Terminating program execution.");
-					System.exit(0);
-				}
+			{
+				System.err.println("The entered Eigenvector File does not exist: " + path1);
+				System.err.println("Terminating program execution.");
+				System.exit(0);
+			}
 			line_count++;
 			/* ************************************************************************************************************************************************** */
 			System.out.println("Reading line " + (line_count + 1) + ", the THIRD LINE of job: " + (job_number + 1));
 			line = lines.get(line_count);
 			sToken = new StringTokenizer(line);
-			directory2 = sToken.nextToken();
-			System.out.println("\tDirectory 2 = " + directory2);
-			if (!(directory2.endsWith("/") || directory2.endsWith("\\")))
-				{
-					System.err.println("Expected the working Directory to end with / or \\\\, but got: " + directory2);
-					System.err.println("Terminating program execution.");
-					System.exit(0);
-				}
-			isDir = new File(directory2).isDirectory();
-			if (!isDir)
-				{
-					System.err.println("The entered directory does not exist as a directory: " + directory2);
-					System.err.println("Terminating program execution.");
-					System.exit(0);
-				}
-			name2 = sToken.nextToken();
-			System.out.println("\tFirst Eigenvector File = " + name2);
-			exist = new File(directory2 + name2).exists();
+			path2 = sToken.nextToken();
+			System.out.println("\tEigenvector File 2 = " + path2);
+			exist = new File(path2).exists();
 			if (!exist)
-				{
-					System.err.println("The entered Eigenvector File does not exist: " + directory2 + name2);
-					System.err.println("Terminating program execution.");
-					System.exit(0);
-				}
+			{
+				System.err.println("The entered Eigenvector File does not exist: " + path2);
+				System.err.println("Terminating program execution.");
+				System.exit(0);
+			}
 			line_count++;
 			/* ************************************************************************************************************************************************** */
 			System.out.println("Reading line " + (line_count + 1));
@@ -256,10 +226,10 @@ public class FSSA_Driver
 
 	private static void write_Logs()
 		{
-			Job_log_writer.write("Matrix 1: " + directory1 + name1 + "\n");
+			Job_log_writer.write("Matrix 1: " + path1 + "\n");
 			Job_log_writer.write("Rows: " + ROWS1 + "\n");
 			Job_log_writer.write("Cols: " + COLS1 + "\n");
-			Job_log_writer.write("Matrix 2: " + directory2 + name2 + "\n");
+			Job_log_writer.write("Matrix 2: " + path2 + "\n");
 			Job_log_writer.write("Rows: " + ROWS2 + "\n");
 			Job_log_writer.write("Cols: " + COLS2 + "\n\n");
 			Batch_log_Writer.write(String.format("%-25s%-8s%-8s%-8s%-8s%-8s%-8s%-8s\t", description, "SS_dim", COLS1, "VS_dim", ROWS1, "RMSIP", nf.format(RMSIP), "PAs"));
@@ -289,7 +259,7 @@ public class FSSA_Driver
 			nff.setMinimumFractionDigits(0);
 
 			System.out.println("Running FSSA Driver: ");
-			System.out.println("Getting the input file: ");
+			System.out.println("Getting the SSA input file: ");
 			try
 				{
 
@@ -300,8 +270,8 @@ public class FSSA_Driver
 					if (args.length >= 1)
 						{
 							input_path = args[0];
-							System.out.println("The path to the input file must be the first argument:");
-							System.out.println("These are the command args:");
+							System.out.println("User specified input file (must be the first program argument)");
+							System.out.println("These are the specified program args:");
 							for (int i = 0; i < args.length; i++)
 								{
 									System.out.println("Arg " + (i + 1) + " Value = " + args[i]);
@@ -336,23 +306,21 @@ public class FSSA_Driver
 				{
 					read_job_parameters();
 
-					file_1 = new File(directory1 + name1);
-					file_2 = new File(directory2 + name2);
-					matrix1 = Matrix_IO.read_Matrix(directory1, name1);
+					matrix1 = Matrix_IO.read_Matrix(path1);
 					ROWS1 = matrix1.getRowDimension();
 					COLS1 = matrix1.getColumnDimension();
-					matrix2 = Matrix_IO.read_Matrix(directory2, name2);
+					matrix2 = Matrix_IO.read_Matrix(path2);
 					ROWS2 = matrix2.getRowDimension();
 					COLS2 = matrix2.getColumnDimension();
 
 					if (ROWS1 != ROWS2)
 						{
-							System.err.println("FATAL ERROR: The subspaces do not come from the same vector space. Program will terminate.");
+							System.err.println("ERROR: The subspaces do not come from the same vector space. Program will terminate.");
 							System.exit(0);
 						}
 					if (COLS1 != COLS2)
 						{
-							System.err.println("FATAL ERROR: The subspaces do not have the same dimensions. Program will terminate");
+							System.err.println("ERROR: The subspaces do not have the same dimensions. Program will terminate");
 							System.exit(0);
 						}
 
@@ -367,6 +335,9 @@ public class FSSA_Driver
 					write_Logs();
 
 					principle_angles_svd.clear();
+					
+					ssa=null;
+					System.gc();
 				}
 			Batch_log_Writer.close();
 		}

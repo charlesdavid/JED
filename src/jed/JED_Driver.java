@@ -1005,8 +1005,8 @@ public class JED_Driver
 					if (args.length >= 1)
 						{
 							input_path = args[0];
-							System.out.println("The path to the input file must be the first argument:");
-							System.out.println("These are the command args:");
+							System.out.println("User specified input file (must be the first program argument)");
+							System.out.println("These are the specified program args:");
 							for (int i = 0; i < args.length; i++)
 								{
 									System.out.println("Arg " + (i + 1) + " Value = " + args[i]);
