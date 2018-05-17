@@ -35,8 +35,8 @@ public class JED_Get_Distance_Pair_PCA
 	double trace_COV, trace_CORR, trace_PCORR, cond_COV, cond_CORR, cond_PCORR, det_COV, det_CORR, det_PCORR, rank_COV, rank_CORR, rank_PCORR;
 	List<Double> eigenvalues_COV, top_eigenvalues_COV, eigenvalues_CORR, top_eigenvalues_CORR, eigenvalues_PCORR, top_eigenvalues_PCORR;
 	double[] dist_pca_mode_COV_min, dist_pca_mode_COV_max, dist_pca_mode_CORR_min, dist_pca_mode_CORR_max, dist_pca_mode_PCORR_min, dist_pca_mode_PCORR_max;
-	Matrix distances, centered_data, COV_dist, CORR_dist, pcorr_dist, precision_cov, precision_corr, top_evectors_dist_COV, top_evectors_dist_CORR, top_evectors_dist_PCORR,
-			residue_means, residue_std_devs;
+	Matrix distances, centered_data, COV_dist, CORR_dist, pcorr_dist, precision_cov, precision_corr, top_evectors_dist_COV, top_evectors_dist_CORR, top_evectors_dist_PCORR, residue_means,
+			residue_std_devs;
 	NumberFormat nf;
 	RoundingMode rm;
 	EigenvalueDecomposition evd;
@@ -67,19 +67,19 @@ public class JED_Get_Distance_Pair_PCA
 			directory = dir;
 			description = des;
 
-			out_dir_dpPCA = directory + "JED_RESULTS_" + description + "/dpPCA/";
+			out_dir_dpPCA = directory + "JED_RESULTS_" + description + File.separatorChar + "dpPCA" + File.separatorChar;
 			exist = new File(out_dir_dpPCA).exists();
 			if (!exist) success = (new File(out_dir_dpPCA)).mkdirs();
 
-			out_dir_COV = out_dir_dpPCA + "COV/";
+			out_dir_COV = out_dir_dpPCA + "COV" + File.separatorChar;
 			exist = new File(out_dir_COV).exists();
 			if (!exist) success = (new File(out_dir_COV)).mkdirs();
 
-			out_dir_CORR = out_dir_dpPCA + "CORR/";
+			out_dir_CORR = out_dir_dpPCA + "CORR" + File.separatorChar;
 			exist = new File(out_dir_CORR).exists();
 			if (!exist) success = (new File(out_dir_CORR)).mkdirs();
 
-			out_dir_PCORR = out_dir_dpPCA + "PCORR/";
+			out_dir_PCORR = out_dir_dpPCA + "PCORR" + File.separatorChar;
 			exist = new File(out_dir_PCORR).exists();
 			if (!exist) success = (new File(out_dir_PCORR)).mkdirs();
 
@@ -132,7 +132,7 @@ public class JED_Get_Distance_Pair_PCA
 			file_name_head = out_dir_dpPCA + "ss_" + number_of_pairs + "_Residue_Pairs";
 
 			residue_means = pca.getData_means();
-			path = file_name_head + "_Centroids_of_Variables.txt";
+			path = file_name_head + "_Means_of_Variables.txt";
 			Matrix_IO.write_Matrix(residue_means, path, 12, 6);
 
 			residue_std_devs = pca.getData_sigmas();
@@ -224,9 +224,9 @@ public class JED_Get_Distance_Pair_PCA
 			double[] ss_evals = evd.getRealEigenvalues();
 			eigenvalues_COV = new ArrayList<>();
 			for (double k : ss_evals)
-			{
-				eigenvalues_COV.add(k);
-			}
+				{
+					eigenvalues_COV.add(k);
+				}
 			Collections.sort(eigenvalues_COV, Collections.reverseOrder());
 			path = file_name_head + "_eigenvalues_COV.txt";
 			List_IO.write_Double_List(eigenvalues_COV, path, 12);
@@ -238,28 +238,29 @@ public class JED_Get_Distance_Pair_PCA
 	private void write_top_evals_COV()
 		{
 			try
-			{
-				path = file_name_head + "_top_" + number_of_modes + "_eigenvalues_COV.txt";
-				File top_ss_evals_cov = new File(path);
-				BufferedWriter top_ss_evals_writer = new BufferedWriter(new FileWriter(top_ss_evals_cov));
-				top_ss_evals_writer.write(String.format("%-16s%-16s%-16s%n", "Eigenvalue", "% Variance", "Cumulative Variance"));
-				top_eigenvalues_COV = new ArrayList<>();
-				double cumulative_variance = 0;
-				for (int i = 0; i < number_of_modes; i++)
 				{
-					double val = eigenvalues_COV.get(i);
-					double normed_val = (val / trace_COV);
-					cumulative_variance += normed_val;
-					top_ss_evals_writer.write(String.format("%-16s%-16s%-16s%n", nf.format(val), nf.format(normed_val), nf.format(cumulative_variance)));
-					top_eigenvalues_COV.add(val);
-				}
-				top_ss_evals_writer.close();
+					path = file_name_head + "_top_" + number_of_modes + "_eigenvalues_COV.txt";
+					File top_ss_evals_cov = new File(path);
+					BufferedWriter top_ss_evals_writer = new BufferedWriter(new FileWriter(top_ss_evals_cov));
+					top_ss_evals_writer.write(String.format("%-16s%-16s%-16s%n", "Eigenvalue", "% Variance", "Cumulative Variance"));
+					top_eigenvalues_COV = new ArrayList<>();
+					double cumulative_variance = 0;
+					for (int i = 0; i < number_of_modes; i++)
+						{
+							double val = eigenvalues_COV.get(i);
+							double normed_val = (val / trace_COV);
+							cumulative_variance += normed_val;
+							top_ss_evals_writer.write(String.format("%-16s%-16s%-16s%n", nf.format(val), nf.format(normed_val), nf.format(cumulative_variance)));
+							top_eigenvalues_COV.add(val);
+						}
+					top_ss_evals_writer.close();
 
-			} catch (IOException io)
-			{
-				System.err.println("IOException thrown. Could not write the file: " + path);
-				io.printStackTrace();
-			}
+				}
+			catch (IOException io)
+				{
+					System.err.println("IOException thrown. Could not write the file: " + path);
+					io.printStackTrace();
+				}
 
 		}
 
@@ -271,7 +272,6 @@ public class JED_Get_Distance_Pair_PCA
 
 			Matrix ss_evectors = evd.getV();
 			Matrix D = evd.getD();
-			// precision_cov =
 			// ss_evectors.times(D.inverse()).times(ss_evectors.transpose());
 			precision_cov = ss_evectors.times(D.inverse()).times(ss_evectors.inverse());
 			evd = null;
@@ -279,10 +279,10 @@ public class JED_Get_Distance_Pair_PCA
 			top_evectors_dist_COV = ss_evectors.getMatrix(0, ROWS_DP - 1, ROWS_DP - number_of_modes, ROWS_DP - 1);
 			Matrix modes_reversed = new Matrix(ROWS_DP, COLS);
 			for (int r = 0; r < COLS; r++)
-			{
-				Matrix col = top_evectors_dist_COV.getMatrix(0, ROWS_DP - 1, COLS - 1 - r, COLS - 1 - r);
-				modes_reversed.setMatrix(0, ROWS_DP - 1, r, r, col);
-			}
+				{
+					Matrix col = top_evectors_dist_COV.getMatrix(0, ROWS_DP - 1, COLS - 1 - r, COLS - 1 - r);
+					modes_reversed.setMatrix(0, ROWS_DP - 1, r, r, col);
+				}
 			top_evectors_dist_COV = modes_reversed;
 
 			path = file_name_head + "_top_" + number_of_modes + "_eigenvectors_COV.txt";
@@ -306,31 +306,31 @@ public class JED_Get_Distance_Pair_PCA
 			dist_pca_mode_COV_min = new double[number_of_modes];
 
 			for (int a = 0; a < number_of_modes; a++)
-			{
-				double max = 0;
-				double min = 1;
-
-				for (int b = 0; b < ROWS_DP; b++)
 				{
-					double d = top_evectors_dist_COV.get(b, a);
-					double d_abs = Math.abs(d);
-					double sq = (d * d);
-					double value = top_eigenvalues_COV.get(a);
-					if (value < 0) value = 0;
-					double sqrt_val = Math.sqrt(value);
-					double wm = sqrt_val * d_abs;
-					double w_sq = value * sq;
-					SS_pca_modes.set(b, a, d_abs);
-					SS_weighted_pca_modes.set(b, a, wm);
-					SS_pca_square_modes.set(b, a, sq);
-					SS_weighted_pca_square_modes.set(b, a, w_sq);
-					if (d_abs >= max) max = d_abs;
-					if (d_abs <= min) min = d_abs;
-				}
+					double max = 0;
+					double min = 1;
 
-				dist_pca_mode_COV_max[a] = max;
-				dist_pca_mode_COV_min[a] = min;
-			}
+					for (int b = 0; b < ROWS_DP; b++)
+						{
+							double d = top_evectors_dist_COV.get(b, a);
+							double d_abs = Math.abs(d);
+							double sq = (d * d);
+							double value = top_eigenvalues_COV.get(a);
+							if (value < 0) value = 0;
+							double sqrt_val = Math.sqrt(value);
+							double wm = sqrt_val * d_abs;
+							double w_sq = value * sq;
+							SS_pca_modes.set(b, a, d_abs);
+							SS_weighted_pca_modes.set(b, a, wm);
+							SS_pca_square_modes.set(b, a, sq);
+							SS_weighted_pca_square_modes.set(b, a, w_sq);
+							if (d_abs >= max) max = d_abs;
+							if (d_abs <= min) min = d_abs;
+						}
+
+					dist_pca_mode_COV_max[a] = max;
+					dist_pca_mode_COV_min[a] = min;
+				}
 			path = file_name_head + "_top_" + number_of_modes + "_square_pca_mode_MAXES_COV.txt";
 			Array_IO.write_Double_Array(dist_pca_mode_COV_max, path, 6);
 			path = file_name_head + "_top_" + number_of_modes + "_square_pca_mode_MINS_COV.txt";
@@ -357,9 +357,9 @@ public class JED_Get_Distance_Pair_PCA
 			double[] ss_evals = evd.getRealEigenvalues();
 			eigenvalues_CORR = new ArrayList<>();
 			for (double k : ss_evals)
-			{
-				eigenvalues_CORR.add(k);
-			}
+				{
+					eigenvalues_CORR.add(k);
+				}
 			Collections.sort(eigenvalues_CORR, Collections.reverseOrder());
 			path = file_name_head + "_eigenvalues_CORR.txt";
 			List_IO.write_Double_List(eigenvalues_CORR, path, 12);
@@ -371,28 +371,29 @@ public class JED_Get_Distance_Pair_PCA
 	private void write_top_evals_CORR()
 		{
 			try
-			{
-				path = file_name_head + "_top_" + number_of_modes + "_eigenvalues_CORR.txt";
-				File top_ss_evals_cov = new File(path);
-				BufferedWriter top_ss_evals_writer = new BufferedWriter(new FileWriter(top_ss_evals_cov));
-				top_ss_evals_writer.write(String.format("%-16s%-16s%-16s%n", "Eigenvalue", "% Variance", "Cumulative Variance"));
-				top_eigenvalues_CORR = new ArrayList<>();
-				double cumulative_variance = 0;
-				for (int i = 0; i < number_of_modes; i++)
 				{
-					double val = eigenvalues_CORR.get(i);
-					double normed_val = (val / trace_CORR);
-					cumulative_variance += normed_val;
-					top_ss_evals_writer.write(String.format("%-16s%-16s%-16s%n", nf.format(val), nf.format(normed_val), nf.format(cumulative_variance)));
-					top_eigenvalues_CORR.add(val);
-				}
-				top_ss_evals_writer.close();
+					path = file_name_head + "_top_" + number_of_modes + "_eigenvalues_CORR.txt";
+					File top_ss_evals_cov = new File(path);
+					BufferedWriter top_ss_evals_writer = new BufferedWriter(new FileWriter(top_ss_evals_cov));
+					top_ss_evals_writer.write(String.format("%-16s%-16s%-16s%n", "Eigenvalue", "% Variance", "Cumulative Variance"));
+					top_eigenvalues_CORR = new ArrayList<>();
+					double cumulative_variance = 0;
+					for (int i = 0; i < number_of_modes; i++)
+						{
+							double val = eigenvalues_CORR.get(i);
+							double normed_val = (val / trace_CORR);
+							cumulative_variance += normed_val;
+							top_ss_evals_writer.write(String.format("%-16s%-16s%-16s%n", nf.format(val), nf.format(normed_val), nf.format(cumulative_variance)));
+							top_eigenvalues_CORR.add(val);
+						}
+					top_ss_evals_writer.close();
 
-			} catch (IOException io)
-			{
-				System.err.println("IOException thrown. Could not read the file: " + path);
-				io.printStackTrace();
-			}
+				}
+			catch (IOException io)
+				{
+					System.err.println("IOException thrown. Could not read the file: " + path);
+					io.printStackTrace();
+				}
 		}
 
 	/**
@@ -403,7 +404,6 @@ public class JED_Get_Distance_Pair_PCA
 
 			Matrix ss_evectors = evd.getV();
 			Matrix D = evd.getD();
-			// precision_corr =
 			// ss_evectors.times(D.inverse()).times(ss_evectors.transpose());
 			precision_corr = ss_evectors.times(D.inverse()).times(ss_evectors.inverse());
 			evd = null;
@@ -412,10 +412,10 @@ public class JED_Get_Distance_Pair_PCA
 			top_evectors_dist_CORR = ss_evectors.getMatrix(0, ROWS_DP - 1, ROWS_DP - number_of_modes, ROWS_DP - 1);
 			Matrix modes_reversed = new Matrix(ROWS_DP, COLS);
 			for (int r = 0; r < COLS; r++)
-			{
-				Matrix col = top_evectors_dist_CORR.getMatrix(0, ROWS_DP - 1, COLS - 1 - r, COLS - 1 - r);
-				modes_reversed.setMatrix(0, ROWS_DP - 1, r, r, col);
-			}
+				{
+					Matrix col = top_evectors_dist_CORR.getMatrix(0, ROWS_DP - 1, COLS - 1 - r, COLS - 1 - r);
+					modes_reversed.setMatrix(0, ROWS_DP - 1, r, r, col);
+				}
 			top_evectors_dist_CORR = modes_reversed;
 
 			path = file_name_head + "_top_" + number_of_modes + "_eigenvectors_CORR.txt";
@@ -440,31 +440,31 @@ public class JED_Get_Distance_Pair_PCA
 			dist_pca_mode_CORR_min = new double[number_of_modes];
 
 			for (int a = 0; a < number_of_modes; a++)
-			{
-				double max = 0;
-				double min = 1;
-
-				for (int b = 0; b < ROWS_DP; b++)
 				{
-					double d = top_evectors_dist_CORR.get(b, a);
-					double d_abs = Math.abs(d);
-					double sq = (d * d);
-					double value = top_eigenvalues_CORR.get(a);
-					if (value < 0) value = 0;
-					double sqrt_val = Math.sqrt(value);
-					double wm = sqrt_val * d_abs;
-					double w_sq = value * sq;
-					SS_pca_modes.set(b, a, d_abs);
-					SS_weighted_pca_modes.set(b, a, wm);
-					SS_pca_square_modes.set(b, a, sq);
-					SS_weighted_pca_square_modes.set(b, a, w_sq);
-					if (d_abs >= max) max = d_abs;
-					if (d_abs <= min) min = d_abs;
-				}
+					double max = 0;
+					double min = 1;
 
-				dist_pca_mode_CORR_max[a] = max;
-				dist_pca_mode_CORR_min[a] = min;
-			}
+					for (int b = 0; b < ROWS_DP; b++)
+						{
+							double d = top_evectors_dist_CORR.get(b, a);
+							double d_abs = Math.abs(d);
+							double sq = (d * d);
+							double value = top_eigenvalues_CORR.get(a);
+							if (value < 0) value = 0;
+							double sqrt_val = Math.sqrt(value);
+							double wm = sqrt_val * d_abs;
+							double w_sq = value * sq;
+							SS_pca_modes.set(b, a, d_abs);
+							SS_weighted_pca_modes.set(b, a, wm);
+							SS_pca_square_modes.set(b, a, sq);
+							SS_weighted_pca_square_modes.set(b, a, w_sq);
+							if (d_abs >= max) max = d_abs;
+							if (d_abs <= min) min = d_abs;
+						}
+
+					dist_pca_mode_CORR_max[a] = max;
+					dist_pca_mode_CORR_min[a] = min;
+				}
 			path = file_name_head + "_top_" + number_of_modes + "_square_pca_mode_MAXES_CORR.txt";
 			Array_IO.write_Double_Array(dist_pca_mode_CORR_max, path, 6);
 			path = file_name_head + "_top_" + number_of_modes + "_square_pca_mode_MINS_CORR.txt";
@@ -492,9 +492,9 @@ public class JED_Get_Distance_Pair_PCA
 			double[] ss_evals = evd.getRealEigenvalues();
 			eigenvalues_PCORR = new ArrayList<>();
 			for (double k : ss_evals)
-			{
-				eigenvalues_PCORR.add(k);
-			}
+				{
+					eigenvalues_PCORR.add(k);
+				}
 			Collections.sort(eigenvalues_PCORR, Collections.reverseOrder());
 			List_IO.write_Double_List(eigenvalues_PCORR, file_name_head + "_eigenvalues_PCORR.txt", 12);
 		}
@@ -505,27 +505,28 @@ public class JED_Get_Distance_Pair_PCA
 	private void write_top_evals_PCORR()
 		{
 			try
-			{
-				File top_ss_evals_cov = new File(file_name_head + "_top_" + number_of_modes + "_eigenvalues_PCORR.txt");
-				BufferedWriter top_ss_evals_writer = new BufferedWriter(new FileWriter(top_ss_evals_cov));
-				top_ss_evals_writer.write(String.format("%-16s%-16s%-16s%n", "Eigenvalue", "% Variance", "Cumulative Variance"));
-				top_eigenvalues_PCORR = new ArrayList<>();
-				double cumulative_variance = 0;
-				for (int i = 0; i < number_of_modes; i++)
 				{
-					double val = eigenvalues_PCORR.get(i);
-					double normed_val = (val / trace_PCORR);
-					cumulative_variance += normed_val;
-					top_ss_evals_writer.write(String.format("%-16s%-16s%-16s%n", nf.format(val), nf.format(normed_val), nf.format(cumulative_variance)));
-					top_eigenvalues_PCORR.add(val);
+					File top_ss_evals_cov = new File(file_name_head + "_top_" + number_of_modes + "_eigenvalues_PCORR.txt");
+					BufferedWriter top_ss_evals_writer = new BufferedWriter(new FileWriter(top_ss_evals_cov));
+					top_ss_evals_writer.write(String.format("%-16s%-16s%-16s%n", "Eigenvalue", "% Variance", "Cumulative Variance"));
+					top_eigenvalues_PCORR = new ArrayList<>();
+					double cumulative_variance = 0;
+					for (int i = 0; i < number_of_modes; i++)
+						{
+							double val = eigenvalues_PCORR.get(i);
+							double normed_val = (val / trace_PCORR);
+							cumulative_variance += normed_val;
+							top_ss_evals_writer.write(String.format("%-16s%-16s%-16s%n", nf.format(val), nf.format(normed_val), nf.format(cumulative_variance)));
+							top_eigenvalues_PCORR.add(val);
+						}
+					top_ss_evals_writer.close();
 				}
-				top_ss_evals_writer.close();
-			} catch (IOException io)
-			{
-				System.err.println("Could not write to the file: " + file_name_head + "_top_" + number_of_modes + "_eigenvalues_PCORR.txt");
-				io.getMessage();
-				io.getStackTrace();
-			}
+			catch (IOException io)
+				{
+					System.err.println("Could not write to the file: " + file_name_head + "_top_" + number_of_modes + "_eigenvalues_PCORR.txt");
+					io.getMessage();
+					io.getStackTrace();
+				}
 		}
 
 	/**
@@ -542,10 +543,10 @@ public class JED_Get_Distance_Pair_PCA
 			top_evectors_dist_PCORR = ss_evectors.getMatrix(0, ROWS_DP - 1, ROWS_DP - number_of_modes, ROWS_DP - 1);
 			Matrix modes_reversed = new Matrix(ROWS_DP, COLS);
 			for (int r = 0; r < COLS; r++)
-			{
-				Matrix col = top_evectors_dist_CORR.getMatrix(0, ROWS_DP - 1, COLS - 1 - r, COLS - 1 - r);
-				modes_reversed.setMatrix(0, ROWS_DP - 1, r, r, col);
-			}
+				{
+					Matrix col = top_evectors_dist_CORR.getMatrix(0, ROWS_DP - 1, COLS - 1 - r, COLS - 1 - r);
+					modes_reversed.setMatrix(0, ROWS_DP - 1, r, r, col);
+				}
 			top_evectors_dist_CORR = modes_reversed;
 
 			path = file_name_head + "_top_" + number_of_modes + "_eigenvectors_PCORR.txt";
@@ -568,30 +569,30 @@ public class JED_Get_Distance_Pair_PCA
 			dist_pca_mode_PCORR_min = new double[number_of_modes];
 
 			for (int a = 0; a < number_of_modes; a++)
-			{
-				double max = 0;
-				double min = 1;
-
-				for (int b = 0; b < ROWS_DP; b++)
 				{
-					double d = top_evectors_dist_PCORR.get(b, a);
-					double d_abs = Math.abs(d);
-					double sq = (d * d);
-					double value = top_eigenvalues_PCORR.get(a);
-					double value_abs = Math.abs(value);
-					double sqrt_val = Math.sqrt(value_abs);
-					double wm = sqrt_val * d_abs;
-					double w_sq = value_abs * sq;
-					SS_pca_modes.set(b, a, d_abs);
-					SS_weighted_pca_modes.set(b, a, wm);
-					SS_pca_square_modes.set(b, a, sq);
-					SS_weighted_pca_square_modes.set(b, a, w_sq);
-					if (d_abs >= max) max = d_abs;
-					if (d_abs <= min) min = d_abs;
+					double max = 0;
+					double min = 1;
+
+					for (int b = 0; b < ROWS_DP; b++)
+						{
+							double d = top_evectors_dist_PCORR.get(b, a);
+							double d_abs = Math.abs(d);
+							double sq = (d * d);
+							double value = top_eigenvalues_PCORR.get(a);
+							double value_abs = Math.abs(value);
+							double sqrt_val = Math.sqrt(value_abs);
+							double wm = sqrt_val * d_abs;
+							double w_sq = value_abs * sq;
+							SS_pca_modes.set(b, a, d_abs);
+							SS_weighted_pca_modes.set(b, a, wm);
+							SS_pca_square_modes.set(b, a, sq);
+							SS_weighted_pca_square_modes.set(b, a, w_sq);
+							if (d_abs >= max) max = d_abs;
+							if (d_abs <= min) min = d_abs;
+						}
+					dist_pca_mode_PCORR_max[a] = max;
+					dist_pca_mode_PCORR_min[a] = min;
 				}
-				dist_pca_mode_PCORR_max[a] = max;
-				dist_pca_mode_PCORR_min[a] = min;
-			}
 			path = file_name_head + "_top_" + number_of_modes + "_square_pca_mode_MAXES_PCORR.txt";
 			Array_IO.write_Double_Array(dist_pca_mode_PCORR_max, path, 6);
 			path = file_name_head + "_top_" + number_of_modes + "_square_pca_mode_MINS_PCORR.txt";

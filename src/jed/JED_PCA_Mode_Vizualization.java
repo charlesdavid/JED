@@ -82,7 +82,7 @@ public class JED_PCA_Mode_Vizualization
 			directory = dir;
 			description = des;
 			type = T;
-			out_dir = directory + "JED_RESULTS_" + description + "/" + "VIZ/" + type + "/";
+			out_dir = directory + "JED_RESULTS_" + description + File.separatorChar + "VIZ" + File.separatorChar + type + File.separatorChar;
 			exist = new File(out_dir).exists();
 			if (!exist) success = (new File(out_dir)).mkdirs();
 			atoms = atms;
@@ -168,7 +168,8 @@ public class JED_PCA_Mode_Vizualization
 													double log_bff = Math.log10(BFF);
 													double bf = (slope * log_bff);
 													a.setB_factor(bf);
-												} else
+												}
+											else
 												{
 													a.setB_factor(0);
 												}
@@ -180,7 +181,8 @@ public class JED_PCA_Mode_Vizualization
 
 								}
 
-						} catch (IOException io)
+						}
+					catch (IOException io)
 						{
 							System.err.println("IO Exception thrown. Could not write the mode file: " + output_file);
 							io.printStackTrace();
@@ -283,7 +285,8 @@ public class JED_PCA_Mode_Vizualization
 											double bf = (slope * log_bff);
 											a.setB_factor(bf);
 
-										} else
+										}
+									else
 										{
 											a.setB_factor(0);
 										}
@@ -297,7 +300,8 @@ public class JED_PCA_Mode_Vizualization
 							parser.write_PDB(output_file_writer, atoms, formatter);
 							output_file_writer.close();
 							write_Pymol_Script_Essential(number_of_modes_viz);
-						} catch (IOException io)
+						}
+					catch (IOException io)
 						{
 							System.err.println("IO Exception thrown. Could not write the mode file: " + output_file);
 							io.printStackTrace();
@@ -311,6 +315,13 @@ public class JED_PCA_Mode_Vizualization
 		{
 			try
 				{
+					String out_dir_PS = "";
+					if (out_dir.endsWith(File.separator))
+						{
+							out_dir_PS = out_dir.substring(0, out_dir.length() - 1);
+						}
+					else out_dir_PS = out_dir;
+
 					String name = "ss_" + number_of_residues;
 					File pymol_script_file = new File(file_name_head + "_Mode_" + (mode_number + 1) + "_" + type + ".pml");
 					BufferedWriter script_file_writer = new BufferedWriter(new FileWriter(pymol_script_file));
@@ -318,6 +329,7 @@ public class JED_PCA_Mode_Vizualization
 					script_file_writer.write("from pymol.cgo import *" + "\n");
 					script_file_writer.write("bg_color white" + "\n");
 					script_file_writer.write("from glob import glob" + "\n");
+					script_file_writer.write("cd " + out_dir_PS + "\n");
 					script_file_writer.write("filelist = glob (" + " \"" + name + "_Mode_" + (mode_number + 1) + "_" + type + "_frame*.pdb\" )" + "\n");
 					script_file_writer.write("for file in filelist: cmd.load( file, " + "\"" + "Mode_" + (mode_number + 1) + "\" )" + "\n");
 					script_file_writer.write("hide lines, " + "Mode_" + (mode_number + 1) + "\n");
@@ -327,11 +339,11 @@ public class JED_PCA_Mode_Vizualization
 					script_file_writer.write("set two_sided_lighting,1" + "\n");
 					script_file_writer.write("set cartoon_fancy_helices,1" + "\n");
 					script_file_writer.write("set cartoon_highlight_color,grey50" + "\n");
-					script_file_writer.write("util.performance(0)" + "\n");
 					script_file_writer.write("rebuild" + "\n");
 					script_file_writer.close();
 
-				} catch (IOException io)
+				}
+			catch (IOException io)
 				{
 					System.err.println("IOException thrown. Could not write the PyMOL (TM) script file: " + file_name_head + "_Mode_" + (mode_number + 1) + "_" + type + ".pml");
 					io.getMessage();
@@ -341,6 +353,13 @@ public class JED_PCA_Mode_Vizualization
 
 	private void write_Pymol_Script_Essential(int modes)
 		{
+			String out_dir_PS = "";
+			if (out_dir.endsWith(File.separator))
+				{
+					out_dir_PS = out_dir.substring(0, out_dir.length() - 1);
+				}
+			else out_dir_PS = out_dir;
+
 			String name = "ss_" + number_of_residues;
 			String filename = file_name_head + "_Essential_Modes_" + number_of_modes_viz + "_" + type + ".pml";
 			try
@@ -351,6 +370,7 @@ public class JED_PCA_Mode_Vizualization
 					script_file_writer.write("from pymol.cgo import *" + "\n");
 					script_file_writer.write("bg_color white" + "\n");
 					script_file_writer.write("from glob import glob" + "\n");
+					script_file_writer.write("cd " + out_dir_PS + "\n");
 					script_file_writer.write("filelist = glob (" + " \"" + name + "_Essential_Modes_" + number_of_modes_viz + "_" + type + "_frame*.pdb\" )" + "\n");
 					script_file_writer.write("for file in filelist: cmd.load( file, " + "\"" + "Essential_Modes_" + (modes) + "\" )" + "\n");
 					script_file_writer.write("hide lines, " + "Essential_Modes_" + (modes) + "\n");
@@ -360,11 +380,11 @@ public class JED_PCA_Mode_Vizualization
 					script_file_writer.write("set two_sided_lighting,1" + "\n");
 					script_file_writer.write("set cartoon_fancy_helices,1" + "\n");
 					script_file_writer.write("set cartoon_highlight_color,grey50" + "\n");
-					script_file_writer.write("util.performance(0)" + "\n");
 					script_file_writer.write("rebuild" + "\n");
 					script_file_writer.close();
 
-				} catch (IOException io)
+				}
+			catch (IOException io)
 				{
 					System.err.println("IOException thrown. Could not write the PyMOL(TM) script file: " + filename);
 					io.getMessage();

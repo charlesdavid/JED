@@ -22,146 +22,176 @@ import Jama.Matrix;
  */
 
 public class JED_Get_Distance_Pair_DVPs
-	{
+{
 
-		String directory, out_dir, description, type, file_name_head, path, Q = "COV", R = "CORR", P = "PCORR";
-		int number_of_modes, number_of_conformations, number_of_pairs, ROWS, COLS;
-		Matrix input_coords, reference_distances, delta_vector_series, top_evectors, projections, normed_projections, weighted_projections,
-				weighted_normed_projections;
-		Projector proj;
-		List<Double> top_eigenvals;
-		boolean exist, success;
-		KernelDensityEstimate2d KDE;
+	String directory, out_dir, description, type, file_name_head, path, Q = "COV", R = "CORR", P = "PCORR";
+	int number_of_modes, number_of_conformations, number_of_pairs, ROWS, COLS;
+	Matrix input_coords, reference_distances, delta_vector_series, top_evectors, projections, normed_projections, weighted_projections, weighted_normed_projections;
+	Projector proj;
+	List<Double> top_eigenvals;
+	boolean exist, success;
+	KernelDensityEstimate2d KDE;
 
-		/* **************************************** CONSTRUCTOR ************************************************************************ */
+	/* **************************************** CONSTRUCTOR ************************************************************************ */
 
-		/**
-		 * Constructor to calculate the delta vectors and the DVPs for the Distance Pair analysis.
-		 *
-		 * @param data
-		 *            The distances for the residue pairs
-		 * @param ref_distances
-		 *            The reference distances to use to create the delta vectors
-		 * @param evects
-		 *            The eigenvectors from the Distance Pair PCA
-		 * @param top_eigenvalues
-		 *            The top eigenvalues form the Distance Pair PCA
-		 * @param dir
-		 *            The working directory
-		 * @param des
-		 *            The job description
-		 * @param T
-		 *            The model type for the PCA: COV or CORR (Q or R)
-		 * @param num_modes
-		 *            The number of PCA modes to process
-		 */
-		public JED_Get_Distance_Pair_DVPs(Matrix data, Matrix ref_dists, Matrix evects, List<Double> top_eigenvalues, String dir, String des, String T,
-				int num_modes)
-			{
+	/**
+	 * Constructor to calculate the delta vectors and the DVPs for the Distance Pair analysis.
+	 *
+	 * @param data
+	 *            The distances for the residue pairs
+	 * @param ref_distances
+	 *            The reference distances to use to create the delta vectors
+	 * @param evects
+	 *            The eigenvectors from the Distance Pair PCA
+	 * @param top_eigenvalues
+	 *            The top eigenvalues form the Distance Pair PCA
+	 * @param dir
+	 *            The working directory
+	 * @param des
+	 *            The job description
+	 * @param T
+	 *            The model type for the PCA: COV or CORR (Q, R, P)
+	 * @param num_modes
+	 *            The number of PCA modes to process
+	 */
+	public JED_Get_Distance_Pair_DVPs(Matrix data, Matrix ref_dists, Matrix evects, List<Double> top_eigenvalues, String dir, String des, String T, int num_modes)
+		{
 
-				input_coords = data;
-				reference_distances = ref_dists;
-				top_evectors = evects;
-				top_eigenvals = top_eigenvalues;
-				directory = dir;
-				description = des;
-				type = T;
-				if (type.equals(Q))
-					{
-						out_dir = directory + "JED_RESULTS_" + description + "/dpPCA/COV/";
-						exist = new File(out_dir).exists();
-						if (!exist) success = (new File(out_dir)).mkdirs();
-					}
-				if (type.equals(R))
-					{
-						out_dir = directory + "JED_RESULTS_" + description + "/dpPCA/CORR/";
-						exist = new File(out_dir).exists();
-						if (!exist) success = (new File(out_dir)).mkdirs();
-					}
-				if (type.equals(P))
-					{
-						out_dir = directory + "JED_RESULTS_" + description + "/dpPCA/PCORR/";
-						exist = new File(out_dir).exists();
-						if (!exist) success = (new File(out_dir)).mkdirs();
-					}
-				number_of_modes = num_modes;
-				ROWS = input_coords.getRowDimension();
-				COLS = input_coords.getColumnDimension();
-				number_of_conformations = COLS;
-				delta_vector_series = new Matrix(ROWS, COLS);
-				number_of_pairs = ROWS;
-				file_name_head = out_dir + "ss_" + number_of_pairs + "_Residue_Pairs";
-			}
+			input_coords = data;
+			reference_distances = ref_dists;
+			top_evectors = evects;
+			top_eigenvals = top_eigenvalues;
+			directory = dir;
+			description = des;
+			type = T;
+			if (type.equals(Q))
+				{
+					out_dir = directory + "JED_RESULTS_" + description + File.separatorChar + "dpPCA" + File.separatorChar + "COV" + File.separatorChar;
+					exist = new File(out_dir).exists();
+					if (!exist) success = (new File(out_dir)).mkdirs();
+				}
+			if (type.equals(R))
+				{
+					out_dir = directory + "JED_RESULTS_" + description + File.separatorChar + "dpPCA" + File.separatorChar + "CORR" + File.separatorChar;
+					exist = new File(out_dir).exists();
+					if (!exist) success = (new File(out_dir)).mkdirs();
+				}
+			if (type.equals(P))
+				{
+					out_dir = directory + "JED_RESULTS_" + description + File.separatorChar + "dpPCA" + File.separatorChar + "PCORR" + File.separatorChar;
+					exist = new File(out_dir).exists();
+					if (!exist) success = (new File(out_dir)).mkdirs();
+				}
+			number_of_modes = num_modes;
+			ROWS = input_coords.getRowDimension();
+			COLS = input_coords.getColumnDimension();
+			number_of_conformations = COLS;
+			delta_vector_series = new Matrix(ROWS, COLS);
+			number_of_pairs = ROWS;
+			file_name_head = out_dir + "ss_" + number_of_pairs + "_Residue_Pairs";
+		}
 
-		/* ******************************************************************************************************************************* */
+	/* ******************************************************************************************************************************* */
 
-		/**
-		 * Method to calculate the matrix of delta vectors using the reference frame
-		 */
-		public void get_Distance_Pair_DV_Series()
-			{
-				Matrix ref_col = reference_distances;
-				Matrix col = new Matrix(ROWS, 1);
-				for (int b = 0; b < COLS; b++)
-					{
-						col = input_coords.getMatrix(0, ROWS - 1, b, b);
-						Matrix delta = col.minus(ref_col);
-						delta_vector_series.setMatrix(0, ROWS - 1, b, b, delta);
-					}
-				input_coords = null;
-				path = directory + "JED_RESULTS_" + description + "/dpPCA/ss_" + number_of_pairs + "_Residue_Pairs_Delta_Vectors.txt";
-				Matrix_IO.write_Matrix(delta_vector_series, path, 9, 3);
+	/**
+	 * Method to calculate the matrix of delta vectors using the reference frame
+	 */
+	public void get_Distance_Pair_DV_Series()
+		{
+			Matrix ref_col = reference_distances;
+			Matrix col = new Matrix(ROWS, 1);
+			for (int b = 0; b < COLS; b++)
+				{
+					col = input_coords.getMatrix(0, ROWS - 1, b, b);
+					Matrix delta = col.minus(ref_col);
+					delta_vector_series.setMatrix(0, ROWS - 1, b, b, delta);
+				}
+			input_coords = null;
+			path = directory + "JED_RESULTS_" + description + File.separatorChar + "dpPCA" + File.separatorChar + "ss_" + number_of_pairs + "_Residue_Pairs_Delta_Vectors.txt";
+			Matrix_IO.write_Matrix(delta_vector_series, path, 9, 3);
 
-				get_DVPs();
-			}
+			get_DVPs();
+		}
 
-		/**
-		 * Computes the Distance-Pair delta vector projections and writes them to files: Un-normed, normed, weighted, weighted-normed
-		 */
-		private void get_DVPs()
-			{
-				projections = new Matrix(number_of_conformations, number_of_modes);
-				normed_projections = new Matrix(number_of_conformations, number_of_modes);
-				weighted_projections = new Matrix(number_of_conformations, number_of_modes);
-				weighted_normed_projections = new Matrix(number_of_conformations, number_of_modes);
+	/**
+	 * Computes the Distance-Pair delta vector projections and writes them to files: Un-normed, normed, weighted, weighted-normed
+	 */
+	private void get_DVPs()
+		{
+			projections = new Matrix(number_of_conformations, number_of_modes);
+			normed_projections = new Matrix(number_of_conformations, number_of_modes);
+			weighted_projections = new Matrix(number_of_conformations, number_of_modes);
+			weighted_normed_projections = new Matrix(number_of_conformations, number_of_modes);
 
-				for (int outer = 0; outer < number_of_modes; outer++)
-					{
-						for (int inner = 0; inner < number_of_conformations; inner++)
-							{
-								int row_index_1 = 0;
-								int row_index_2 = ROWS - 1;
-								Matrix data1 = top_evectors.getMatrix(row_index_1, row_index_2, outer, outer);
-								Matrix data2 = delta_vector_series.getMatrix(row_index_1, row_index_2, inner, inner);
-								double weight = top_eigenvals.get(outer);
-								Matrix vector1 = Projector.get_Normed_array(data1);
-								Matrix vector2 = Projector.get_Normed_array(data2);
-								double dp = Projector.get_InnerProduct(data1, data2);
-								double normed_dp = Projector.get_InnerProduct(vector1, vector2);
-								if (dp == Double.NaN) dp = 0.000;
-								if (normed_dp == Double.NaN) normed_dp = 0.000;
-								double w_dp = weight * dp;
-								double weighted_normed_dp = weight * normed_dp;
-								projections.set(inner, outer, dp);
-								normed_projections.set(inner, outer, normed_dp);
-								weighted_projections.set(inner, outer, w_dp);
-								weighted_normed_projections.set(inner, outer, weighted_normed_dp);
-							}
-					}
-				delta_vector_series = null;
-				path = file_name_head + "_top_" + number_of_modes + "_DVPs_" + type + ".txt";
-				Matrix_IO.write_Matrix(projections, path, 9, 3);
-				projections = null;
-				path = file_name_head + "_top_" + number_of_modes + "_normed_DVPs_" + type + ".txt";
-				Matrix_IO.write_Matrix(normed_projections, path, 9, 3);
-				normed_projections = null;
-				path = file_name_head + "_top_" + number_of_modes + "_weighted_DVPs_" + type + ".txt";
-				Matrix_IO.write_Matrix(weighted_projections, path, 9, 3);
-				weighted_projections = null;
-				path = file_name_head + "_top_" + number_of_modes + "_weighted_normed_DVPs_" + type + ".txt";
-				Matrix_IO.write_Matrix(weighted_normed_projections, path, 9, 3);
-				weighted_normed_projections = null;
+			for (int outer = 0; outer < number_of_modes; outer++)
+				{
+					for (int inner = 0; inner < number_of_conformations; inner++)
+						{
+							int row_index_1 = 0;
+							int row_index_2 = ROWS - 1;
+							Matrix data1 = top_evectors.getMatrix(row_index_1, row_index_2, outer, outer);
+							Matrix data2 = delta_vector_series.getMatrix(row_index_1, row_index_2, inner, inner);
+							double weight = top_eigenvals.get(outer);
+							Matrix vector1 = Projector.get_Normed_array(data1);
+							Matrix vector2 = Projector.get_Normed_array(data2);
+							double dp = Projector.get_InnerProduct(data1, data2);
+							double normed_dp = Projector.get_InnerProduct(vector1, vector2);
+							if (dp == Double.NaN) dp = 0.000;
+							if (normed_dp == Double.NaN) normed_dp = 0.000;
+							double w_dp = weight * dp;
+							double weighted_normed_dp = weight * normed_dp;
+							projections.set(inner, outer, dp);
+							normed_projections.set(inner, outer, normed_dp);
+							weighted_projections.set(inner, outer, w_dp);
+							weighted_normed_projections.set(inner, outer, weighted_normed_dp);
+						}
+				}
+			delta_vector_series = null;
+			path = file_name_head + "_top_" + number_of_modes + "_DVPs_" + type + ".txt";
+			Matrix_IO.write_Matrix(projections, path, 9, 3);
+			// projections = null;
+			path = file_name_head + "_top_" + number_of_modes + "_normed_DVPs_" + type + ".txt";
+			Matrix_IO.write_Matrix(normed_projections, path, 9, 3);
+			// normed_projections = null;
+			path = file_name_head + "_top_" + number_of_modes + "_weighted_DVPs_" + type + ".txt";
+			Matrix_IO.write_Matrix(weighted_projections, path, 9, 3);
+			// weighted_projections = null;
+			path = file_name_head + "_top_" + number_of_modes + "_weighted_normed_DVPs_" + type + ".txt";
+			Matrix_IO.write_Matrix(weighted_normed_projections, path, 9, 3);
+			// weighted_normed_projections = null;
 
-				System.gc();
-			}
-	}
+			System.gc();
+		}
+
+	/**
+	 * @return the projections
+	 */
+	public Matrix getProjections()
+		{
+			return projections;
+		}
+
+	/**
+	 * @return the normed_projections
+	 */
+	public Matrix getNormed_projections()
+		{
+			return normed_projections;
+		}
+
+	/**
+	 * @return the weighted_projections
+	 */
+	public Matrix getWeighted_projections()
+		{
+			return weighted_projections;
+		}
+
+	/**
+	 * @return the weighted_normed_projections
+	 */
+	public Matrix getWeighted_normed_projections()
+		{
+			return weighted_normed_projections;
+		}
+}

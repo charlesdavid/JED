@@ -27,7 +27,8 @@ public class JED_Get_Cartesian_DVPs
 	static int number_of_modes, number_of_conformations;
 	static int ROWS, COLS, number_of_residues;
 	static List<Double> eigenvalues;
-	static Matrix reference_PDB_coordinates, projections, normed_projections, weighted_normed_projections, weighted_projections, input_coords, delta_vector_series, top_evectors;
+	static Matrix reference_PDB_coordinates, input_coords, delta_vector_series, top_evectors;
+	Matrix projections, normed_projections, weighted_normed_projections, weighted_projections;
 	static long startTime, endTime, totalTime;
 	boolean exist;
 	boolean success;
@@ -61,35 +62,35 @@ public class JED_Get_Cartesian_DVPs
 			description = des;
 			type = T;
 			if (type.equals(Q))
-			{
-				out_dir = directory + "JED_RESULTS_" + description + "/cPCA/COV/";
-				exist = new File(out_dir).exists();
-				if (!exist)
 				{
-					success = new File(out_dir).mkdirs();
-					if (!success) System.err.println("Could not create the output directory: " + out_dir);
+					out_dir = directory + "JED_RESULTS_" + description + File.separatorChar + "cPCA" + File.separatorChar + "COV" + File.separatorChar;
+					exist = new File(out_dir).exists();
+					if (!exist)
+						{
+							success = new File(out_dir).mkdirs();
+							if (!success) System.err.println("Could not create the output directory: " + out_dir);
+						}
 				}
-			}
 			if (type.equals(R))
-			{
-				out_dir = directory + "JED_RESULTS_" + description + "/cPCA/CORR/";
-				exist = new File(out_dir).exists();
-				if (!exist)
 				{
-					success = new File(out_dir).mkdirs();
-					if (!success) System.err.println("Could not create the output directory: " + out_dir);
+					out_dir = directory + "JED_RESULTS_" + description + File.separatorChar + "cPCA" + File.separatorChar + "CORR" + File.separatorChar;
+					exist = new File(out_dir).exists();
+					if (!exist)
+						{
+							success = new File(out_dir).mkdirs();
+							if (!success) System.err.println("Could not create the output directory: " + out_dir);
+						}
 				}
-			}
 			if (type.equals(PC))
-			{
-				out_dir = directory + "JED_RESULTS_" + description + "/cPCA/PCORR/";
-				exist = new File(out_dir).exists();
-				if (!exist)
 				{
-					success = new File(out_dir).mkdirs();
-					if (!success) System.err.println("Could not create the output directory: " + out_dir);
+					out_dir = directory + "JED_RESULTS_" + description + File.separatorChar + "cPCA" + File.separatorChar + "PCORR" + File.separatorChar;
+					exist = new File(out_dir).exists();
+					if (!exist)
+						{
+							success = new File(out_dir).mkdirs();
+							if (!success) System.err.println("Could not create the output directory: " + out_dir);
+						}
 				}
-			}
 			number_of_modes = top_evectors.getColumnDimension();
 			number_of_conformations = input_coords.getColumnDimension();
 			ROWS = top_evectors.getRowDimension();
@@ -106,11 +107,11 @@ public class JED_Get_Cartesian_DVPs
 			Matrix ref_col = reference_PDB_coordinates;
 			Matrix col = new Matrix(ROWS, 1);
 			for (int b = 0; b < number_of_conformations; b++)
-			{
-				col = input_coords.getMatrix(0, ROWS - 1, b, b);
-				Matrix delta = col.minus(ref_col);
-				delta_vector_series.setMatrix(0, ROWS - 1, b, b, delta);
-			}
+				{
+					col = input_coords.getMatrix(0, ROWS - 1, b, b);
+					Matrix delta = col.minus(ref_col);
+					delta_vector_series.setMatrix(0, ROWS - 1, b, b, delta);
+				}
 			input_coords = null;
 			System.gc();
 			path = directory + "JED_RESULTS_" + description + "/cPCA/ss_" + number_of_residues + "_delta_vectors.txt";
@@ -129,41 +130,61 @@ public class JED_Get_Cartesian_DVPs
 			weighted_normed_projections = new Matrix(number_of_conformations, number_of_modes);
 
 			for (int outer = 0; outer < number_of_modes; outer++)
-			{
-				for (int inner = 0; inner < number_of_conformations; inner++)
 				{
-					int row_index_1 = 0;
-					int row_index_2 = ROWS - 1;
-					Matrix data1 = top_evectors.getMatrix(row_index_1, row_index_2, outer, outer);
-					Matrix data2 = delta_vector_series.getMatrix(row_index_1, row_index_2, inner, inner);
-					double weight = eigenvalues.get(outer);
-					Matrix vector1 = Projector.get_Normed_array(data1);
-					Matrix vector2 = Projector.get_Normed_array(data2);
-					double dp = Projector.get_InnerProduct(data1, data2);
-					double normed_dp = Projector.get_InnerProduct(vector1, vector2);
-					if (dp == Double.NaN) dp = 0.000;
-					if (normed_dp == Double.NaN) normed_dp = 0.000;
-					double w_dp = weight * dp;
-					double weighted_normed_dp = weight * normed_dp;
-					projections.set(inner, outer, dp);
-					normed_projections.set(inner, outer, normed_dp);
-					weighted_projections.set(inner, outer, w_dp);
-					weighted_normed_projections.set(inner, outer, weighted_normed_dp);
+					for (int inner = 0; inner < number_of_conformations; inner++)
+						{
+							int row_index_1 = 0;
+							int row_index_2 = ROWS - 1;
+							Matrix data1 = top_evectors.getMatrix(row_index_1, row_index_2, outer, outer);
+							Matrix data2 = delta_vector_series.getMatrix(row_index_1, row_index_2, inner, inner);
+							double weight = eigenvalues.get(outer);
+							Matrix vector1 = Projector.get_Normed_array(data1);
+							Matrix vector2 = Projector.get_Normed_array(data2);
+							double dp = Projector.get_InnerProduct(data1, data2);
+							double normed_dp = Projector.get_InnerProduct(vector1, vector2);
+							if (dp == Double.NaN) dp = 0.000;
+							if (normed_dp == Double.NaN) normed_dp = 0.000;
+							double w_dp = weight * dp;
+							double weighted_normed_dp = weight * normed_dp;
+							projections.set(inner, outer, dp);
+							normed_projections.set(inner, outer, normed_dp);
+							weighted_projections.set(inner, outer, w_dp);
+							weighted_normed_projections.set(inner, outer, weighted_normed_dp);
+						}
 				}
-			}
 			path = file_name_head + "_top_" + number_of_modes + "_DVPs_" + type + ".txt";
 			Matrix_IO.write_Matrix(projections, path, 9, 3);
-			projections = null;
+			// projections = null;
 			path = file_name_head + "_top_" + number_of_modes + "_normed_DVPs_" + type + ".txt";
 			Matrix_IO.write_Matrix(normed_projections, path, 9, 3);
-			normed_projections = null;
+			// normed_projections = null;
 			path = file_name_head + "_top_" + number_of_modes + "_weighted_DVPs_" + type + ".txt";
 			Matrix_IO.write_Matrix(weighted_projections, path, 9, 3);
-			weighted_projections = null;
+			// weighted_projections = null;
 			path = file_name_head + "_top_" + number_of_modes + "_weighted_normed_DVPs_" + type + ".txt";
 			Matrix_IO.write_Matrix(weighted_normed_projections, path, 9, 3);
-			weighted_normed_projections = null;
+			// weighted_normed_projections = null;
 
 			System.gc();
+		}
+
+	public Matrix getProjections()
+		{
+			return projections;
+		}
+
+	public Matrix getNormed_projections()
+		{
+			return normed_projections;
+		}
+
+	public Matrix getWeighted_normed_projections()
+		{
+			return weighted_normed_projections;
+		}
+
+	public Matrix getWeighted_projections()
+		{
+			return weighted_projections;
 		}
 }
