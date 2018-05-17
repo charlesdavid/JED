@@ -3,12 +3,12 @@
 MV_PCA_Model_Test
 ************************************************************************************************************************************************
 MV1
-/workspace/cflcyd/git/JED/test/Multi/JED_RESULTS_TEST_MULTI/cPCA/COV/			ss_100_top_20_eigenvectors_COV.txt
-/workspace/cflcyd/git/JED/test/Multi/JED_RESULTS_TEST_MULTI/cPCA/CORR/		ss_100_top_20_eigenvectors_CORR.txt
+/workspace/cflcyd/git/JED/test/Multi/JED_RESULTS_TEST_MULTI/cPCA/COV/ss_100_top_20_eigenvectors_COV.txt
+/workspace/cflcyd/git/JED/test/Multi/JED_RESULTS_TEST_MULTI/cPCA/CORR/ss_100_top_20_eigenvectors_CORR.txt
 ************************************************************************************************************************************************
 MV2
-/workspace/cflcyd/git/JED/test/Multi/JED_RESULTS_TEST_MULTI/dpPCA/COV/		ss_5_Residue_Pairs_top_5_eigenvectors_COV.txt
-/workspace/cflcyd/git/JED/test/Multi/JED_RESULTS_TEST_MULTI/dpPCA/CORR/		ss_5_Residue_Pairs_top_5_eigenvectors_CORR.txt
+/workspace/cflcyd/git/JED/test/Multi/JED_RESULTS_TEST_MULTI/dpPCA/COV/ss_5_Residue_Pairs_top_5_eigenvectors_COV.txt
+/workspace/cflcyd/git/JED/test/Multi/JED_RESULTS_TEST_MULTI/dpPCA/CORR/ss_5_Residue_Pairs_top_5_eigenvectors_CORR.txt
 ************************************************************************************************************************************************
 
 
@@ -21,8 +21,8 @@ $output_directory
 $batch_description
 *********************************************************
 $job_description
-$directory1	eigenvector_file1
-$directory2	eigenvector_file2
+$path/to/eigenvector_file1
+$path/to/eigenvector_file2
 *********************************************************
 
 

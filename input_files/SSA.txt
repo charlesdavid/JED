@@ -1,28 +1,3 @@
-5
-C:\\Users\\Charles\\workspace\\JED_1.0\\JED_Test\\SSA\\
-MV_PCA_Model_Test
-************************************************************************************************************************************************
-MV1
-C:\\Users\\Charles\\workspace\\JED\\JED_Test\\Multi\\JED_results_c_PCA\\cPCA\\				ss_946_top_20_eigenvectors_COV.txt
-C:\\Users\\Charles\\workspace\\JED\\JED_Test\\Multi\\JED_results_c_PCA\\cPCA\\				ss_946_top_20_eigenvectors_CORR.txt
-************************************************************************************************************************************************
-MV2
-C:\\Users\\Charles\\workspace\\JED\\JED_Test\\Multi\\JED_results_c_PCA\\cPCA\\				ss_946_top_20_eigenvectors_COV.txt
-C:\\Users\\Charles\\workspace\\JED\\JED_Test\\Multi\\JED_results_c_PCA\\cPCA\\				ss_946_top_20_eigenvectors_CORR.txt
-************************************************************************************************************************************************
-MV3
-C:\\Users\\Charles\\workspace\\JED\\JED_Test\\Multi\\JED_results_c_PCA\\cPCA\\				ss_946_top_20_eigenvectors_COV.txt
-C:\\Users\\Charles\\workspace\\JED\\JED_Test\\Multi\\JED_results_c_PCA\\cPCA\\				ss_946_top_20_eigenvectors_CORR.txt
-************************************************************************************************************************************************
-MV4
-C:\\Users\\Charles\\workspace\\JED\\JED_Test\\Multi\\JED_results_c_PCA\\cPCA\\				ss_946_top_20_eigenvectors_COV.txt
-C:\\Users\\Charles\\workspace\\JED\\JED_Test\\Multi\\JED_results_c_PCA\\cPCA\\				ss_946_top_20_eigenvectors_CORR.txt
-************************************************************************************************************************************************
-MV5
-C:\\Users\\Charles\\workspace\\JED\\JED_Test\\Multi\\JED_results_c_PCA\\cPCA\\				ss_946_top_20_eigenvectors_COV.txt
-C:\\Users\\Charles\\workspace\\JED\\JED_Test\\Multi\\JED_results_c_PCA\\cPCA\\				ss_946_top_20_eigenvectors_CORR.txt
-************************************************************************************************************************************************
-
 
 
 File Format:
@@ -33,8 +8,8 @@ $output_directory
 $batch_description
 *********************************************************
 $job_description
-$directory1	eigenvector_file1
-$directory2	eigenvector_file2
+$path/to/eigenvector_file1
+$path/to/eigenvector_file2
 *********************************************************
 
 

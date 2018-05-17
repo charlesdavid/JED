@@ -295,6 +295,11 @@ public class VIZ_Driver
 		{
 			try
 			{
+				String pymol_dir = out_dir;
+				if (pymol_dir.endsWith(File.separator))
+					{
+						pymol_dir = out_dir.substring(0,out_dir.length()-1);
+					}
 				String name = "ss_" + number_of_residues;
 				File pymol_script_file = new File(file_name_head + "_Mode_" + (mode_number + 1) + "_" + type + ".pml");
 				BufferedWriter script_file_writer = new BufferedWriter(new FileWriter(pymol_script_file));
@@ -302,6 +307,7 @@ public class VIZ_Driver
 				script_file_writer.write("from pymol.cgo import *" + "\n");
 				script_file_writer.write("bg_color white" + "\n");
 				script_file_writer.write("from glob import glob" + "\n");
+				script_file_writer.write("cd " + pymol_dir + "\n");
 				script_file_writer.write("filelist = glob (" + " \"" + name + "_Mode_" + (mode_number + 1) + "_" + type + "_frame*.pdb\" )" + "\n");
 				script_file_writer.write("for file in filelist: cmd.load( file, " + "\"" + "Mode_" + (mode_number + 1) + "\" )" + "\n");
 				script_file_writer.write("hide lines, " + "Mode_" + (mode_number + 1) + "\n");
@@ -311,7 +317,6 @@ public class VIZ_Driver
 				script_file_writer.write("set two_sided_lighting,1" + "\n");
 				script_file_writer.write("set cartoon_fancy_helices,1" + "\n");
 				script_file_writer.write("set cartoon_highlight_color,grey50" + "\n");
-				script_file_writer.write("util.performance(0)" + "\n");
 				script_file_writer.write("rebuild" + "\n");
 				script_file_writer.close();
 
@@ -330,6 +335,11 @@ public class VIZ_Driver
 		{
 			try
 			{
+				String pymol_dir = out_dir;
+				if (pymol_dir.endsWith(File.separator))
+					{
+						pymol_dir = out_dir.substring(0,out_dir.length()-1);
+					}
 				String name = "ss_" + number_of_residues;
 				File pymol_script_file = new File(
 						file_name_head + "_Essential_Modes_" + (number_of_modes_start + 1) + "_" + (number_of_modes_start + number_of_modes_viz) + "_" + type + ".pml");
@@ -338,6 +348,7 @@ public class VIZ_Driver
 				script_file_writer.write("from pymol.cgo import *" + "\n");
 				script_file_writer.write("bg_color white" + "\n");
 				script_file_writer.write("from glob import glob" + "\n");
+				script_file_writer.write("cd " + pymol_dir + "\n");
 				script_file_writer.write("filelist = glob (" + " \"" + name + "_Essential_Modes_" + (number_of_modes_start + 1) + "_"
 						+ (number_of_modes_start + number_of_modes_viz) + "_" + type + "_frame*.pdb\" )" + "\n");
 				script_file_writer.write("for file in filelist: cmd.load( file, " + "\"" + "Essential_Modes_" + (modes) + "\" )" + "\n");
@@ -348,7 +359,6 @@ public class VIZ_Driver
 				script_file_writer.write("set two_sided_lighting,1" + "\n");
 				script_file_writer.write("set cartoon_fancy_helices,1" + "\n");
 				script_file_writer.write("set cartoon_highlight_color,grey50" + "\n");
-				script_file_writer.write("util.performance(0)" + "\n");
 				script_file_writer.write("rebuild" + "\n");
 				script_file_writer.close();
 
@@ -471,8 +481,8 @@ public class VIZ_Driver
 			if (!OK || mode_amplitude < 0)
 			{
 				System.err.println("Expected Mode Amplitude to be a positive decimal, but got: " + test);
-				System.err.println("Setting Mode Amplitude to default value of 1.5");
-				mode_amplitude = 1.5;
+				System.err.println("Setting Mode Amplitude to default value of 2.5");
+				mode_amplitude = 2.5;
 			}
 			test = sToken.nextToken();
 			OK = Test_Numeric_Type.test_Double(test);
@@ -491,8 +501,8 @@ public class VIZ_Driver
 			if (!OK || threshold_high < 0)
 			{
 				System.err.println("Expected high threshold percentage to be a positive decimal in range [0,1), but got: " + test);
-				System.err.println("Setting high threshold percentage to default value of 0.05");
-				threshold_high = 0.05;
+				System.err.println("Setting high threshold percentage to default value of 0.90");
+				threshold_high = 0.90;
 			}
 			test = sToken.nextToken();
 			OK = Test_Numeric_Type.test_Integer(test);
@@ -501,8 +511,8 @@ public class VIZ_Driver
 			if (!OK || number_of_frames < 0)
 			{
 				System.err.println("Expected Number of frames to be a positive integer, but got: " + test);
-				System.err.println("Setting number of frames to default value of 100");
-				number_of_frames = 100;
+				System.err.println("Setting number of frames to default value of 20");
+				number_of_frames = 20;
 			}
 			test = sToken.nextToken();
 			OK = Test_Numeric_Type.test_Integer(test);
@@ -511,8 +521,8 @@ public class VIZ_Driver
 			if (!OK || number_of_cycles < 1)
 			{
 				System.err.println("Expected Number of Cycles to be a positive integer, but got: " + test);
-				System.err.println("Setting number of cycles to default value of 5");
-				number_of_cycles = 5;
+				System.err.println("Setting number of cycles to default value of 2");
+				number_of_cycles = 2;
 			}
 			test = sToken.nextToken();
 			if (test.equals("1")) do_individual = true;
@@ -606,11 +616,11 @@ public class VIZ_Driver
 			sToken = new StringTokenizer(line);
 			out_dir = sToken.nextToken();
 			System.out.println("\tOutput Directory = " + out_dir);
-			if (!(out_dir.endsWith("/") || out_dir.endsWith("\\")))
+			if (!(out_dir.endsWith(File.separator)))
 			{
-				System.err.println("Expected the Output Directory to end with / or \\\\, but got: " + line);
-				System.err.println("Terminating program execution.");
-				System.exit(0);
+				System.err.println("Expected the Output Directory to end with: " + File.separatorChar + ", but got: " + out_dir);
+				System.err.println("Attempting to fix...");
+				out_dir = out_dir + File.separator;
 			}
 			exist = new File(out_dir).exists();
 			if (!exist)
@@ -731,8 +741,8 @@ public class VIZ_Driver
 				if (args.length >= 1)
 				{
 					input_path = args[0];
-					System.out.println("The path to the input file must be the first argument:");
-					System.out.println("These are the command args:");
+					System.out.println("User specified input file (must be the first program argument)");
+					System.out.println("These are the specified program args:");
 					for (int i = 0; i < args.length; i++)
 					{
 						System.out.println("Arg " + (i + 1) + " Value = " + args[i]);

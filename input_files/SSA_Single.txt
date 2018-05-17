@@ -3,12 +3,12 @@
 MG_PCA_Model_Test
 **********************************************************************************************************************************
 MG1
-/workspace/cflcyd/git/JED/test/Single/JED_RESULTS_TEST_SINGLE/cPCA/COV/	ss_151_top_20_eigenvectors_COV.txt
-/workspace/cflcyd/git/JED/test/Single/JED_RESULTS_TEST_SINGLE/cPCA/CORR/	ss_151_top_20_eigenvectors_CORR.txt
+/workspace/cflcyd/git/JED/test/Single/JED_RESULTS_TEST_SINGLE/cPCA/COV/ss_151_top_20_eigenvectors_COV.txt
+/workspace/cflcyd/git/JED/test/Single/JED_RESULTS_TEST_SINGLE/cPCA/CORR/ss_151_top_20_eigenvectors_CORR.txt
 **********************************************************************************************************************************
 MG2
-/workspace/cflcyd/git/JED/test/Single/JED_RESULTS_TEST_SINGLE/dpPCA/COV/	ss_10_Residue_Pairs_top_10_eigenvectors_COV.txt
-/workspace/cflcyd/git/JED/test/Single/JED_RESULTS_TEST_SINGLE/dpPCA/CORR/	ss_10_Residue_Pairs_top_10_eigenvectors_CORR.txt
+/workspace/cflcyd/git/JED/test/Single/JED_RESULTS_TEST_SINGLE/dpPCA/COV/ss_10_Residue_Pairs_top_10_eigenvectors_COV.txt
+/workspace/cflcyd/git/JED/test/Single/JED_RESULTS_TEST_SINGLE/dpPCA/CORR/ss_10_Residue_Pairs_top_10_eigenvectors_CORR.txt
 **********************************************************************************************************************************
 
 File Format:
@@ -19,8 +19,8 @@ $output_directory
 $batch_description
 *********************************************************
 $job_description
-$directory1	eigenvector_file1
-$directory2	eigenvector_file2
+$path/to/eigenvector_file1
+$path/to/eigenvector_file2
 *********************************************************
 
 
