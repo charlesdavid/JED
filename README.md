@@ -8,14 +8,13 @@
 * Finally, JED produces PDB frames and script files for viewing movies in PyMol(TM) of both individual modes and a superposition of Essential Modes.
 
 
-### This repo is for the developers of JED to collaborate...
-### and for users of JED to submit feedback
+### Thank you for using JED software:  
 
 * Please report bugs by submitting a new issue tagged with BUG:  
 	* Be sure to provide enough data to reproduce the error  
 	* Include JED input files, JED errors, and Java stack traces  
 
-* Please suggest new features by submitting a new issue tagged with NEW FEATURE  
+* Please suggest new features by submitting a new issue tagged with NEW FEATURE or ENHANCEMENT
 
 * Please contact me if you wish to become a collaborator on this software:  
 
@@ -24,7 +23,8 @@ Charles David: cdavid@carolina.rr.com
 ##### Last Update: May 2018
 * New JavaDocs
 * New Jars
+* New Tests
 * Minor code fixes
-* Added FES to JED Driver
-* Created new input files
-* Fixed Pymol script output (now works with educational license)
+	* Added FES to JED Driver (now version 1.1)
+	* Created new input files
+	* Fixed Pymol script output (now works with educational license)
