@@ -1,0 +1,2 @@
+MG1                      SS_dim  20      VS_dim  453     RMSIP   0.92    PAs     	13  	13  	14  	14  	15  	16  	16  	18  	18  	19  	21  	21  	23  	24  	25  	27  	28  	32  	37  	55  	Max_Angle   402   
+MG2                      SS_dim  10      VS_dim  10      RMSIP   1.00    PAs     	0   	0   	0   	0   	0   	0   	0   	0   	0   	0   	Max_Angle   285   

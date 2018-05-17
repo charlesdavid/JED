@@ -1,0 +1,85 @@
+Matrix 1: /workspace/cflcyd/git/JED/test/Single/JED_RESULTS_TEST_SINGLE/dpPCA/COV/ss_10_Residue_Pairs_top_10_eigenvectors_COV.txt
+Rows: 10
+Cols: 10
+Matrix 2: /workspace/cflcyd/git/JED/test/Single/JED_RESULTS_TEST_SINGLE/dpPCA/CORR/ss_10_Residue_Pairs_top_10_eigenvectors_CORR.txt
+Rows: 10
+Cols: 10
+
+The projections of each vector in subspace 1 with each vector in subspace 2 are:
+
+   0.476  -0.048   0.189   0.259  -0.362   0.068  -0.199  -0.687  -0.053   0.135
+  -0.579   0.125  -0.004   0.047  -0.025   0.134  -0.038  -0.478  -0.023  -0.631
+   0.548   0.145  -0.295  -0.116   0.503   0.079   0.389  -0.198   0.030  -0.358
+  -0.240  -0.006  -0.542  -0.354   0.229   0.032  -0.209  -0.400  -0.063   0.512
+  -0.254   0.119  -0.062   0.686   0.159  -0.027   0.530  -0.117   0.052   0.352
+   0.095   0.075  -0.687   0.228  -0.511   0.347  -0.033   0.241   0.036  -0.139
+   0.061  -0.081  -0.049   0.492   0.517   0.150  -0.656   0.135   0.002  -0.087
+   0.034  -0.163  -0.318   0.157  -0.087  -0.889  -0.092  -0.049   0.024  -0.193
+  -0.049  -0.949  -0.057   0.017   0.041   0.187   0.205  -0.048  -0.077  -0.077
+  -0.015  -0.083   0.016  -0.051  -0.006   0.031  -0.043  -0.072   0.991   0.022
+
+The cumulative overlaps CO_k for each vector in subspace 1 with all the vectors in subspace 2 are:
+Vector  1   1.00    
+Vector  2   1.00    
+Vector  3   1.00    
+Vector  4   1.00    
+Vector  5   1.00    
+Vector  6   1.00    
+Vector  7   1.00    
+Vector  8   1.00    
+Vector  9   1.00    
+Vector  10  1.00    
+
+The cumulative overlaps CO_k for each vector in subspace 2 with all the vectors in subspace 1 are:
+Vector  1   1.00    
+Vector  2   1.00    
+Vector  3   1.00    
+Vector  4   1.00    
+Vector  5   1.00    
+Vector  6   1.00    
+Vector  7   1.00    
+Vector  8   1.00    
+Vector  9   1.00    
+Vector  10  1.00    
+
+The RMSIP for the two subspaces is 1.00
+
+The principle angles between these spaces (in degrees) are:
+Angle   1   0.00    
+Angle   2   0.00    
+Angle   3   0.00    
+Angle   4   0.00    
+Angle   5   0.00    
+Angle   6   0.04    
+Angle   7   0.06    
+Angle   8   0.06    
+Angle   9   0.09    
+Angle   10  0.11    
+
+The products of cosines (CPs) for these two subspaces (equivalents in degrees) are:
+CP  1   0.00    
+CP  2   0.00    
+CP  3   0.00    
+CP  4   0.00    
+CP  5   0.00    
+CP  6   0.04    
+CP  7   0.07    
+CP  8   0.09    
+CP  9   0.13    
+CP  10  0.17    
+
+The vectorial sums of angles (VS, in degrees) are:
+VS      1   0.00    
+VS      2   0.00    
+VS      3   0.00    
+VS      4   0.00    
+VS      5   0.00    
+VS      6   0.04    
+VS      7   0.07    
+VS      8   0.09    
+VS      9   0.13    
+VS      10  0.17    
+
+Maximum possible angle between the two subspaces = 284.60 degrees.
+
+Analysis completed: 2018-05-17 23:23:30

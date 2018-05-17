@@ -1,0 +1,55 @@
+Matrix 1: /workspace/cflcyd/git/JED/test/Multi/JED_RESULTS_TEST_MULTI/dpPCA/COV/ss_5_Residue_Pairs_top_5_eigenvectors_COV.txt
+Rows: 5
+Cols: 5
+Matrix 2: /workspace/cflcyd/git/JED/test/Multi/JED_RESULTS_TEST_MULTI/dpPCA/CORR/ss_5_Residue_Pairs_top_5_eigenvectors_CORR.txt
+Rows: 5
+Cols: 5
+
+The projections of each vector in subspace 1 with each vector in subspace 2 are:
+
+   0.404   0.031  -0.765  -0.465  -0.187
+   0.756   0.110   0.526  -0.051  -0.370
+  -0.234   0.953   0.015  -0.101  -0.160
+  -0.443  -0.267   0.262  -0.622  -0.526
+  -0.117  -0.081  -0.265   0.620  -0.725
+
+The cumulative overlaps CO_k for each vector in subspace 1 with all the vectors in subspace 2 are:
+Vector  1   1.00    
+Vector  2   1.00    
+Vector  3   1.00    
+Vector  4   1.00    
+Vector  5   1.00    
+
+The cumulative overlaps CO_k for each vector in subspace 2 with all the vectors in subspace 1 are:
+Vector  1   1.00    
+Vector  2   1.00    
+Vector  3   1.00    
+Vector  4   1.00    
+Vector  5   1.00    
+
+The RMSIP for the two subspaces is 1.00
+
+The principle angles between these spaces (in degrees) are:
+Angle   1   0.00    
+Angle   2   0.00    
+Angle   3   0.00    
+Angle   4   0.06    
+Angle   5   0.08    
+
+The products of cosines (CPs) for these two subspaces (equivalents in degrees) are:
+CP  1   0.00    
+CP  2   0.00    
+CP  3   0.00    
+CP  4   0.06    
+CP  5   0.10    
+
+The vectorial sums of angles (VS, in degrees) are:
+VS      1   0.00    
+VS      2   0.00    
+VS      3   0.00    
+VS      4   0.06    
+VS      5   0.10    
+
+Maximum possible angle between the two subspaces = 201.25 degrees.
+
+Analysis completed: 2018-05-17 23:38:15

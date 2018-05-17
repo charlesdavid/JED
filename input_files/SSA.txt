@@ -33,8 +33,8 @@ $output_directory
 $batch_description
 *********************************************************
 $job_description
-$path_to_first_eigenvector_file
-$path_to_second_eigenvector_file
+$directory1	eigenvector_file1
+$directory2	eigenvector_file2
 *********************************************************
 
 
@@ -42,3 +42,4 @@ $path_to_second_eigenvector_file
 Note: Separator lines "*****" are NOT optional!
 
 Ensure that the matices are equidimensional...
+
