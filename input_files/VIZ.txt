@@ -67,8 +67,9 @@ C:/Users/Charles/workspace/JED_2.0/JED_Test/Single/VIZ_TEST7/
 
 
 File Format:
+
 $Number_of_Jobs
-****************************************************************************************************************************
+********************************************************************************************************************************************************
 $start_mode     $num_modes_viz     $mode_amplitutude     $threshold_low     $threshold_high     $num_frames     $num_cycles     $do_individual     $type
 $ref_PDB
 $eigenvalues
@@ -77,3 +78,7 @@ $sq_modes
 $mode_maxes
 $mode_mins
 $out_dir
+********************************************************************************************************************************************************
+
+
+Note: Separator lines "*****" are NOT optional!

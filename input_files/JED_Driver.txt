@@ -1,45 +1,20 @@
-0      1     //MULTI CHAIN PDBs
-C:\\Users\\Charles\\workspace\\JED_2.0\\JED_Test\\Multi\\
-TEST_MULTI			MVb_A_B_ATP.pdb
-0.00     0.00
-1     1     1     3.0
-residues.txt
-residue_pairs.txt
-original_PDB_Coordinates.txt
+File Format:
+
+(Pre-Processing Runs)
+
+$read     $multi
+$directory
+$description     $reference_PDB
 
 
+(Analytical Runs)
 
-
-
-0      0     //SINGLE CHAIN PDBs
-C:\\Users\\Charles\\workspace\\JED_2.0\\JED_Test\\Single\\
-TEST_SINGLE			1A6N.pdb
-0.00    1.60
-2     2     2     1.5
-residues.txt
-residue_pairs.txt
-original_PDB_Coordinates.txt
-
-
-
-
-
-
-
-1      0	//SINGLE CHAIN PDBs PRE-PROCESSING JOB
-C:\\Users\\Charles\\workspace\\JED_2.0\\JED_Test\\Single\\PDBs\\
-TEST_PRE-PROCESSING_SINGLE 			1A6N.pdb	
-
-
-
-
-
-
-
-1    1     //MULTI CHAIN PDBs PRE-PROCESSING JOB
-C:\\Users\\Charles\\workspace\\JED_2.0\\JED_Test\\Multi\\PDBs\\
-TEST_PRE-PROCESSING_MULTI		MVb_A_B_ATP.pdb
-
-
-
+$read     $multi
+$directory
+$description     $reference_PDB
+$percent     $z-cutoff
+$num_cPCA_modes     $num_dpPCA_modes     $num_viz_modes     $mode_amplitude
+$residues_cartesian  (Needed for cPCA)
+$residue_pairs.txt   (Needed for dpPCA)
+$PDB_Coordinates
 

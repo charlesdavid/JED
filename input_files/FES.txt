@@ -21,9 +21,10 @@ ss_151_top_20_weighted_DVPs_CORR.txt
 
 
 
-Format of file:
+File Format:
 
-$num_jobs
+
+$num_jobs --> (repeat job declaration $num_jobs times)
 $out_dir
 $batch_description
 ****************************************************
@@ -33,7 +34,9 @@ $delta_vectors
 $op1     $op2     $num_points     $offset     $size
 ****************************************************
 
+
+
 Set $size = 0 to determine grid cellsize automatically using the Max(Range X, Range Y)/256 (Recommended)
 Decreasing cellsize will increase computation time ~O(n^2)
-
+Note: Separator lines "****" are NOT optional!
 
