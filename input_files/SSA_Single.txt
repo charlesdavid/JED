@@ -27,5 +27,5 @@ $path/to/eigenvector_file2
 
 Note: Separator lines "*****" are NOT optional!
 
-Ensure that the matices are equidimensional...
+Ensure that the matrices are equidimensional...
 

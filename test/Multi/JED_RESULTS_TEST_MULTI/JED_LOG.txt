@@ -1,4 +1,4 @@
-JED: Java Essential Dynamics version 1.0
+JED: Java Essential Dynamics version 1.1
 Job Description: TEST_MULTI
 Working directory: /workspace/cflcyd/git/JED/test/Multi/
 Output directory: /workspace/cflcyd/git/JED/test/Multi/JED_RESULTS_TEST_MULTI/
@@ -74,4 +74,9 @@ For the essential motion, a superposition was created spanning 2 full periods fo
 Pymol(TM) scripts were generated for each individual mode and the essential subspace, to play the mode structures as movies.
 MODE AMPLITUDE = 3.000
 
-Analysis completed: 2018-05-16 17:13:42
+Performing Free Energy calculations using two order parameters on each PCA model: 
+	The first and second PC (weighted-projection). 
+See the FES Logs in the FES subdirectories of each PCA model for more details.
+
+
+Analysis completed: 2018-05-18 02:46:07

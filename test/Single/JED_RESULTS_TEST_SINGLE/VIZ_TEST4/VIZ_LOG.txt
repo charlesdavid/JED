@@ -1,0 +1,15 @@
+JED Cartesian Mode Visualization Driver version 1.0
+Reference PDB file: /workspace/cflcyd/git/JED/test/Single/JED_RESULTS_TEST_SINGLE/cPCA/ss_151_RMSF_edited.pdb
+Eigenvalues file: /workspace/cflcyd/git/JED/test/Single/JED_RESULTS_TEST_SINGLE/cPCA/CORR/ss_151_eigenvalues_CORR.txt
+Eigenvectors file: /workspace/cflcyd/git/JED/test/Single/JED_RESULTS_TEST_SINGLE/cPCA/CORR/ss_151_top_20_eigenvectors_CORR.txt
+Modes file: /workspace/cflcyd/git/JED/test/Single/JED_RESULTS_TEST_SINGLE/cPCA/CORR/ss_151_top_20_square_pca_modes_CORR.txt
+Mode Maxes file: /workspace/cflcyd/git/JED/test/Single/JED_RESULTS_TEST_SINGLE/cPCA/CORR/ss_151_top_20_square_pca_mode_MAXES_CORR.txt
+Mode Mins file: /workspace/cflcyd/git/JED/test/Single/JED_RESULTS_TEST_SINGLE/cPCA/CORR/ss_151_top_20_square_pca_mode_MINS_CORR.txt
+Output directory: /workspace/cflcyd/git/JED/test/Single/JED_RESULTS_TEST_SINGLE/VIZ_TEST4/
+Number of Frames = 100
+Number of Cycles = 5
+Mode amplitutde = 3.000
+
+Performing Cartesian Essential Mode Visualization, combining  4  cPCA modes starting with mode 0
+
+Cartesian Mode Visualization Completed: 2018-05-18 02:26:58

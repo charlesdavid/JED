@@ -1,4 +1,4 @@
-JED: Java Essential Dynamics version 1.0
+JED: Java Essential Dynamics version 1.1
 Job Description: TEST_PRE-PROCESSING_SINGLE
 Working directory: /workspace/cflcyd/git/JED/test/Single/PDBs/
 Output directory: /workspace/cflcyd/git/JED/test/Single/PDBs/JED_RESULTS_TEST_PRE-PROCESSING_SINGLE/
@@ -27,4 +27,4 @@ PDB file with B-factors replaced by residue RMSDs: ss_151_RMSF_edited.pdb
 
 Variable Z-scores were calculated.
 
-Analysis completed: 2018-05-16 16:38:44
+Analysis completed: 2018-05-18 02:41:09

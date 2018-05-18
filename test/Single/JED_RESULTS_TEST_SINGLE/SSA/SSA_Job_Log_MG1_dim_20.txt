@@ -142,4 +142,4 @@ VS      20  109.76
 
 Maximum possible angle between the two subspaces = 402.49 degrees.
 
-Analysis completed: 2018-05-17 23:23:30
+Analysis completed: 2018-05-18 02:30:14

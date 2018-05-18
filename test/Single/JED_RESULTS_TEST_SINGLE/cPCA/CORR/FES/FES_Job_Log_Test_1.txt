@@ -1,4 +1,4 @@
-Delta Vectors: /workspace/cflcyd/git/JED/test/Single/JED_RESULTS_TEST_SINGLE/cPCA/CORR/ss_151_top_20_weighted_DVPs_CORR.txt
+Principal components: /workspace/cflcyd/git/JED/test/Single/JED_RESULTS_TEST_SINGLE/cPCA/CORR/ss_151_top_20_weighted_DVPs_CORR.txt
 Total Number of Conformations (rows) used to create the DVPs: 2001
 Total Number of Modes (cols) used to create the DVPs: 20
 Order Parameter 1 (Col# 1): 1
@@ -2012,4 +2012,4 @@ The kernel bandwidths were: 7.823   3.313
       -489.103        49.169         1.084
 
 
-Analysis completed: 2018-05-16 17:34:35
+Analysis completed: 2018-05-18 02:32:39

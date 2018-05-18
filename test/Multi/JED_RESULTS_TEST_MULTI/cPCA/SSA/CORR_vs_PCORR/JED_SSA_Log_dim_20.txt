@@ -151,4 +151,4 @@ VS    20          64
 
 Maximum possible angle between two subspaces of this dimension is 402 degrees
 
-Analysis completed: 2018-05-16 17:12:57
+Analysis completed: 2018-05-18 02:45:18

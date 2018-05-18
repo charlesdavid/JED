@@ -1,3 +1,3 @@
-Test_1Conformations = 2000    OP1 =   0       OP2 =   1       Bounds are: OP1(-2,221.124,377.048); OP2(-185.114,699.442)           KDE Bandwidths are: 7.823, 3.313
-Test_2Conformations = 2000    OP1 =   0       OP2 =   2       Bounds are: OP1(-2,221.124,377.048); OP2(-541.931,331.489)           KDE Bandwidths are: 6.584, 1.983
-Test_3Conformations = 2000    OP1 =   1       OP2 =   2       Bounds are: OP1(-185.114,699.442); OP2(-541.931,331.489)           KDE Bandwidths are: 2.957, 2.169
+Test_1Conformations = 2000    OP1 =   1       OP2 =   20      Bounds are: OP1(-2,221.124,377.048); OP2(-185.114,699.442)           KDE Bandwidths are: 7.823, 3.313
+Test_2Conformations = 2000    OP1 =   1       OP2 =   21      Bounds are: OP1(-2,221.124,377.048); OP2(-541.931,331.489)           KDE Bandwidths are: 6.584, 1.983
+Test_3Conformations = 2000    OP1 =   2       OP2 =   21      Bounds are: OP1(-185.114,699.442); OP2(-541.931,331.489)           KDE Bandwidths are: 2.957, 2.169

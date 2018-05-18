@@ -2,6 +2,7 @@ from pymol import cmd
 from pymol.cgo import *
 bg_color white
 from glob import glob
+cd /workspace/cflcyd/git/JED/test/Multi/JED_RESULTS_TEST_MULTI/VIZ/PCORR
 filelist = glob ( "ss_100_Mode_5_PCORR_frame*.pdb" )
 for file in filelist: cmd.load( file, "Mode_5" )
 hide lines, Mode_5
@@ -11,5 +12,4 @@ orient
 set two_sided_lighting,1
 set cartoon_fancy_helices,1
 set cartoon_highlight_color,grey50
-util.performance(0)
 rebuild

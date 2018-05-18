@@ -49,4 +49,4 @@ The PA spectra for the range of subspaces are:
    13   13   14   14   15   16   16   18   18   19   21   21   23   24   25   27   28   32   37   55
 
 
-Analysis completed: 2018-05-16 17:09:52
+Analysis completed: 2018-05-18 02:43:01
